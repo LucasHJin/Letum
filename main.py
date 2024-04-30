@@ -20,8 +20,13 @@ def look_around(enemyNumber, enemyType, itemNumber, itemType):
     if itemNumber<=0 and enemyNumber<=0:
         print("It appears as if there is nothing in this room.")
 
-def open_chest(rand, items):
-    rand = 1
+def open_chest(choose, items, gold):
+    if choose==1:
+        print("You have received ["+items[0]+"].")
+    elif choose==2:
+        print("You have received ["+gold+"].")
+        for i in items:
+            print("You have received ["+i+"].")
 
 def check_profile(person, weapon):
     print(person.name)
@@ -106,17 +111,16 @@ look_around(0, 0, 1, "rotting wooden chest")
 possible = {"O": "Open The Chest"}
 print("What will you do?")
 print_options(possible)
+choice = input("  >>  ")
 while choice.lower() != "o":
     choice = not_option(possible)
 
-
-
-weapon_input = input("  >>  ")
+open_chest(1, ["Old Iron Sword"], 0)
 
 player = Character(name=name, str=int(stats_input[0]), dex=int(stats_input[1]), con=int(stats_input[2]), level=1, exp=0)
+# player = Character(name, int(stats_input[0]), int(stats_input[1]), int(stats_input[2]), 1, 0, "Old Iron Sword")
+weapon = Sword(name="Old Iron Sword", rarity="Common", character=player)
 
-if weapon_input.lower()=="sword":
-    weapon = Sword(name="Old Iron Sword", rarity="Common", character=player)
 
 player.refresh_stats()
 
