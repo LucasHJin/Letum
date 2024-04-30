@@ -1,8 +1,8 @@
 class Character:
-    def __init__(self, name, str, dex, con, level, exp):
+    def __init__(self, name, srn, dex, con, level, exp):
         self.name = name
         self.stats = {
-            'str': str,
+            'str': srn,
             'dex': dex,
             'con': con,
         }
@@ -31,7 +31,10 @@ class Character:
         while self.exp>self.level*50:
             self.exp-=self.level*50
             counter+=1
-        return counter;
+        return counter
+    
+    def add_exp(self, amount):
+        self.exp+=amount
 
     def level_up(self):
         print("Congratulations! You have leveled up.")

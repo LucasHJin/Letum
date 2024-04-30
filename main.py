@@ -117,7 +117,7 @@ while choice.lower() != "o":
 
 open_chest(1, ["Old Iron Sword"], 0)
 
-player = Character(name=name, str=int(stats_input[0]), dex=int(stats_input[1]), con=int(stats_input[2]), level=1, exp=0)
+player = Character(name=name, srn=int(stats_input[0]), dex=int(stats_input[1]), con=int(stats_input[2]), level=1, exp=0)
 # player = Character(name, int(stats_input[0]), int(stats_input[1]), int(stats_input[2]), 1, 0, "Old Iron Sword")
 weapon = Sword(name="Old Iron Sword", rarity="Common", character=player)
 
