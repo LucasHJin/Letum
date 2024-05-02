@@ -7,10 +7,14 @@ class Character:
             'con': con,
         }
         self.level = level
+        self.exp = exp
         self.health = 10
         self.armor_class = 0
         self.attack_damage = 0
-        self.exp = exp
+        self.inventory = {
+            'Gold': 0,
+            'Health Potion': 0
+        }
 
     def calc_health(self):
         self.health = 100 + self.stats['con'] // 2
@@ -36,14 +40,14 @@ class Character:
     def add_exp(self, amount):
         self.exp+=amount
 
-    def level_up(self):
+    def level_up_once(self):
         print("Congratulations! You have leveled up.")
         print("You have 3 points to distribute among your stats.")
         print("Current stats:", self.stats)
         
         for _ in range(3):
             stat_choice = input("Which stat would you like to increase? (str/dex/con): ").lower()
-            if stat_choice in self.stats:
+            if stat_choice.lower() in self.stats:
                 self.stats[stat_choice] += 1
             else:
                 print("Invalid choice. Please choose from 'str', 'dex', or 'con'.")
@@ -55,5 +59,17 @@ class Character:
         self.calc_health()
         self.calc_damage()
         self.calc_ac()
+
+    def all_level_up(self):
+        times = self.calc_exp()
+        for i in range(times):
+            self.level_up_once()
+
+    def add_inventory(self, items):
+        for i in items.keys():
+            if i in self.inventory:
+                self.inventory[i]+=items[i]
+            else:
+                self.inventory[i]=items[i]
 
 
