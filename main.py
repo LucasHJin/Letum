@@ -14,7 +14,7 @@ import time
 #FUNCTIONS
 def look_around(enemyNumber, enemyType, itemNumber, itemType):
     if enemyNumber>0:
-        print("STuff", enemyType)
+        print("Stuff", enemyType)
     if itemNumber>0:
         print("As you look around, examining every nook and cranny, you see a", itemType, "hidden in the corner.")
     if itemNumber<=0 and enemyNumber<=0:
