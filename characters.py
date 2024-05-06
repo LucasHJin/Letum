@@ -38,6 +38,12 @@ class Character:
                 #do something... (skip turn)
                 temp = 1
 
+    def use_health_potion(self):
+        self.inventory['Health Potion'] -= 1
+        self.current_health += 50
+        if self.current_health > self.health:
+            self.current_health = self.health
+
             
     def check_dead(self):
         if self.current_health<=0:
