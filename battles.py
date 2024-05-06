@@ -92,7 +92,7 @@ class Battle:
         for enemy_key in self.enemiesDict:
             for inst in en_inst[enemy_key]:
                 if inst.check_dead:
-                    if not isinstance(Skeleton, inst):
+                    if not isinstance(Skeleton, inst): #https://www.toppr.com/guides/python-guide/references/methods-and-functions/methods/built-in/isinstance/python-isinstance-2/#:~:text=The%20isinstance%20()%20function%20checks,parent%20class%20of%20an%20object.
                         en_inst[enemy_key.remove(inst)] #https://www.w3schools.com/python/python_lists_remove.asp
                     else:
                         if not inst.used:
