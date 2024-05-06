@@ -17,6 +17,11 @@ class Character:
         }
         self.current_health = self.health
         self.tabbar = {}
+        self.equipment = {
+            'Head': "None",
+            'Body': "None",
+            'Ring': "None"
+        }
 
     def refresh_current_health(self): #for after level up or clear room (REMEMBER)!
         self.current_health = self.health
@@ -29,6 +34,9 @@ class Character:
                     print(" ~ You have been poisoned for", pDamage, "damage. ~ ")
                     self.current_health -= pDamage
                 self.tabbar[effect]-=1
+            elif effect == "Stunned":
+                #do something... (skip turn)
+                temp = 1
 
             
     def check_dead(self):
