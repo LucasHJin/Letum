@@ -65,6 +65,7 @@ class Character:
         self.calc_health()
         self.calc_damage()
         self.calc_ac()
+        self.refresh_current_health()
 
     def calc_exp(self):
         counter=0

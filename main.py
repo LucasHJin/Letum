@@ -8,6 +8,7 @@ April 13, 2023: Program Creation
 """
 from characters import Character
 from weapons import Sword
+from battles import Battle
 import os
 import time
 
@@ -150,6 +151,22 @@ player.refresh_stats()
 #add obtained items to inventory
 player.add_inventory(contain)
 
+eyDict = {
+    'Rat': [1, 1, 1],
+    'Goblin': [],
+    'Skeleton': [],
+    'Demon': []
+}
+
+rnd = Battle(eyDict, player, weapon)
+
+print(rnd.weapon.abilityDict)
+print(rnd.weapon.rarity)
+print(rnd.weapon.abilityDict[rnd.weapon.rarity])
+
+rnd.entire_game()
+
+"""
 print(" ~ If you want to check your inventory, press [I] when prompted for an input. ~ ")
 print(" ~ If you want to check your status, press [S] when prompted for an input. ~ ")
 print(" ~ Try it out right now, or press [C] to continue. ~ ")
@@ -178,3 +195,6 @@ while choice.lower != "c":
         os.system('cls')
         print_options(possible)
         choice = input("  >>  ")
+"""
+
+

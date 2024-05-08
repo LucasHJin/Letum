@@ -16,10 +16,13 @@ class Enemy:
 
 class Rat(Enemy):
     def __init__(self, name, tpe, character):
-        super().__init__(name=name, tpe=tpe)
-        self.damage = 5*self.multiplier
-        self.health = random.randint(50, 75)*self.multiplier
+        #super().__init__(name=name, tpe=tpe, multiplier=self.ENEMY_TPE_MULT[tpe], health=random.randint(50, 75)*multiplier, damage=5*multiplier)
+        self.name = name
+        self.tpe = tpe
         self.character=character
+        self.multiplier = self.ENEMY_TPE_MULT[tpe]
+        self.health = random.randint(50, 75) * self.multiplier
+        self.damage = 5 * self.multiplier
 
     def choose_ability(self):
         if not self.check_dead():
@@ -53,9 +56,9 @@ class Rat(Enemy):
 
 class Goblin(Enemy):
     def __init__(self, name, tpe, character):
-        super().__init__(name=name, tpe=tpe)
-        self.damage = 8*self.multiplier
-        self.health = random.randint(75, 100)*self.multiplier
+        super().__init__(name=name, tpe=tpe, health=random.randint(75, 100), damage=9)
+        self.damage *= self.multiplier
+        self.health *= self.multiplier
         self.character=character
 
     def choose_ability(self):
@@ -92,9 +95,9 @@ class Goblin(Enemy):
 
 class Skeleton(Enemy):
     def __init__(self, name, tpe, character):
-        super().__init__(name=name, tpe=tpe)
-        self.damage = 8*self.multiplier
-        self.health = random.randint(75, 100)*self.multiplier
+        super().__init__(name=name, tpe=tpe, health=random.randint(75, 100), damage=7)
+        self.damage *= self.multiplier
+        self.health *= self.multiplier
         self.character=character
         self.used = False
 
@@ -137,10 +140,11 @@ class Skeleton(Enemy):
 
 class Demon(Enemy):
     def __init__(self, name, tpe, character):
-        super().__init__(name=name, tpe=tpe)
-        self.damage = 8*self.multiplier
-        self.health = random.randint(75, 100)*self.multiplier
+        super().__init__(name=name, tpe=tpe, health=random.randint(100, 200), damage=10)
+        self.damage *= self.multiplier
+        self.health *= self.multiplier
         self.character=character
+
 
     def choose_ability(self):
         if not self.check_dead():
