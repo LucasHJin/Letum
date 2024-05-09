@@ -57,6 +57,7 @@ class Battle:
             elif choice_action == "Holy Aura":
                 dmg = self.weapon.holy_aura()
             else:
+                #ABLE TO USE HEALTH POTION EVEN WITH FULL HEALTH PROBLEM
                 dmg = 0
                 self.character.use_health_potion()
             if choice_action == "Wide Slash":
@@ -65,11 +66,10 @@ class Battle:
                         inst.health -= dmg
             elif choice_action != "HP":
                 #PROBLEM -> DAMAGE MESSAGE OCCURS BEFORE ATTACK
-                #PROBLEM -> ALL SAME NAME AND HEALTH, NOT NORMAL
-                print("Who do you wish to attack?")
+                print("Who do you wish to attack? (Make sure to type the name exactly as displayed.)")
                 for enemy_key in self.enemiesDict:
                     for inst in en_inst[enemy_key]:
-                        print("  ["+inst.name+"] -> Current Health:", inst.health, "(Make sure to type the name exactly as displayed.)")
+                        print("  ["+inst.name+"] - Current Health:", inst.health)
                 who = input("  >>  ")
                 chosen = False
                 for enemy_key in self.enemiesDict:
@@ -77,10 +77,10 @@ class Battle:
                         if inst.name == who:
                             chosen = True
                 while not chosen:
-                    print("That was not the option. The options are: ")
+                    print("That was not the option. (Make sure to type the name exactly as displayed.) The options are: ")
                     for enemy_key in self.enemiesDict:
                         for inst in en_inst[enemy_key]:
-                            print("  ["+inst.name+"] -> Current Health:", inst.health, "(Make sure to type the name exactly as displayed.)")
+                            print("  ["+inst.name+"] -> Current Health:", inst.health)
                     who = input("  >>  ")
                     for enemy_key in self.enemiesDict:
                         for inst in en_inst[enemy_key]:
@@ -94,8 +94,10 @@ class Battle:
         for enemy_key in self.enemiesDict:
             for inst in en_inst[enemy_key]:
                 if inst.check_dead:
-                    if not isinstance(Skeleton, inst): #https://www.toppr.com/guides/python-guide/references/methods-and-functions/methods/built-in/isinstance/python-isinstance-2/#:~:text=The%20isinstance%20()%20function%20checks,parent%20class%20of%20an%20object.
-                        en_inst[enemy_key.remove(inst)] #https://www.w3schools.com/python/python_lists_remove.asp
+                    #https://www.toppr.com/guides/python-guide/references/methods-and-functions/methods/built-in/isinstance/python-isinstance-2/#:~:text=The%20isinstance%20()%20function%20checks,parent%20class%20of%20an%20object.
+                    if not isinstance(inst, Skeleton): 
+                        #https://www.w3schools.com/python/python_lists_remove.asp
+                        en_inst[enemy_key.remove(inst)] 
                     else:
                         if not inst.used:
                             inst.used = True
@@ -126,13 +128,14 @@ class Battle:
             'Skeleton': [],
             'Demon': []
         }
+        ENEMY_LVL = ['Common', 'Elite', 'Boss']
         for enemy_key in self.enemiesDict:
             enemy_amount = 0
+            counter = 0 #counter for each individual type
             for type_amount in self.enemiesDict[enemy_key]:
-                counter = 0 #counter for each individual in a type of enemy
                 for count in range(type_amount):
                     #https://www.w3schools.com/python/ref_string_format.asp -> for naming instance
-                    instance_name = "{}{}".format(enemy_key, count)
+                    instance_name = "{} {} #{}".format(ENEMY_LVL[counter], enemy_key, count+1)
                     if enemy_key == "Rat":
                         if counter == 0:
                             instance = Rat(instance_name, "Common", self.character)
