@@ -11,6 +11,7 @@ from weapons import Sword
 from battles import Battle
 import os
 import time
+#https://stackoverflow.com/questions/60608275/how-can-i-print-text-so-it-looks-like-its-being-typed-out MAYBE
 
 #FUNCTIONS
 def look_around(enemyNumber, enemyType, itemNumber, itemType):
@@ -23,7 +24,7 @@ def look_around(enemyNumber, enemyType, itemNumber, itemType):
 
 def open_chest(items):
     for i in items.keys():
-        print(" ~ You have received"+str(items[i])+" x ["+i+"]. ~ ")
+        print(" ~ You have received "+str(items[i])+" x ["+i+"]. ~ ")
 
 def check_profile(person, wpn):
     os.system('cls')
@@ -133,14 +134,14 @@ print("\nAs you open the rotting chest, its hinges slowly creaking like the gutt
 wpn_name = "Old Iron Sword"
 
 
-print("\n")
-
 contain = {
     'Gold': 100,
     'Health Potion': 5,
     wpn_name: 1
 }
 open_chest(contain)
+
+print("")
 
 #player = Character(name=name, srn=int(stats_input[0]), dex=int(stats_input[1]), con=int(stats_input[2]), level=1, exp=0)
 #only do ^^ if there are optional paramaters that could be passed but aren't
@@ -160,11 +161,9 @@ eyDict = {
 
 rnd = Battle(eyDict, player, weapon)
 
-print(rnd.weapon.abilityDict)
-print(rnd.weapon.rarity)
-print(rnd.weapon.abilityDict[rnd.weapon.rarity])
+hold = rnd.entire_game()
 
-rnd.entire_game()
+print("BATTLE ENDED", hold)
 
 """
 print(" ~ If you want to check your inventory, press [I] when prompted for an input. ~ ")

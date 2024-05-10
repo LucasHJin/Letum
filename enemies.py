@@ -21,14 +21,14 @@ class Rat(Enemy):
         self.tpe = tpe
         self.character=character
         self.multiplier = self.ENEMY_TPE_MULT[tpe]
-        self.health = random.randint(50, 75) * self.multiplier
-        self.damage = 5 * self.multiplier
+        self.health = int(random.randint(50, 75) * self.multiplier)
+        self.damage = random.randint(4, 5) * self.multiplier
 
     def choose_ability(self):
         if not self.check_dead():
             # https://pynative.com/python-weighted-random-choices-with-probability/ for weighted values
             chosenAbility = random.choices(['Bite', 'Scratch'], weights = [60, 40], k=1) 
-            if chosenAbility == 'Bite':
+            if chosenAbility[0] == 'Bite':
                 return self.bite()
             else:
                 return self.scratch()
@@ -37,13 +37,14 @@ class Rat(Enemy):
 
     def bite(self):
         # https://pynative.com/python-get-random-float-numbers/ for random float
-        damage = self.multiplier * self.damage * random.uniform(0.8, 1.2)
-        print("The mutated rat unhinges his mandibles, snapping at your body. Its bite deals", damage, "damage.") #DONT FORGET TO ROUND LATERdamage = self.multiplier * self.damage * random.uniform(0.8, 1.2)
+        # https://note.nkmk.me/en/python-math-floor-ceil-int/#:~:text=While%20math.,()%20instead%20rounds%20toward%20zero. -> rounding damage to integers
+        damage = int(self.multiplier * self.damage * random.uniform(0.8, 1.2) * (100/(100+self.character.armor_class)))
+        print(self.name, "unhinges its mutated mandibles, snapping at your body. Its bite deals", damage, "damage.") #DONT FORGET TO ROUND LATERdamage = self.multiplier * self.damage * random.uniform(0.8, 1.2)
         return damage
     
     def scratch(self):
-        damage = self.multiplier * self.damage * random.uniform(0.5, 1.5)
-        print("Pouncing on you the rat successfully scratches you with its sharp, jagged claws. You feel a sharp pain where you were scratched, receiving", damage, "damage.")
+        damage = int(self.multiplier * self.damage * random.uniform(0.5, 1.5) * (100/(100+self.character.armor_class)))
+        print("Pouncing on you,", self.name, "successfully scratches you with its sharp, jagged claws. You feel a sharp pain where you were scratched, receiving", damage, "damage.")
         return damage
     
     def check_dead(self):
@@ -56,15 +57,17 @@ class Rat(Enemy):
 
 class Goblin(Enemy):
     def __init__(self, name, tpe, character):
-        super().__init__(name=name, tpe=tpe, health=random.randint(75, 100), damage=9)
-        self.damage *= self.multiplier
-        self.health *= self.multiplier
+        self.name = name
+        self.tpe = tpe
         self.character=character
+        self.multiplier = self.ENEMY_TPE_MULT[tpe]
+        self.health = int(random.randint(75, 100) * self.multiplier)
+        self.damage = random.randint(7, 8) * self.multiplier
 
     def choose_ability(self):
         if not self.check_dead():
             chosenAbility = random.choices(['Stab', 'Poison_dart'], weights = [70, 30], k=1) 
-            if chosenAbility == 'Stab':
+            if chosenAbility[0] == 'Stab':
                 return self.stab()
             else:
                 return self.poison_dart()
@@ -72,17 +75,17 @@ class Goblin(Enemy):
             return "DEAD"
 
     def stab(self):
-        damage = self.multiplier * self.damage * random.uniform(1, 1.2)
-        print("The goblin stabs forward, plunging his shoddy stone knife into your body. It deals", damage, "damage.")
+        damage = int(self.multiplier * self.damage * random.uniform(1, 1.2) * (100/(100+self.character.armor_class)))
+        print(self.name, "stabs forward, plunging his shoddy stone knife into your body. It deals", damage, "damage.")
         return damage
     
     def poison_dart(self):
-        damage = self.multiplier * self.damage * random.uniform(0.3, 0.5)
+        damage = int(self.multiplier * self.damage * random.uniform(0.3, 0.5) * (100/(100+self.character.armor_class)))
         if self.character.tabbar["Poison"]:
             self.character.tabbar["Poison"] += 1
         else:
             self.character.tabbar["Poison"] = 1
-        print("A quick projectile shoots out of the goblin's blowdart and glances off you dealing", damage, "damage. You observe yourself for a moment, thinking you were lucky until you start feeling dizzy...")
+        print("A quick projectile shoots out of", self.name, "blowdart and glances off you dealing", damage, "damage. You observe yourself for a moment, thinking you were lucky until you start feeling dizzy...")
         print(" ~ You have been poisoned for 1 turn. ~ ")
         return damage
     
@@ -95,19 +98,22 @@ class Goblin(Enemy):
 
 class Skeleton(Enemy):
     def __init__(self, name, tpe, character):
-        super().__init__(name=name, tpe=tpe, health=random.randint(75, 100), damage=7)
-        self.damage *= self.multiplier
-        self.health *= self.multiplier
+        self.name = name
+        self.tpe = tpe
         self.character=character
-        self.used = False
+        self.multiplier = self.ENEMY_TPE_MULT[tpe]
+        self.health = int(random.randint(75, 85) * self.multiplier)
+        self.damage = random.randint(6, 7) * self.multiplier
 
     def choose_ability(self):
+        """
         if self.check_dead() and not self.used:
             self.used = True
             self.escape_death()
+        """
         if not self.check_dead():
             chosenAbility = random.choices(['Slash', 'Stun'], weights = [50, 50], k=1) 
-            if chosenAbility == 'Slash':
+            if chosenAbility[0] == 'Slash':
                 return self.slash()
             else:
                 return self.block()
@@ -115,12 +121,12 @@ class Skeleton(Enemy):
             return "DEAD"
 
     def slash(self):
-        damage = self.multiplier * self.damage * random.uniform(0.5, 2.5)
-        print("The skeleton swipes at you; you aren't sure with what but it looks to be a sharpened bone, possibly from its own body... You take", damage, "damage.")
+        damage = int(self.multiplier * self.damage * random.uniform(0.5, 2.5) * (100/(100+self.character.armor_class)))
+        print(self.name, "swipes at you; you aren't sure with what but it looks to be a sharpened bone, possibly from its own body... You take", damage, "damage.")
         return damage
     
     def stun(self):
-        print("The skeleton lunges at you, disassembling and assembling itself, trapping you for one turn.")
+        print(self.name, "lunges at you, disassembling and assembling itself, trapping you for one turn.")
         if self.character.tabbar["Stunned"]:
             self.character.tabbar["Stunned"] += 1
         else:
@@ -128,7 +134,7 @@ class Skeleton(Enemy):
         return 0
     
     def escape_death(self):
-        print("The skeleton realizes its innate trait, avoiding the death with which it has taunted for so long.")
+        print(self.name, "realizes its innate trait, avoiding the death which it has taunted for so long.")
         self.health = 1
         
     def check_dead(self):
@@ -140,16 +146,18 @@ class Skeleton(Enemy):
 
 class Demon(Enemy):
     def __init__(self, name, tpe, character):
-        super().__init__(name=name, tpe=tpe, health=random.randint(100, 200), damage=10)
-        self.damage *= self.multiplier
-        self.health *= self.multiplier
+        self.name = name
+        self.tpe = tpe
         self.character=character
+        self.multiplier = self.ENEMY_TPE_MULT[tpe]
+        self.health = int(random.randint(100, 175) * self.multiplier)
+        self.damage = random.randint(10, 11) * self.multiplier
 
 
     def choose_ability(self):
         if not self.check_dead():
             chosenAbility = random.choices(['Weaken', 'Hellfire'], weights = [25, 75], k=1) 
-            if chosenAbility == 'Weaken':
+            if chosenAbility[0] == 'Weaken':
                 return self.weaken()
             else:
                 return self.hellfire()
@@ -157,23 +165,23 @@ class Demon(Enemy):
             return "DEAD"
 
     def weaken(self):
-        damage = self.multiplier * (self.damage + self.character.health*0.03) * random.uniform(0.5, 0.6)  
+        damage = int(self.multiplier * (self.damage + self.character.health*0.03) * random.uniform(0.5, 0.6) * (100/(100+self.character.armor_class)))
         if self.character.tabbar["Weakened"]:
             self.character.tabbar["Weakened"] += 1
         else:
             self.character.tabbar["Weakened"] = 1
-        print("The demon chants a spell and, before long, you hear a ringing sound which only continues to grow. It deals", damage, "damage.")
+        print(self.name, "chants a spell and, before long, you hear a ringing sound which only continues to grow. It deals", damage, "damage.")
         print(" ~ You have been weakened for 1 turn. ~ ")
         return damage
     
     def hellfire(self):
         if self.character.tabbar["Weakened"]>0:
-            damage = self.multiplier * random.uniform(1, 1.2) * 2.5 * (self.damage + self.character.health*0.05)
-            print("The demon burns you with hellfire which is strengthed by your weakness. The flames burn you for", damage, "damage.")
+            damage = int(self.multiplier * random.uniform(1, 1.2) * 2.5 * (self.damage + self.character.health*0.05) * (100/(100+self.character.armor_class)))
+            print(self.name, "burns you with hellfire which is strengthed by your weakness. The flames burn you for", damage, "damage.")
             return damage
         else:
-            print("The demon curses, bemoaning the fact that you aren't weakened. His flames deal", damage, "damage.")
-            damage = self.multiplier * random.uniform(1, 1.1) * (self.damage + self.character.health*0.025)
+            print(self.name, "curses, bemoaning the fact that you aren't weakened. His flames deal", damage, "damage.")
+            damage = int(self.multiplier * random.uniform(1, 1.1) * (self.damage + self.character.health*0.025) * (100/(100+self.character.armor_class)))
             print("")
             return damage
 

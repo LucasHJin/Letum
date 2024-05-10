@@ -1,3 +1,5 @@
+import random
+
 class Character:
     def __init__(self, name, srn, dex, con, level, exp):
         self.name = name
@@ -40,9 +42,12 @@ class Character:
 
     def use_health_potion(self):
         self.inventory['Health Potion'] -= 1
-        self.current_health += 50
+        add_health = random.randint(25, 50)
+        self.current_health += add_health
         if self.current_health > self.health:
             self.current_health = self.health
+        print("Quickly uncorking your health potion, you guzzle it down and feel your body rejuvenate. [+"+str(add_health)+"HP]")
+        print("  >>  Health:", self.current_health)
 
             
     def check_dead(self):
@@ -56,7 +61,7 @@ class Character:
         self.health = 100 + self.stats['con'] * 2
 
     def calc_ac(self):
-        self.armor_class = 35 + self.stats['dex'] // 3
+        self.armor_class = 25 + self.stats['dex'] // 3
 
     def calc_damage(self):
         self.attack_damage = 20 + self.stats['str'] // 2

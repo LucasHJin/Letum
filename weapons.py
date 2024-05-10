@@ -28,15 +28,15 @@ class Sword(Weapon):
         }
 
     def slash(self):
-        dmg = self.damage_multiplier * (self.damage + self.character.attack_damage // 2) * random.uniform(1, 1.1)
+        dmg = int(self.damage_multiplier * (self.damage + self.character.attack_damage // 2) * random.uniform(1, 1.1))
         return dmg
     
     def wide_slash (self):
-        dmg = self.damage_multiplier * (self.damage + self.character.attack_damage) * random.uniform(0.5, 0.6)
+        dmg = int(self.damage_multiplier * (self.damage + self.character.attack_damage) * random.uniform(0.5, 0.6))
         return dmg
     
     def holy_blow(self):
-        dmg = self.damage_multiplier * (self.damage + self.character.attack_damage) * random.uniform(2, 3.5)
+        dmg = int(self.damage_multiplier * (self.damage + self.character.attack_damage) * random.uniform(2, 3.5))
         return dmg
     
     def holy_aura(self):

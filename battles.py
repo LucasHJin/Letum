@@ -7,12 +7,11 @@ import os
 #TO DO:
 '''
 ADD REFRESH HP AND LEVEL UP
-FIX UP UI (MESSAGES)
+- CHANGE LEVEL UP TO CONTINUOSULY BE CALLED AND JUST KEEP TRACK OF AVAILABLE STATUS POINTS
+- END OF EVERY BATTLE, OFFER TO ALLOCATE STAT POINTS
 ADD ALL THE NECESSARY STATUS EFFECTS
-CHANGE THE INIT FOR ALL OTHER CLASSES
-ADD ARMOUR CLASS TO BATTLES
-ADD ROUNDING
-MAYBE ADD MESSAGE SAYING YOU HAVE SLAIN AN ENEMY IF THEY DIE
+CHANGE THE INIT FOR ALL OTHER CLASSES -> DONE TO BE CHECKED
+MAKE GAME FINISHED WORK!!! (I.e. WHEN ENEMY IS KILLED)
 '''
 
 class Battle:
@@ -27,18 +26,26 @@ class Battle:
             ene_inst = self.create_enemy_instances()
         status = self.turn(ene_inst)
         while status != "DEAD" and status != "WON":
-            os.system('cls')
+            #os.system('cls')
             status = self.turn(status)
-        #REFRESH HP AND LEVEL UP?
+        if status == "DEAD":
+            return "DEAD"
+        else:
+            #REFRESH HP AND LEVEL UP?
+            temp = 1
+            return "WON"
 
     def turn(self, en_inst): #REMEMBER ADD COOLDOWNS
         #have each enemy and character go once in a turn (loop iterate) AND check for death and if so remove that character
-        print("  >>  Health:", self.character.current_health)
         if self.character.check_dead():
             print("Having taken too many blows, you succumb to your wounds.")
             return "DEAD"
         else:
             #player turn
+            print("\nYour Turn:")
+            print("{---------------------------------------------------------------}")
+            print("  >>  Health:", self.character.current_health)
+            
             print("What do you want to do?")
             for i in range(len(self.weapon.abilityDict[self.weapon.rarity])-1):
                 print("  ["+str(i+1)+"] "+self.weapon.abilityDict[self.weapon.rarity][i])
@@ -76,8 +83,7 @@ class Battle:
                 dmg = self.weapon.holy_blow()
             elif choice_action == "Holy Aura":
                 dmg = self.weapon.holy_aura()
-            elif choice_action == "HP" and self.character.inventory["Health Potion"]>0:
-                #ABLE TO USE HEALTH POTION EVEN WITH FULL HEALTH PROBLEM
+            elif choice_action == "HP" and self.character.inventory["Health Potion"]>0 and self.character.current_health!=self.character.health:
                 dmg = 0
                 self.character.use_health_potion()
             if choice_action == "Wide Slash":
@@ -85,7 +91,6 @@ class Battle:
                     for inst in en_inst[enemy_key]:
                         inst.health -= dmg
             elif choice_action != "HP":
-                #PROBLEM -> DAMAGE MESSAGE OCCURS BEFORE ATTACK
                 print("Who do you wish to attack? (Make sure to type the name exactly as displayed.)")
                 for enemy_key in self.enemiesDict:
                     for inst in en_inst[enemy_key]:
@@ -119,33 +124,40 @@ class Battle:
                 elif choice_action == "Holy Aura":
                     print("You call upon the holy power of the Gods and buff yourself.")
                     print(" ~ All your stats have been increased by 5 for 2 turns. ~ ")
+                
         #enemy turn
-        for enemy_key in self.enemiesDict: #DAMAGE WORKS
+        for enemy_key in self.enemiesDict: 
             for inst in en_inst[enemy_key]:
                 if inst.check_dead():
                     #https://www.toppr.com/guides/python-guide/references/methods-and-functions/methods/built-in/isinstance/python-isinstance-2/#:~:text=The%20isinstance%20()%20function%20checks,parent%20class%20of%20an%20object.
                     if not isinstance(inst, Skeleton): 
                         #https://www.w3schools.com/python/python_lists_remove.asp
                         en_inst[enemy_key].remove(inst) 
+                        print(" ~ Congratulations, you have slain an enemy! ["+inst.name+"] ~ ")
                     else:
                         if not inst.used:
                             inst.used = True
                             inst.escape_death()
                         else:
                             en_inst[enemy_key].remove(inst)
-        
+                            print(" ~ You have overcome a skeleton's innate trait and slain them. ["+inst.name+"] ~ ")
+        print("{---------------------------------------------------------------}\n")
+
+        print("Enemy's turn")
+        print("{---------------------------------------------------------------}")
+        for enemy_key in self.enemiesDict:
+            for inst in en_inst[enemy_key]:
+                if not inst.check_dead():
+                    enemy_dmg = inst.choose_ability()
+                    self.character.current_health -= enemy_dmg
+        print("{---------------------------------------------------------------}")
+
         #check won DOESN"T WORK YET -> FIX
         total_left = 0
         for enemy_key in self.enemiesDict:
             total_left += len(self.enemiesDict[enemy_key])
         if total_left == 0:
             return "WON"
-
-        for enemy_key in self.enemiesDict:
-            for inst in en_inst[enemy_key]:
-                if not inst.check_dead():
-                    enemy_dmg = inst.choose_ability()
-                    self.character.current_health -= enemy_dmg
 
         return en_inst
 
