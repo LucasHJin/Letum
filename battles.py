@@ -4,6 +4,17 @@ from enemies import Skeleton
 from enemies import Demon
 import os
 
+#TO DO:
+'''
+ADD REFRESH HP AND LEVEL UP
+FIX UP UI (MESSAGES)
+ADD ALL THE NECESSARY STATUS EFFECTS
+CHANGE THE INIT FOR ALL OTHER CLASSES
+ADD ARMOUR CLASS TO BATTLES
+ADD ROUNDING
+MAYBE ADD MESSAGE SAYING YOU HAVE SLAIN AN ENEMY IF THEY DIE
+'''
+
 class Battle:
     def __init__(self, enemiesDict, character, weapon):
         self.enemiesDict = enemiesDict #dict with list of common, elite, boss numbers for each enemy
@@ -18,6 +29,7 @@ class Battle:
         while status != "DEAD" and status != "WON":
             os.system('cls')
             status = self.turn(status)
+        #REFRESH HP AND LEVEL UP?
 
     def turn(self, en_inst): #REMEMBER ADD COOLDOWNS
         #have each enemy and character go once in a turn (loop iterate) AND check for death and if so remove that character
@@ -30,23 +42,31 @@ class Battle:
             print("What do you want to do?")
             for i in range(len(self.weapon.abilityDict[self.weapon.rarity])-1):
                 print("  ["+str(i+1)+"] "+self.weapon.abilityDict[self.weapon.rarity][i])
-            if self.character.inventory["Health Potion"]>0:
+            if self.character.inventory["Health Potion"]>0 and self.character.current_health != self.character.health:
                 print("  ["+str(i+2)+"] Use a Health Potion ("+str(self.character.inventory["Health Potion"])+"X)")
             choice = input("  >>  ")
             check_answer = False
             for j in range(len(self.weapon.abilityDict[self.weapon.rarity])):
                 if choice == str(j+1):
-                    check_answer = True
+                    if choice != str(len(self.weapon.abilityDict[self.weapon.rarity])):
+                        check_answer = True
+                    else:
+                        if self.character.inventory["Health Potion"] > 0 and self.character.current_health != self.character.health:
+                            check_answer = True
             while not check_answer:
-                print("That was not one of the options. The options are:")
+                print("Sorry, you can't do that. The options are:")
                 for i in range(len(self.weapon.abilityDict[self.weapon.rarity])-1):
                     print("  ["+str(i+1)+"] "+self.weapon.abilityDict[self.weapon.rarity][i])
-                if self.character.inventory["Health Potion"]>0:
+                if self.character.inventory["Health Potion"]>0 and self.character.current_health != self.character.health:
                     print("  ["+str(i+2)+"] Use a Health Potion ("+str(self.character.inventory["Health Potion"])+"X)")
                 choice = input("  >>  ")
                 for j in range(len(self.weapon.abilityDict[self.weapon.rarity])):
                     if choice == str(j+1):
-                        check_answer = True
+                        if choice != str(len(self.weapon.abilityDict[self.weapon.rarity])):
+                            check_answer = True
+                        else:
+                            if self.character.inventory["Health Potion"] > 0 and self.character.current_health != self.character.health:
+                                check_answer = True
             choice_action = self.weapon.abilityDict[self.weapon.rarity][int(choice)-1]
             if choice_action == "Slash":
                 dmg = self.weapon.slash()
@@ -56,7 +76,7 @@ class Battle:
                 dmg = self.weapon.holy_blow()
             elif choice_action == "Holy Aura":
                 dmg = self.weapon.holy_aura()
-            else:
+            elif choice_action == "HP" and self.character.inventory["Health Potion"]>0:
                 #ABLE TO USE HEALTH POTION EVEN WITH FULL HEALTH PROBLEM
                 dmg = 0
                 self.character.use_health_potion()
@@ -90,21 +110,31 @@ class Battle:
                     for inst in en_inst[enemy_key]:
                         if inst.name == who:
                             inst.health -= dmg
+                if choice_action == "Slash":
+                    print("You slash your sword through the enemy's grotesque cadaver. You deal", dmg, "damage.")
+                elif choice_action == "Wide Slash":
+                    print("Throwing a wide slash, you hit all the enemies, dealing", dmg, "damage to each one of them.")
+                elif choice_action == "Holy Blow":
+                    print("Smiting the enemy down, you deal", dmg, "damage.")
+                elif choice_action == "Holy Aura":
+                    print("You call upon the holy power of the Gods and buff yourself.")
+                    print(" ~ All your stats have been increased by 5 for 2 turns. ~ ")
         #enemy turn
-        for enemy_key in self.enemiesDict:
+        for enemy_key in self.enemiesDict: #DAMAGE WORKS
             for inst in en_inst[enemy_key]:
-                if inst.check_dead:
+                if inst.check_dead():
                     #https://www.toppr.com/guides/python-guide/references/methods-and-functions/methods/built-in/isinstance/python-isinstance-2/#:~:text=The%20isinstance%20()%20function%20checks,parent%20class%20of%20an%20object.
                     if not isinstance(inst, Skeleton): 
                         #https://www.w3schools.com/python/python_lists_remove.asp
-                        en_inst[enemy_key.remove(inst)] 
+                        en_inst[enemy_key].remove(inst) 
                     else:
                         if not inst.used:
                             inst.used = True
                             inst.escape_death()
                         else:
-                            en_inst[enemy_key.remove(inst)]
+                            en_inst[enemy_key].remove(inst)
         
+        #check won DOESN"T WORK YET -> FIX
         total_left = 0
         for enemy_key in self.enemiesDict:
             total_left += len(self.enemiesDict[enemy_key])
@@ -113,7 +143,7 @@ class Battle:
 
         for enemy_key in self.enemiesDict:
             for inst in en_inst[enemy_key]:
-                if not inst.check_dead:
+                if not inst.check_dead():
                     enemy_dmg = inst.choose_ability()
                     self.character.current_health -= enemy_dmg
 

@@ -152,7 +152,7 @@ player.refresh_stats()
 player.add_inventory(contain)
 
 eyDict = {
-    'Rat': [3, 1, 1],
+    'Rat': [3, 1],
     'Goblin': [],
     'Skeleton': [],
     'Demon': []

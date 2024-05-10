@@ -26,7 +26,7 @@ class Character:
     def refresh_current_health(self): #for after level up or clear room (REMEMBER)!
         self.current_health = self.health
 
-    def check_status_bar(self):
+    def check_status_bar(self): # STILL NEED TO DO
         for effect in self.tabbar.keys():
             if effect=="Poison":
                 pDamage = self.health*0.05
@@ -53,7 +53,7 @@ class Character:
         return dead
 
     def calc_health(self):
-        self.health = 100 + self.stats['con'] // 2
+        self.health = 100 + self.stats['con'] * 2
 
     def calc_ac(self):
         self.armor_class = 35 + self.stats['dex'] // 3

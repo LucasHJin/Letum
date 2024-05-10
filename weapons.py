@@ -17,7 +17,7 @@ class Weapon:
 
 class Sword(Weapon):
     def __init__(self, name, rarity, character):
-        super().__init__(name=name, rarity=rarity, damage=7)
+        super().__init__(name=name, rarity=rarity, damage=50) #CHANGE BACK LATER
         self.character=character
         self.abilityDict = {
             'Common': ['Slash', 'HP'],
@@ -29,17 +29,14 @@ class Sword(Weapon):
 
     def slash(self):
         dmg = self.damage_multiplier * (self.damage + self.character.attack_damage // 2) * random.uniform(1, 1.1)
-        print("You slash your sword through the enemy's grotesque cadaver. You deal", dmg, "damage.")
         return dmg
     
     def wide_slash (self):
         dmg = self.damage_multiplier * (self.damage + self.character.attack_damage) * random.uniform(0.5, 0.6)
-        print("Throwing a wide slash, you hit all the enemies, dealing", dmg, "damage to each one of them.")
         return dmg
     
     def holy_blow(self):
         dmg = self.damage_multiplier * (self.damage + self.character.attack_damage) * random.uniform(2, 3.5)
-        print("Smiting the enemy down, you deal", dmg, "damage.")
         return dmg
     
     def holy_aura(self):
@@ -47,9 +44,7 @@ class Sword(Weapon):
             self.character.tabbar["Buffed"] += 2
         else:
             self.character.tabbar["Buffed"] = 2
-        print("You call upon the holy power of the Gods and buff yourself.")
-        print(" ~ All your stats have been increased by 5 for 2 turns. ~ ")
-        return "Buffed"
+        return 0
     
 
 
