@@ -23,6 +23,7 @@ class Rat(Enemy):
         self.multiplier = self.ENEMY_TPE_MULT[tpe]
         self.health = int(random.randint(50, 75) * self.multiplier)
         self.damage = random.randint(4, 5) * self.multiplier
+        self.exp = random.randint(8, 12) * self.multiplier
 
     def choose_ability(self):
         if not self.check_dead():
@@ -63,6 +64,7 @@ class Goblin(Enemy):
         self.multiplier = self.ENEMY_TPE_MULT[tpe]
         self.health = int(random.randint(75, 100) * self.multiplier)
         self.damage = random.randint(7, 8) * self.multiplier
+        self.exp = random.randint(15, 20) * self.multiplier
 
     def choose_ability(self):
         if not self.check_dead():
@@ -104,6 +106,8 @@ class Skeleton(Enemy):
         self.multiplier = self.ENEMY_TPE_MULT[tpe]
         self.health = int(random.randint(75, 85) * self.multiplier)
         self.damage = random.randint(6, 7) * self.multiplier
+        self.exp = random.randint(25, 30) * self.multiplier
+        self.used = False
 
     def choose_ability(self):
         """
@@ -116,7 +120,7 @@ class Skeleton(Enemy):
             if chosenAbility[0] == 'Slash':
                 return self.slash()
             else:
-                return self.block()
+                return self.stun()
         else:
             return "DEAD"
 
@@ -126,7 +130,7 @@ class Skeleton(Enemy):
         return damage
     
     def stun(self):
-        print(self.name, "lunges at you, disassembling and assembling itself, trapping you for one turn.")
+        print(self.name, "lunges at you, disassembling and assembling itself, attempting to trap you.")
         if self.character.tabbar["Stunned"]:
             self.character.tabbar["Stunned"] += 1
         else:
@@ -152,6 +156,7 @@ class Demon(Enemy):
         self.multiplier = self.ENEMY_TPE_MULT[tpe]
         self.health = int(random.randint(100, 175) * self.multiplier)
         self.damage = random.randint(10, 11) * self.multiplier
+        self.exp = random.randint(50, 100) * self.multiplier
 
 
     def choose_ability(self):
@@ -178,11 +183,11 @@ class Demon(Enemy):
         if self.character.tabbar["Weakened"]>0:
             damage = int(self.multiplier * random.uniform(1, 1.2) * 2.5 * (self.damage + self.character.health*0.05) * (100/(100+self.character.armor_class)))
             print(self.name, "burns you with hellfire which is strengthed by your weakness. The flames burn you for", damage, "damage.")
+            self.character.tabbar["Weakened"]-=1
             return damage
         else:
-            print(self.name, "curses, bemoaning the fact that you aren't weakened. His flames deal", damage, "damage.")
             damage = int(self.multiplier * random.uniform(1, 1.1) * (self.damage + self.character.health*0.025) * (100/(100+self.character.armor_class)))
-            print("")
+            print(self.name, "curses, bemoaning the fact that you aren't weakened. His flames deal", damage, "damage.")
             return damage
 
     def check_dead(self):

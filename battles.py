@@ -3,15 +3,12 @@ from enemies import Goblin
 from enemies import Skeleton
 from enemies import Demon
 import os
+import math
+import random
 
 #TO DO:
 '''
-ADD REFRESH HP AND LEVEL UP
-- CHANGE LEVEL UP TO CONTINUOSULY BE CALLED AND JUST KEEP TRACK OF AVAILABLE STATUS POINTS
-- END OF EVERY BATTLE, OFFER TO ALLOCATE STAT POINTS
-ADD ALL THE NECESSARY STATUS EFFECTS
-CHANGE THE INIT FOR ALL OTHER CLASSES -> DONE TO BE CHECKED
-MAKE GAME FINISHED WORK!!! (I.e. WHEN ENEMY IS KILLED)
+ADD COOLDOWNS AND ENEMIES DROP GOLD AND ARMOUR?!!!
 '''
 
 class Battle:
@@ -24,34 +21,72 @@ class Battle:
     def entire_game(self):
         if self.turn_count == 1:
             ene_inst = self.create_enemy_instances()
+        print("Looking into the distance, you see:")
+        for enemy_key in self.enemiesDict:
+            counter = 0
+            for amount_enemies in self.enemiesDict[enemy_key]:
+                if counter==0:
+                    print("  [X"+str(amount_enemies)+"]", "Common", enemy_key)
+                elif counter==1:
+                    print("  [X"+str(amount_enemies)+"]", "Elite", enemy_key)
+                else:
+                    print("  [X"+str(amount_enemies)+"]", "Boss", enemy_key)
         status = self.turn(ene_inst)
         while status != "DEAD" and status != "WON":
-            #os.system('cls')
+            input("[Press any key to continue.]")
+            os.system('cls')
             status = self.turn(status)
         if status == "DEAD":
             return "DEAD"
         else:
-            #REFRESH HP AND LEVEL UP?
-            temp = 1
+            #refresh hp
+            self.character.refresh_current_health()
+            #level up
+            if self.character.exp>self.character.needed_exp:
+                self.character.all_level_up()
             return "WON"
 
-    def turn(self, en_inst): #REMEMBER ADD COOLDOWNS
-        #have each enemy and character go once in a turn (loop iterate) AND check for death and if so remove that character
+    def turn(self, en_inst): 
+        #player turn
+        print("\nYour Turn:")
+        print("{---------------------------------------------------------------}")
+        dodge_stun = 0
+        self.character.check_status_bar()
+        print("  >>  Health:", self.character.current_health)
+        #case 1: dead
         if self.character.check_dead():
             print("Having taken too many blows, you succumb to your wounds.")
             return "DEAD"
-        else:
-            #player turn
-            print("\nYour Turn:")
-            print("{---------------------------------------------------------------}")
-            print("  >>  Health:", self.character.current_health)
-            
+        #case 2: check stunned
+        elif self.character.tabbar["Stunned"]>0:
+            PROBABILITY_FACTOR = 2/3
+            #https://www.w3schools.com/python/ref_math_log.asp
+            probability = PROBABILITY_FACTOR * math.log(self.character.tabbar["Stunned"]+1)
+            #check if skip turn based off probability
+            if random.random() <= probability:
+                print("You were immobilized and lose 1 turn.")
+                dodge_stun = 1
+            else:
+                print("You dodge the skeleton and avoid being caught between their ribgcages.")
+            self.character.tabbar["Stunned"]=0
+        #case 3: normal turn
+        if (self.character.tabbar["Stunned"]==0 and dodge_stun==0):
             print("What do you want to do?")
             for i in range(len(self.weapon.abilityDict[self.weapon.rarity])-1):
                 print("  ["+str(i+1)+"] "+self.weapon.abilityDict[self.weapon.rarity][i])
             if self.character.inventory["Health Potion"]>0 and self.character.current_health != self.character.health:
                 print("  ["+str(i+2)+"] Use a Health Potion ("+str(self.character.inventory["Health Potion"])+"X)")
+            print("  [V] View the enemy")
             choice = input("  >>  ")
+            if not choice.isdigit():
+                if choice.lower() == "v":
+                    print("{---------------------------------------------------------------}")
+                    print("Enemy:")
+                    for enemy_key in self.enemiesDict:
+                        for inst in en_inst[enemy_key]:
+                            print("  ["+inst.name+"] - Current Health:", inst.health)
+                    input("[Enter any key to continue.]")
+                    print("{---------------------------------------------------------------}")
             check_answer = False
             for j in range(len(self.weapon.abilityDict[self.weapon.rarity])):
                 if choice == str(j+1):
@@ -61,12 +96,22 @@ class Battle:
                         if self.character.inventory["Health Potion"] > 0 and self.character.current_health != self.character.health:
                             check_answer = True
             while not check_answer:
-                print("Sorry, you can't do that. The options are:")
+                print("Enter a new choice. The options are:")
                 for i in range(len(self.weapon.abilityDict[self.weapon.rarity])-1):
                     print("  ["+str(i+1)+"] "+self.weapon.abilityDict[self.weapon.rarity][i])
                 if self.character.inventory["Health Potion"]>0 and self.character.current_health != self.character.health:
                     print("  ["+str(i+2)+"] Use a Health Potion ("+str(self.character.inventory["Health Potion"])+"X)")
+                print("  [V] View the enemy")
                 choice = input("  >>  ")
+                if not choice.isdigit():
+                    if choice.lower() == "v":
+                        print("{---------------------------------------------------------------}")
+                        print("Enemy:")
+                        for enemy_key in self.enemiesDict:
+                            for inst in en_inst[enemy_key]:
+                                print("  ["+inst.name+"] - Current Health:", inst.health)
+                        input("[Enter any key to continue.]")
+                        print("{---------------------------------------------------------------}")
                 for j in range(len(self.weapon.abilityDict[self.weapon.rarity])):
                     if choice == str(j+1):
                         if choice != str(len(self.weapon.abilityDict[self.weapon.rarity])):
@@ -83,6 +128,11 @@ class Battle:
                 dmg = self.weapon.holy_blow()
             elif choice_action == "Holy Aura":
                 dmg = self.weapon.holy_aura()
+                print("You call upon the holy power of the Gods and buff yourself.")
+                print(" ~ All your stats have been increased by 5 for 2 turns. ~ ")
+                print("  >>  Strength:", self.character.stats['str'], "→", self.character.stats['str']+5)
+                print("  >>  Dexterity:", self.character.stats['dex'], "→", self.character.stats['dex']+5)
+                print("  >>  Constitution:", self.character.stats['con'], "→", self.character.stats['con']+5)
             elif choice_action == "HP" and self.character.inventory["Health Potion"]>0 and self.character.current_health!=self.character.health:
                 dmg = 0
                 self.character.use_health_potion()
@@ -90,7 +140,7 @@ class Battle:
                 for enemy_key in self.enemiesDict:
                     for inst in en_inst[enemy_key]:
                         inst.health -= dmg
-            elif choice_action != "HP":
+            elif choice_action != "HP" and choice_action != "Holy Aura":
                 print("Who do you wish to attack? (Make sure to type the name exactly as displayed.)")
                 for enemy_key in self.enemiesDict:
                     for inst in en_inst[enemy_key]:
@@ -121,28 +171,40 @@ class Battle:
                     print("Throwing a wide slash, you hit all the enemies, dealing", dmg, "damage to each one of them.")
                 elif choice_action == "Holy Blow":
                     print("Smiting the enemy down, you deal", dmg, "damage.")
-                elif choice_action == "Holy Aura":
-                    print("You call upon the holy power of the Gods and buff yourself.")
-                    print(" ~ All your stats have been increased by 5 for 2 turns. ~ ")
                 
-        #enemy turn
+                
         for enemy_key in self.enemiesDict: 
-            for inst in en_inst[enemy_key]:
+            #iterate over copy -> no uninteded problems if multiple enemies are killed at the same time
+            for inst in list(en_inst[enemy_key]):
                 if inst.check_dead():
                     #https://www.toppr.com/guides/python-guide/references/methods-and-functions/methods/built-in/isinstance/python-isinstance-2/#:~:text=The%20isinstance%20()%20function%20checks,parent%20class%20of%20an%20object.
                     if not isinstance(inst, Skeleton): 
                         #https://www.w3schools.com/python/python_lists_remove.asp
-                        en_inst[enemy_key].remove(inst) 
                         print(" ~ Congratulations, you have slain an enemy! ["+inst.name+"] ~ ")
+                        print(" ~ +"+str(int(inst.exp))+" experience ~ ")
+                        self.character.exp = int(self.character.exp+inst.exp)
+                        en_inst[enemy_key].remove(inst) 
                     else:
                         if not inst.used:
                             inst.used = True
                             inst.escape_death()
                         else:
-                            en_inst[enemy_key].remove(inst)
                             print(" ~ You have overcome a skeleton's innate trait and slain them. ["+inst.name+"] ~ ")
-        print("{---------------------------------------------------------------}\n")
+                            print(" ~ +"+str(int(inst.exp))+" experience ~ ")
+                            self.character.needed_exp += inst.exp
+                            en_inst[enemy_key].remove(inst)
 
+        print("{---------------------------------------------------------------}")
+        input("[Press any key to continue.]\n")
+
+        #check if won
+        total_left = 0
+        for enemy_key in self.enemiesDict:
+            total_left += len(en_inst[enemy_key])
+        if total_left == 0:
+            return "WON"
+
+        #enemy turn
         print("Enemy's turn")
         print("{---------------------------------------------------------------}")
         for enemy_key in self.enemiesDict:
@@ -152,12 +214,6 @@ class Battle:
                     self.character.current_health -= enemy_dmg
         print("{---------------------------------------------------------------}")
 
-        #check won DOESN"T WORK YET -> FIX
-        total_left = 0
-        for enemy_key in self.enemiesDict:
-            total_left += len(self.enemiesDict[enemy_key])
-        if total_left == 0:
-            return "WON"
 
         return en_inst
 

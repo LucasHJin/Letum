@@ -31,7 +31,7 @@ def check_profile(person, wpn):
     print("STATUS")
     print(person.name)
     print("Level:", person.level)
-    print("Experience: "+str(person.exp)+"/"+str(person.level*50))
+    print("Experience: "+str(person.exp)+"/"+str(person.needed_exp))
     print("{---------------------------------------------------------------}")
     print("  >>  Health:", person.health)
     print("  >>  Weapon:", wpn.name)
@@ -40,8 +40,7 @@ def check_profile(person, wpn):
     print("  >>  Dexterity:", person.stats['dex'])
     print("  >>  Constitution:", person.stats['con'])
     print("{---------------------------------------------------------------}")
-    print(" ~ Enter any button to return. ~ ")
-    input()
+    input("[Enter any button to return.]")
 
 def check_inventory(person):
     os.system('cls')
@@ -50,8 +49,8 @@ def check_inventory(person):
     for i in person.inventory.keys():
         print(i+":", person.inventory[i])
     print("{---------------------------------------------------------------}")
-    print(" ~ Enter any button to return. ~ ")
-    input()
+    input("[Enter any button to return.]")
+
 
 def print_options(statements):
     for k, v in statements.items():
@@ -146,24 +145,12 @@ print("")
 #player = Character(name=name, srn=int(stats_input[0]), dex=int(stats_input[1]), con=int(stats_input[2]), level=1, exp=0)
 #only do ^^ if there are optional paramaters that could be passed but aren't
 player = Character(name, int(stats_input[0]), int(stats_input[1]), int(stats_input[2]), 1, 0)
-weapon = Sword(name=wpn_name, rarity="Common", character=player)
+weapon = Sword(name=wpn_name, rarity="Legendary", character=player)
 #refresh stats to set proper stats (like initializing) for player
 player.refresh_stats()
 #add obtained items to inventory
 player.add_inventory(contain)
 
-eyDict = {
-    'Rat': [3, 1],
-    'Goblin': [],
-    'Skeleton': [],
-    'Demon': []
-}
-
-rnd = Battle(eyDict, player, weapon)
-
-hold = rnd.entire_game()
-
-print("BATTLE ENDED", hold)
 
 """
 print(" ~ If you want to check your inventory, press [I] when prompted for an input. ~ ")
@@ -197,3 +184,17 @@ while choice.lower != "c":
 """
 
 
+eyDict = {
+    'Rat': [4],
+    'Goblin': [],
+    'Skeleton': [],
+    'Demon': []
+}
+
+rnd = Battle(eyDict, player, weapon)
+
+result = rnd.entire_game()
+
+
+#while result!="DEAD":
+    #print

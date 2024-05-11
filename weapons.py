@@ -17,7 +17,7 @@ class Weapon:
 
 class Sword(Weapon):
     def __init__(self, name, rarity, character):
-        super().__init__(name=name, rarity=rarity, damage=50) #CHANGE BACK LATER
+        super().__init__(name=name, rarity=rarity, damage = random.randint(6, 9)) #CHANGE BACK LATER
         self.character=character
         self.abilityDict = {
             'Common': ['Slash', 'HP'],
@@ -32,7 +32,7 @@ class Sword(Weapon):
         return dmg
     
     def wide_slash (self):
-        dmg = int(self.damage_multiplier * (self.damage + self.character.attack_damage) * random.uniform(0.5, 0.6))
+        dmg = int(self.damage_multiplier * (self.damage + self.character.attack_damage // 1.5) * random.uniform(0.5, 0.6))
         return dmg
     
     def holy_blow(self):
@@ -41,30 +41,9 @@ class Sword(Weapon):
     
     def holy_aura(self):
         if self.character.tabbar["Buffed"]:
-            self.character.tabbar["Buffed"] += 2
+            self.character.tabbar["Buffed"] += 1
         else:
-            self.character.tabbar["Buffed"] = 2
+            self.character.tabbar["Buffed"] = 1
         return 0
     
 
-
-
-"""
-class Dagger(Weapon):
-    def __init__(self, name):
-        super().__init__(name=name)
-
-    def swipe(self, character):
-        crit = random.randint(1, 3)
-        return self.damage_multiplier * self.damage // 2 * crit + character.attack_damage // 2
-
-
-class Staff(Weapon):
-    def __init__(self, name):
-        super().__init__(name=name)
-
-    def fireball(self, character):
-        possible = random.randint(self.damage-6, self.damage+6)
-        return self.damage_multiplier * possible + character.attack_damage // 2
-
-"""
