@@ -26,6 +26,13 @@ class Sword(Weapon):
             'Epic': ['Slash', 'Wide Slash', 'Holy Blow', 'HP'],
             'Legendary': ['Slash', 'Wide Slash', 'Holy Blow', 'Holy Aura', 'HP']
         }
+        self.cooldownsDict = {
+            'Slash': 0,
+            'Wide Slash': 0,
+            'Holy Blow': 0,
+            'Holy Aura': 0
+        }
+
 
     def slash(self):
         dmg = int(self.damage_multiplier * (self.damage + self.character.attack_damage // 2) * random.uniform(1, 1.1))

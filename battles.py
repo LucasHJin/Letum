@@ -8,7 +8,7 @@ import random
 
 #TO DO:
 '''
-ADD COOLDOWNS AND ENEMIES DROP GOLD AND ARMOUR?!!!
+ENEMIES DROP GOLD AND ARMOUR?!!!
 '''
 
 class Battle:
@@ -53,6 +53,15 @@ class Battle:
         dodge_stun = 0
         self.character.check_status_bar()
         print("  >>  Health:", self.character.current_health)
+        for ability_cooldown in self.weapon.cooldownsDict:
+            if self.weapon.cooldownsDict[ability_cooldown]>0:
+                self.weapon.cooldownsDict[ability_cooldown] -= 1
+
+
+        for ability_cooldown in self.weapon.cooldownsDict:
+            print(ability_cooldown, self.weapon.cooldownsDict[ability_cooldown])
+
+
         #case 1: dead
         if self.character.check_dead():
             print("Having taken too many blows, you succumb to your wounds.")
@@ -73,7 +82,10 @@ class Battle:
         if (self.character.tabbar["Stunned"]==0 and dodge_stun==0):
             print("What do you want to do?")
             for i in range(len(self.weapon.abilityDict[self.weapon.rarity])-1):
-                print("  ["+str(i+1)+"] "+self.weapon.abilityDict[self.weapon.rarity][i])
+                if self.weapon.cooldownsDict[self.weapon.abilityDict[self.weapon.rarity][i]]==0:
+                    print("  ["+str(i+1)+"] "+self.weapon.abilityDict[self.weapon.rarity][i])
+                else:
+                    print("X ["+str(i+1)+"] "+self.weapon.abilityDict[self.weapon.rarity][i], "→", self.weapon.cooldownsDict[self.weapon.abilityDict[self.weapon.rarity][i]], "turn cooldown remaining")
             if self.character.inventory["Health Potion"]>0 and self.character.current_health != self.character.health:
                 print("  ["+str(i+2)+"] Use a Health Potion ("+str(self.character.inventory["Health Potion"])+"X)")
             print("  [V] View the enemy")
@@ -91,14 +103,19 @@ class Battle:
             for j in range(len(self.weapon.abilityDict[self.weapon.rarity])):
                 if choice == str(j+1):
                     if choice != str(len(self.weapon.abilityDict[self.weapon.rarity])):
-                        check_answer = True
+                        #reorganized into 2 if statements instead of and for legibility
+                        if self.weapon.cooldownsDict[self.weapon.abilityDict[self.weapon.rarity][int(choice)-1]]==0:
+                            check_answer = True
                     else:
                         if self.character.inventory["Health Potion"] > 0 and self.character.current_health != self.character.health:
                             check_answer = True
             while not check_answer:
                 print("Enter a new choice. The options are:")
                 for i in range(len(self.weapon.abilityDict[self.weapon.rarity])-1):
-                    print("  ["+str(i+1)+"] "+self.weapon.abilityDict[self.weapon.rarity][i])
+                    if self.weapon.cooldownsDict[self.weapon.abilityDict[self.weapon.rarity][i]]==0:
+                        print("  ["+str(i+1)+"] "+self.weapon.abilityDict[self.weapon.rarity][i])
+                    else:
+                        print("X ["+str(i+1)+"] "+self.weapon.abilityDict[self.weapon.rarity][i], "→", self.weapon.cooldownsDict[self.weapon.abilityDict[self.weapon.rarity][i]], "turn cooldown remaining")
                 if self.character.inventory["Health Potion"]>0 and self.character.current_health != self.character.health:
                     print("  ["+str(i+2)+"] Use a Health Potion ("+str(self.character.inventory["Health Potion"])+"X)")
                 print("  [V] View the enemy")
@@ -115,7 +132,8 @@ class Battle:
                 for j in range(len(self.weapon.abilityDict[self.weapon.rarity])):
                     if choice == str(j+1):
                         if choice != str(len(self.weapon.abilityDict[self.weapon.rarity])):
-                            check_answer = True
+                            if self.weapon.cooldownsDict[self.weapon.abilityDict[self.weapon.rarity][int(choice)-1]]==0:
+                                check_answer = True
                         else:
                             if self.character.inventory["Health Potion"] > 0 and self.character.current_health != self.character.health:
                                 check_answer = True
@@ -124,10 +142,13 @@ class Battle:
                 dmg = self.weapon.slash()
             elif choice_action == "Wide Slash":
                 dmg = self.weapon.wide_slash()
+                self.weapon.cooldownsDict[choice_action]=3
             elif choice_action == "Holy Blow":
                 dmg = self.weapon.holy_blow()
+                self.weapon.cooldownsDict[choice_action]=3
             elif choice_action == "Holy Aura":
                 dmg = self.weapon.holy_aura()
+                self.weapon.cooldownsDict[choice_action]=4
                 print("You call upon the holy power of the Gods and buff yourself.")
                 print(" ~ All your stats have been increased by 5 for 2 turns. ~ ")
                 print("  >>  Strength:", self.character.stats['str'], "→", self.character.stats['str']+5)
@@ -140,6 +161,7 @@ class Battle:
                 for enemy_key in self.enemiesDict:
                     for inst in en_inst[enemy_key]:
                         inst.health -= dmg
+                print("Throwing a wide slash, you hit all the enemies, dealing", dmg, "damage to each one of them.")
             elif choice_action != "HP" and choice_action != "Holy Aura":
                 print("Who do you wish to attack? (Make sure to type the name exactly as displayed.)")
                 for enemy_key in self.enemiesDict:
@@ -167,12 +189,9 @@ class Battle:
                             inst.health -= dmg
                 if choice_action == "Slash":
                     print("You slash your sword through the enemy's grotesque cadaver. You deal", dmg, "damage.")
-                elif choice_action == "Wide Slash":
-                    print("Throwing a wide slash, you hit all the enemies, dealing", dmg, "damage to each one of them.")
                 elif choice_action == "Holy Blow":
                     print("Smiting the enemy down, you deal", dmg, "damage.")
-                
-                
+            
         for enemy_key in self.enemiesDict: 
             #iterate over copy -> no uninteded problems if multiple enemies are killed at the same time
             for inst in list(en_inst[enemy_key]):
