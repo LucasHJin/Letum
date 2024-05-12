@@ -11,17 +11,11 @@ from weapons import Sword
 from battles import Battle
 import os
 import time
+from shop import Shop
+import random
 #https://stackoverflow.com/questions/60608275/how-can-i-print-text-so-it-looks-like-its-being-typed-out MAYBE
 
 #FUNCTIONS
-def look_around(enemyNumber, enemyType, itemNumber, itemType):
-    if enemyNumber>0:
-        print("Stuff", enemyType)
-    if itemNumber>0:
-        print("As you look around, examining every nook and cranny, you see a", itemType, "hidden in the corner.")
-    if itemNumber<=0 and enemyNumber<=0:
-        print("It appears as if there is nothing in this room.")
-
 def open_chest(items):
     for i in items.keys():
         print(" ~ You have received "+str(items[i])+" x ["+i+"]. ~ ")
@@ -102,6 +96,7 @@ while check:
         check = False
 
 print("\n ~ Thank you for revealing our stats. ~ ")
+print(" ~ Your goal is simple. It is to survive as long as possible against an endless horde of monsters. ~ ")
 print(" ~ Good luck, and may you leave behind a legacy worthy of your name. ~ ")
 
 time.sleep(1.5)
@@ -119,7 +114,7 @@ choice = input("  >>  ")
 while choice.lower() != "l":
     choice = not_option(possible)
 
-look_around(0, 0, 1, "rotting wooden chest")
+print("As you look around, you see a rotten wooden chest a few metres to your left. You approach it, wondering what it could possibly contain.")
 
 possible = {"O": "Open The Chest"}
 print("What will you do?")
@@ -128,10 +123,9 @@ choice = input("  >>  ")
 while choice.lower() != "o":
     choice = not_option(possible)
 
-print("\nAs you open the rotting chest, its hinges slowly creaking like the gutteral roar of a ghastly beast, you notice a reflective piece of metal within it. Looking closer, you make out the shape of a sword. Suddenly, it dissapears, followed by vocal notifications, seemingly from the same 'Creator' you spoke to previously.")
+print("\nAs you open the rotting chest, its hinges slowly creaking like the gutteral roar of a ghastly beast, you notice a reflective piece of metal within it. Looking closer, you make out the shape of a sword. Suddenly, it disappears, followed by vocal notifications, seemingly from the same 'Creator' you spoke to previously.")
 
 wpn_name = "Old Iron Sword"
-
 
 contain = {
     'Gold': 100,
@@ -140,22 +134,20 @@ contain = {
 }
 open_chest(contain)
 
-print("")
-
 #player = Character(name=name, srn=int(stats_input[0]), dex=int(stats_input[1]), con=int(stats_input[2]), level=1, exp=0)
 #only do ^^ if there are optional paramaters that could be passed but aren't
 player = Character(name, int(stats_input[0]), int(stats_input[1]), int(stats_input[2]), 1, 0)
-weapon = Sword(name=wpn_name, rarity="Legendary", character=player)
+weapon = Sword(name=wpn_name, rarity="Common", character=player)
 #refresh stats to set proper stats (like initializing) for player
 player.refresh_stats()
 #add obtained items to inventory
 player.add_inventory(contain)
 
-
-"""
-print(" ~ If you want to check your inventory, press [I] when prompted for an input. ~ ")
-print(" ~ If you want to check your status, press [S] when prompted for an input. ~ ")
-print(" ~ Try it out right now, or press [C] to continue. ~ ")
+print(" ~ This is a magical chest. Each time you defeat a wave of monsters, it will be refilled with random items. It may contain gold, health potions, weapons or armor. ~ ")
+print(" ~ You might have seen notifications earlier stating that you obtained 100 Gold and 5 Health Potions. All material things will be put in your inventory or equipped onto your body. To check your equipped items, stats, health and more, you will need to access your status. ~ ")
+print(" ~ To check what is in your inventory, press [I] when prompted for an input. ~ ")
+print(" ~ If you want to check your status and your equipped items, press [S] when prompted for an input. ~ ")
+print(" ~ Once finished learning the basics, press [C] to continue. ~ ")
 
 possible = {
     "I": "Open Inventory",
@@ -165,7 +157,7 @@ possible = {
 print("\nWhat will you do?")
 print_options(possible)
 choice = input("  >>  ")
-while choice.lower != "c":
+while choice.lower() != "c":
     if choice.lower() == "i":
         check_inventory(player)
         os.system('cls')
@@ -181,20 +173,82 @@ while choice.lower != "c":
         os.system('cls')
         print_options(possible)
         choice = input("  >>  ")
-"""
+
+print("As you wonder what to do now, you here once again the voice in your head.")
+print(" ~ I'm unable to say much else due to restrictions but I will try to reveal as much as possible. ~ ")
+print(" ~ Very soon, you will be thrust into your first battle. You will have to fight all sorts of horrendous monsters but, if you manage to escape unscathed, you will be much stronger. ~ ")
+print(" ~ Additionally, there is one more way to get better equipment and weapons. ~")
+print(" ~ Look to your right. ~")
+print("Looking to your right, you see a stall, populated with a human like figure. Looking closer, you realise it is a dwarf. Wondering how you never noticed it, the voice suddenly exclaims")
+print(" ~ Be not scared. I teleported my loyal follower, Kun, to your location to aid you in your survival. He will sell you items and... who knows, maybe he'll be able to help you with your mentality as well. ~")
+print("With that statement, you hear a sudden bang.")
+print(" ~ Sorry, it appears I am unable to say more. Good luck! ~ ")
 
 
 eyDict = {
-    'Rat': [4],
-    'Goblin': [],
-    'Skeleton': [],
-    'Demon': []
+    'Rat': [3, 0, 0],
+    'Goblin': [0, 0, 0],
+    'Skeleton': [0, 0, 0],
+    'Demon': [0, 0, 0]
 }
-
 rnd = Battle(eyDict, player, weapon)
+result_temp = "TEMP"
+round_counter = 0
 
-result = rnd.entire_game()
+#TO DO LATER
+shop = Shop()
 
+while result_temp != "DEAD":
+    possible = {
+        "I": "Open Inventory",
+        "S": "Open Status",
+        "B": "Buy Items from the Shop",
+        "F": "Fight the Next Round"
+    }
+    while choice.lower() != "f":
+        if choice.lower() == "i":
+            check_inventory(player)
+            os.system('cls')
+            print_options(possible)
+            choice = input("  >>  ")
+        elif choice.lower() == "s":
+            check_profile(player, weapon)
+            os.system('cls')
+            print_options(possible)
+            choice = input("  >>  ")
+        elif choice.lower() == "b":
+            shop.open_shop()
+            os.system('cls')
+            print_options(possible)
+            choice = input("  >>  ")
+        elif choice.lower() != "f":
+            print(" ~ That was not one of the options. The options are: ~ ")
+            os.system('cls')
+            print_options(possible)
+            choice = input("  >>  ")
 
-#while result!="DEAD":
-    #print
+    print("ROUND", round_counter+1)
+    print("{---------------------------------------------------------------}")
+    result = rnd.entire_game()
+    round_counter += 1
+    result_temp = result
+
+    generate_multipliers = {
+        'Rat': [5, 3, 1.5],    
+        'Goblin': [2.5, 1.8, 1.2], 
+        'Skeleton': [1.5, 1, 0.8], 
+        'Demon': [0.8, 0.3, 0.1]
+    }
+    #FIX AFTER FINISHING R1, GOES TO R2 WITH 0 IN EVERYTHING -> NEED TO GO THROUGH TOP PART AGAIN
+
+    for enemy in eyDict:
+        for enemy_type_num in range(len(eyDict[enemy])):
+            #amount of enemies
+            amount_enemies = round_counter//10 + random.randint(0, round_counter//5)
+            #multiplier for having more weaker enemies and less stronger enemies
+            amount_enemies *= int(generate_multipliers[enemy][enemy_type_num])
+            eyDict[enemy][enemy_type_num] = amount_enemies
+
+    rnd.enemiesDict = eyDict
+
+print("YOU SURVIVED", round_counter, "ROUNDS. CONGRATULATIONS,", player.name+".")
