@@ -6,10 +6,6 @@ import os
 import math
 import random
 
-#TO DO:
-'''
-ENEMIES DROP GOLD AND ARMOUR?!!!
-'''
 
 class Battle:
     def __init__(self, enemiesDict, character, weapon):

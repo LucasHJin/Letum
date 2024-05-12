@@ -6,19 +6,30 @@ This is a DnD based text-adventure role playing game. Based on the timeless genr
 History:
 April 13, 2023: Program Creation
 """
+#NOT ONE OF THE OPTIONS CODE APPEARING RANDOMLY
+#ENEMIES DROP ARMOUR AND WEAPONS?!!!
+#FIX AFTER FINISHING R1, GOES TO R2 WITH 0 IN EVERYTHING -> NEED TO GO THROUGH TOP PART AGAIN
+#ADD EQUIPPING WEAPONS AND ARMOR
+
 from characters import Character
 from weapons import Sword
 from battles import Battle
+from armor import Head
+from armor import Body
+from armor import Ring
 import os
 import time
-from shop import Shop
+from shops import Shop
 import random
 #https://stackoverflow.com/questions/60608275/how-can-i-print-text-so-it-looks-like-its-being-typed-out MAYBE
 
 #FUNCTIONS
 def open_chest(items):
     for i in items.keys():
-        print(" ~ You have received "+str(items[i])+" x ["+i+"]. ~ ")
+        if not isinstance(i, Sword) and not isinstance(i, Head) and not isinstance(i, Body) and not isinstance(i, Ring):
+            print(i+":", items[i])
+        else:
+            print(i.name+":", items[i])
 
 def check_profile(person, wpn):
     os.system('cls')
@@ -41,7 +52,10 @@ def check_inventory(person):
     print("INVENTORY")
     print("{---------------------------------------------------------------}")
     for i in person.inventory.keys():
-        print(i+":", person.inventory[i])
+        if not isinstance(i, Sword) and not isinstance(i, Head) and not isinstance(i, Body) and not isinstance(i, Ring):
+            print(i+":", person.inventory[i])
+        else:
+            print(i.name+":", person.inventory[i])
     print("{---------------------------------------------------------------}")
     input("[Enter any button to return.]")
 
@@ -125,22 +139,21 @@ while choice.lower() != "o":
 
 print("\nAs you open the rotting chest, its hinges slowly creaking like the gutteral roar of a ghastly beast, you notice a reflective piece of metal within it. Looking closer, you make out the shape of a sword. Suddenly, it disappears, followed by vocal notifications, seemingly from the same 'Creator' you spoke to previously.")
 
-wpn_name = "Old Iron Sword"
+#player = Character(name=name, srn=int(stats_input[0]), dex=int(stats_input[1]), con=int(stats_input[2]), level=1, exp=0)
+#only do ^^ if there are optional paramaters that could be passed but aren't
+player = Character(name, int(stats_input[0]), int(stats_input[1]), int(stats_input[2]), 1, 0)
+weapon = Sword("Old Iron Sword", "Common", player, 0, 0, 0, 0, 0)
+#refresh stats to set proper stats (like initializing) for player
+player.refresh_stats()
+#add obtained items to inventory
 
 contain = {
     'Gold': 100,
     'Health Potion': 5,
-    wpn_name: 1
+    weapon: 1
 }
 open_chest(contain)
 
-#player = Character(name=name, srn=int(stats_input[0]), dex=int(stats_input[1]), con=int(stats_input[2]), level=1, exp=0)
-#only do ^^ if there are optional paramaters that could be passed but aren't
-player = Character(name, int(stats_input[0]), int(stats_input[1]), int(stats_input[2]), 1, 0)
-weapon = Sword(name=wpn_name, rarity="Common", character=player)
-#refresh stats to set proper stats (like initializing) for player
-player.refresh_stats()
-#add obtained items to inventory
 player.add_inventory(contain)
 
 print(" ~ This is a magical chest. Each time you defeat a wave of monsters, it will be refilled with random items. It may contain gold, health potions, weapons or armor. ~ ")
@@ -196,7 +209,8 @@ result_temp = "TEMP"
 round_counter = 0
 
 #TO DO LATER
-shop = Shop()
+shop = Shop(player)
+shop.create_items([10, 10, 10, 10])
 
 while result_temp != "DEAD":
     possible = {
@@ -239,7 +253,6 @@ while result_temp != "DEAD":
         'Skeleton': [1.5, 1, 0.8], 
         'Demon': [0.8, 0.3, 0.1]
     }
-    #FIX AFTER FINISHING R1, GOES TO R2 WITH 0 IN EVERYTHING -> NEED TO GO THROUGH TOP PART AGAIN
 
     for enemy in eyDict:
         for enemy_type_num in range(len(eyDict[enemy])):

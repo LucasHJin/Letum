@@ -16,9 +16,11 @@ class Weapon:
         self.damage_multiplier = self.RARITY_MULT[rarity]
 
 class Sword(Weapon):
-    def __init__(self, name, rarity, character):
-        super().__init__(name=name, rarity=rarity, damage = random.randint(6, 9)) #CHANGE BACK LATER
-        self.character=character
+    def __init__(self, name, rarity, character, buy_value, sell_value, srn, dex, con):
+        super().__init__(name=name, rarity=rarity, damage = random.randint(6, 9)) 
+        self.character = character
+        self.buy_value = buy_value
+        self.sell_value = sell_value
         self.abilityDict = {
             'Common': ['Slash', 'HP'],
             'Uncommon': ['Slash', 'HP'],
@@ -32,7 +34,11 @@ class Sword(Weapon):
             'Holy Blow': 0,
             'Holy Aura': 0
         }
-
+        self.added_stats = {
+            'str': srn,
+            'dex': dex,
+            'con': con
+        }
 
     def slash(self):
         dmg = int(self.damage_multiplier * (self.damage + self.character.attack_damage // 2) * random.uniform(1, 1.1))
