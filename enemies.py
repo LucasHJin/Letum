@@ -24,6 +24,7 @@ class Rat(Enemy):
         self.health = int(random.randint(50, 75) * self.multiplier)
         self.damage = random.randint(4, 5) * self.multiplier
         self.exp = random.randint(8, 12) * self.multiplier
+        self.gold = random.randint(50, 100) * self.multiplier
 
     def choose_ability(self):
         if not self.check_dead():
@@ -65,6 +66,7 @@ class Goblin(Enemy):
         self.health = int(random.randint(75, 100) * self.multiplier)
         self.damage = random.randint(7, 8) * self.multiplier
         self.exp = random.randint(15, 20) * self.multiplier
+        self.gold = random.randint(150, 200) * self.multiplier
 
     def choose_ability(self):
         if not self.check_dead():
@@ -108,6 +110,7 @@ class Skeleton(Enemy):
         self.damage = random.randint(6, 7) * self.multiplier
         self.exp = random.randint(25, 30) * self.multiplier
         self.used = False
+        self.gold = random.randint(75, 125) * self.multiplier
 
     def choose_ability(self):
         """
@@ -157,6 +160,7 @@ class Demon(Enemy):
         self.health = int(random.randint(100, 175) * self.multiplier)
         self.damage = random.randint(10, 11) * self.multiplier
         self.exp = random.randint(50, 100) * self.multiplier
+        self.gold = random.randint(500, 1000) * self.multiplier
 
 
     def choose_ability(self):

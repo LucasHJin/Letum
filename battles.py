@@ -57,9 +57,10 @@ class Battle:
             if self.weapon.cooldownsDict[ability_cooldown]>0:
                 self.weapon.cooldownsDict[ability_cooldown] -= 1
 
-
+        """
         for ability_cooldown in self.weapon.cooldownsDict:
             print(ability_cooldown, self.weapon.cooldownsDict[ability_cooldown])
+        """
 
 
         #case 1: dead
@@ -200,8 +201,10 @@ class Battle:
                     if not isinstance(inst, Skeleton): 
                         #https://www.w3schools.com/python/python_lists_remove.asp
                         print(" ~ Congratulations, you have slain an enemy! ["+inst.name+"] ~ ")
-                        print(" ~ +"+str(int(inst.exp))+" experience ~ ")
-                        self.character.exp = int(self.character.exp+inst.exp)
+                        print(" ~ +"+str(int(inst.exp))+" EXP ~ ")
+                        print(" ~ +"+str(int(inst.gold))+" Gold ~ ")
+                        self.character.inventory['Gold'] += int(inst.gold)
+                        self.character.exp += int(inst.exp)
                         en_inst[enemy_key].remove(inst) 
                     else:
                         if not inst.used:
@@ -209,8 +212,10 @@ class Battle:
                             inst.escape_death()
                         else:
                             print(" ~ You have overcome a skeleton's innate trait and slain them. ["+inst.name+"] ~ ")
-                            print(" ~ +"+str(int(inst.exp))+" experience ~ ")
-                            self.character.needed_exp += inst.exp
+                            print(" ~ +"+str(int(inst.exp))+" EXP ~ ")
+                            print(" ~ +"+str(int(inst.gold))+" Gold ~ ")
+                            self.character.inventory['Gold'] += int(inst.gold)
+                            self.character.exp += int(inst.exp)
                             en_inst[enemy_key].remove(inst)
 
         print("{---------------------------------------------------------------}")
