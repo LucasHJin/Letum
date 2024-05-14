@@ -74,7 +74,7 @@ class Character:
         check = False
         for item in self.inventory:
             if isinstance(self.inventory[item], Sword) or isinstance(self.inventory[item], Ring) or isinstance(self.inventory[item], Head) or isinstance(self.inventory[item], Body):
-                if choice2 == self.inventory[item].name and choice2 != self.equipment[choice.lower()]:
+                if choice2 == self.inventory[item].name and choice2 != self.equipment[POSSIBLEDICT[choice.lower()]]:
                     check = True
                     break
         while not check:
