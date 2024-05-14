@@ -45,6 +45,19 @@ def check_profile(person, wpn):
     print("  >>  Dexterity:", person.stats['dex'])
     print("  >>  Constitution:", person.stats['con'])
     print("{---------------------------------------------------------------}")
+    if person.equipment['Helmet'] == "None":
+        print("  >>  Helmet: N/A")
+    else:
+        print("  >>  Helmet:", person.equipment['Helmet'].name)
+    if person.equipment['Armor'] == "None":
+        print("  >>  Armor: N/A")
+    else:
+        print("  >>  Armor:", person.equipment['Armor'].name)
+    if person.equipment['Ring'] == "None":
+        print("  >>  Ring: N/A")
+    else:
+        print("  >>  Ring:", person.equipment['Ring'].name)
+    print("{---------------------------------------------------------------}")
     input("[Enter any button to return.]")
 
 def check_inventory(person):
