@@ -94,9 +94,9 @@ class Shop:
                     else:
                         item_name = item_a + " " + item_p + item_s + "'s " + item_n
                         points = int(random.randint(1, 2) * RARITY_MULT[item_rarity[0]])
-                        print("POINTS", points)
+                        #print("POINTS", points)
                         split_points = random.choices(['str', 'dex', 'con'], weights=[2, 1, 1], k=points)
-                        print("SPLIT POINTS", split_points)
+                        #print("SPLIT POINTS", split_points)
                         added_stats = {
                             'str': 0,
                             'dex': 0,
@@ -105,9 +105,9 @@ class Shop:
                         added_stats['str']=split_points.count('str')
                         added_stats['dex']=split_points.count('dex')
                         added_stats['con']=split_points.count('con')
-                        print("ADDED", added_stats)
+                        #print("ADDED", added_stats)
                         inst = Sword(item_name, item_rarity[0], self.character, 0, 0, int(added_stats["str"]), int(added_stats["dex"]), int(added_stats["con"]))
-                        print("AFTER", inst.added_stats)
+                        #print("AFTER", inst.added_stats)
                         item_cost = points*300 + inst.damage*250 + int(inst.damage*inst.damage_multiplier*10)
                         item_sell = int(item_cost * 0.7)
                         inst.buy_value = item_cost
@@ -120,8 +120,8 @@ class Shop:
                     item_cost = 0
                     for extra in inst.added_extra:
                         item_cost += inst.added_extra[extra]*50
-                    for stat in inst.added_stat:
-                        item_cost += inst.added_stat[stat]*100
+                    for stat in inst.added_stats:
+                        item_cost += inst.added_stats[stat]*100
                     inst.buy_value = item_cost
                     inst.sell_value = int(item_cost * 0.7)
                     self.items['Helmets'].append(inst)
@@ -132,8 +132,8 @@ class Shop:
                     item_cost = 0
                     for extra in inst.added_extra:
                         item_cost += inst.added_extra[extra]*50
-                    for stat in inst.added_stat:
-                        item_cost += inst.added_stat[stat]*100
+                    for stat in inst.added_stats:
+                        item_cost += inst.added_stats[stat]*100
                     inst.buy_value = item_cost
                     inst.sell_value = int(item_cost * 0.7)
                     self.items['Body Armor'].append(inst)
@@ -144,8 +144,8 @@ class Shop:
                     item_cost = 0
                     for extra in inst.added_extra:
                         item_cost += inst.added_extra[extra]*50
-                    for stat in inst.added_stat:
-                        item_cost += inst.added_stat[stat]*100
+                    for stat in inst.added_stats:
+                        item_cost += inst.added_stats[stat]*100
                     inst.buy_value = item_cost
                     inst.sell_value = int(item_cost * 0.7)
                     self.items['Rings'].append(inst)
@@ -276,14 +276,14 @@ class Shop:
                             print("{---------------------------------------------------------------}")
                             print("  >>  Cost:", inst.buy_value)
                             print("  >>  Rarity:", inst.rarity)
-                            if inst.added_stat['str']>0 or inst.added_stat['dex']>0 or inst.added_stat['con']>0:
+                            if inst.added_stats['str']>0 or inst.added_stats['dex']>0 or inst.added_stats['con']>0:
                                 print("  >>  Added Stats:")
-                                if inst.added_stat['str']>0:
-                                    print("    >>  Strength: +"+str(inst.added_stat['str']))
-                                if inst.added_stat['dex']>0:
-                                    print("    >>  Dexterity: +"+str(inst.added_stat['dex']))
-                                if inst.added_stat['con']>0:
-                                    print("    >>  Constitution: +"+str(inst.added_stat['con']))
+                                if inst.added_stats['str']>0:
+                                    print("    >>  Strength: +"+str(inst.added_stats['str']))
+                                if inst.added_stats['dex']>0:
+                                    print("    >>  Dexterity: +"+str(inst.added_stats['dex']))
+                                if inst.added_stats['con']>0:
+                                    print("    >>  Constitution: +"+str(inst.added_stats['con']))
                             print("  >>  Added Benefits:")
                             print("    >>  Health: +"+str(inst.added_extra['hp']))
                             print("    >>  Damage: +"+str(inst.added_extra['dmg']))
@@ -323,14 +323,14 @@ class Shop:
                             print("  >>  Cost:", inst.buy_value)
                             print("  >>  Rarity:", inst.rarity)
                             print("  >>  Added Stats:")
-                            if inst.added_stat['str']>0 or inst.added_stat['dex']>0 or inst.added_stat['con']>0:
+                            if inst.added_stats['str']>0 or inst.added_stats['dex']>0 or inst.added_stats['con']>0:
                                 print("  >>  Added Stats:")
-                                if inst.added_stat['str']>0:
-                                    print("    >>  Strength: +"+str(inst.added_stat['str']))
-                                if inst.added_stat['dex']>0:
-                                    print("    >>  Dexterity: +"+str(inst.added_stat['dex']))
-                                if inst.added_stat['con']>0:
-                                    print("    >>  Constitution: +"+str(inst.added_stat['con']))
+                                if inst.added_stats['str']>0:
+                                    print("    >>  Strength: +"+str(inst.added_stats['str']))
+                                if inst.added_stats['dex']>0:
+                                    print("    >>  Dexterity: +"+str(inst.added_stats['dex']))
+                                if inst.added_stats['con']>0:
+                                    print("    >>  Constitution: +"+str(inst.added_stats['con']))
                             print("  >>  Added Benefits:")
                             print("    >>  Health: +"+str(inst.added_extra['hp']))
                             print("    >>  Damage: +"+str(inst.added_extra['dmg']))
@@ -369,14 +369,14 @@ class Shop:
                             print("{---------------------------------------------------------------}")
                             print("  >>  Cost:", inst.buy_value)
                             print("  >>  Rarity:", inst.rarity)
-                            if inst.added_stat['str']>0 or inst.added_stat['dex']>0 or inst.added_stat['con']>0:
+                            if inst.added_stats['str']>0 or inst.added_stats['dex']>0 or inst.added_stats['con']>0:
                                 print("  >>  Added Stats:")
-                                if inst.added_stat['str']>0:
-                                    print("    >>  Strength: +"+str(inst.added_stat['str']))
-                                if inst.added_stat['dex']>0:
-                                    print("    >>  Dexterity: +"+str(inst.added_stat['dex']))
-                                if inst.added_stat['con']>0:
-                                    print("    >>  Constitution: +"+str(inst.added_stat['con']))
+                                if inst.added_stats['str']>0:
+                                    print("    >>  Strength: +"+str(inst.added_stats['str']))
+                                if inst.added_stats['dex']>0:
+                                    print("    >>  Dexterity: +"+str(inst.added_stats['dex']))
+                                if inst.added_stats['con']>0:
+                                    print("    >>  Constitution: +"+str(inst.added_stats['con']))
                             print("  >>  Added Benefits:")
                             print("    >>  Health: +"+str(inst.added_extra['hp']))
                             print("    >>  Damage: +"+str(inst.added_extra['dmg']))

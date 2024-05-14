@@ -33,16 +33,25 @@ class Character:
         self.equipment = {
             'Helmet': "None",
             'Armor': "None",
-            'Ring': "None"
+            'Ring': "None",
+            'Weapon': "None"
         }
         self.needed_exp = 40
         self.stat_points = 0
         self.is_buffed = False
+        self.added_ac = 0
+        self.added_hp = 0
+        self.added_dmg = 0
+
 
     def equip_equipment(self):
         #display message
         print("Current Equipment")
         print("{---------------------------------------------------------------}")
+        if self.equipment['Weapon'] == "None":
+            print("  >>  Weapon: N/A")
+        else:
+            print("  >>  Weapon:", self.equipment['Weapon'].name)
         if self.equipment['Helmet'] == "None":
             print("  >>  Helmet: N/A")
         else:
@@ -59,11 +68,12 @@ class Character:
         #input and finding want to equip equipment
         print("What would you like to equip right now? [Enter the first letter of the equipment category.]")
         choice = input("  >>  ")
-        POSSIBLE = ['h', 'a', 'r']
+        POSSIBLE = ['h', 'a', 'r', 'w']
         POSSIBLEDICT = {
             'h': "Helmet",
             'a': "Armor",
-            'r': "Ring"
+            'r': "Ring",
+            'w': "Weapon"
         }
         while choice.lower() not in POSSIBLE:
             print("Sorry, that was not an option. What would you like to equip right now? [Enter the FIRST LETTER of the equipment category.]")
@@ -72,25 +82,94 @@ class Character:
         print("And what equipment would you like to equip? Please make sure that you are equipping a new piece of equipment. [Enter the name of the equipment (exactly as written) or enter [I] to check your inventory.]")
         choice2 = input("  >>  ")
         check = False
-        for item in self.inventory:
-            if isinstance(self.inventory[item], Sword) or isinstance(self.inventory[item], Ring) or isinstance(self.inventory[item], Head) or isinstance(self.inventory[item], Body):
-                if choice2 == self.inventory[item].name and choice2 != self.equipment[POSSIBLEDICT[choice.lower()]]:
-                    check = True
-                    break
-        while not check:
-            print("That was not a valid piece of equipment. Please make sure that you are equipping a new piece of equipment. [Enter the name of the equipment (exactly as written) or enter [I] to check your inventory.]")
-            choice2 = input("  >>  ")
+        if choice2.lower() == 'i':
+            self.check_inventory()
+        else:
             for item in self.inventory:
                 if isinstance(self.inventory[item], Sword) or isinstance(self.inventory[item], Ring) or isinstance(self.inventory[item], Head) or isinstance(self.inventory[item], Body):
-                    if choice2 == self.inventory[item].name and choice2 != self.equipment[choice.lower()]:
+                    if choice2 == self.inventory[item].name and choice2 != self.equipment[POSSIBLEDICT[choice.lower()]]:
                         check = True
+                        chosenItem = self.inventory[item]
                         break
-        #finding currently equipped equipment
-        
-        
+        while not check:
+            print("What will you do now?. Please make sure that you are equipping a new piece of equipment. [Enter the name of the equipment (exactly as written) or enter [I] to check your inventory.]")
+            choice2 = input("  >>  ")
+            if choice2.lower() == 'i':
+                self.check_inventory()
+            else:
+                for item in self.inventory:
+                    if isinstance(self.inventory[item], Sword) or isinstance(self.inventory[item], Ring) or isinstance(self.inventory[item], Head) or isinstance(self.inventory[item], Body):
+                        if choice2 == self.inventory[item].name and choice2 != self.equipment[POSSIBLEDICT[choice.lower()]]:
+                            check = True
+                            chosenItem = self.inventory[item]
+                            break
+        print(self.stats)
+        print(self.equipment)
+        #finding currently equipped equipment and the stats they would add
+        if POSSIBLEDICT[choice.lower()] == "Weapon":
+            remove_stats = {
+                'str': 0,
+                'dex': 0,
+                'con': 0
+            }
+            if self.equipment[POSSIBLEDICT[choice.lower()]] != "None":
+                for item in self.inventory:
+                    if isinstance(self.inventory[item], Sword):
+                        if self.equipment[POSSIBLEDICT[choice.lower()]] == self.inventory[item].name:
+                            remove_stats['str'] = self.inventory[item].added_stats['str']
+                            remove_stats['dex'] = self.inventory[item].added_stats['dex']
+                            remove_stats['con'] = self.inventory[item].added_stats['con']
+        else:
+            remove_stats = {
+                'str': 0,
+                'dex': 0,
+                'con': 0
+            }
+            remove_extra = {
+                'ac': 0,
+                'hp': 0,
+                'dmg': 0
+            }
+            if self.equipment[POSSIBLEDICT[choice.lower()]] != "None":
+                for item in self.inventory:
+                    if isinstance(self.inventory[item], Head) or isinstance(self.inventory[item], Body) or isinstance(self.inventory[item], Ring):
+                        if self.equipment[POSSIBLEDICT[choice.lower()]] == self.inventory[item].name:
+                            remove_stats['str'] = self.inventory[item].added_stats['str']
+                            remove_stats['dex'] = self.inventory[item].added_stats['dex']
+                            remove_stats['con'] = self.inventory[item].added_stats['con']
+                            remove_extra['ac'] = self.inventory[item].added_extra['ac']
+                            remove_extra['hp'] = self.inventory[item].added_extra['hp']
+                            remove_extra['dmg'] = self.inventory[item].added_extra['dmg']
+
         #changing stats to remove old and add new equipment
+        self.stats['str'] = self.stats['str'] - remove_stats['str'] + chosenItem.added_stats['str']
+        self.stats['dex'] = self.stats['dex'] - remove_stats['dex'] + chosenItem.added_stats['dex']
+        self.stats['con'] = self.stats['con'] - remove_stats['con'] + chosenItem.added_stats['con']
+        #Refresh all the values on status
+        self.refresh_stats()
+        #Need to add on calced values again
+        self.added_ac = self.added_ac - remove_extra['ac'] + chosenItem.added_extra['ac']
+        self.added_hp = self.added_hp - remove_extra['hp'] + chosenItem.added_extra['hp']
+        self.added_dmg = self.added_dmg - remove_extra['dmg'] + chosenItem.added_extra['dmg']
+        self.armor_class = self.armor_class + self.added_ac
+        self.health = self.health + self.added_hp
+        self.attack_damage = self.attack_damage + self.added_dmg
+
+        print(self.stats)
+        print(self.equipment)
         
         
+    def check_inventory(self):
+        os.system('cls')
+        print("INVENTORY")
+        print("{---------------------------------------------------------------}")
+        for i in self.inventory.keys():
+            if not isinstance(i, Sword) and not isinstance(i, Head) and not isinstance(i, Body) and not isinstance(i, Ring):
+                print(i+":", self.inventory[i])
+            else:
+                print(i.name+":", self.inventory[i])
+        print("{---------------------------------------------------------------}")
+        input("[Enter any button to return.]")
         
 
     def refresh_current_health(self): #for after level up or clear room 
@@ -154,6 +233,12 @@ class Character:
         self.calc_health()
         self.calc_damage()
         self.calc_ac()
+
+        #Need to add on armor bonuses again
+        self.armor_class = self.armor_class + self.added_ac
+        self.health = self.health + self.added_hp
+        self.attack_damage = self.attack_damage + self.added_dmg
+
         self.calc_needed_exp()
         self.refresh_current_health()
 
@@ -204,11 +289,6 @@ class Character:
         print("{---------------------------------------------------------------}")
         input("[Enter any button to continue.]")
 
-
-        self.calc_health()
-        self.calc_damage()
-        self.calc_ac()
-        self.refresh_current_health()
 
     def all_level_up(self):
         os.system('cls')

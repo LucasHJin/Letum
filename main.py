@@ -10,6 +10,11 @@ April 13, 2023: Program Creation
 #ENEMIES DROP ARMOUR AND WEAPONS?!!!
 #FIX AFTER FINISHING R1, GOES TO R2 WITH 0 IN EVERYTHING -> NEED TO GO THROUGH TOP PART AGAIN
 #ADD EQUIPPING WEAPONS AND ARMOR
+#ADD MAC AND OS CLEAR, NOT JUST OS
+#MOVE CHECK PROFILE AND INVENTORY
+#NEED TO ADD LEAVE FROM EQUIPPING
+#REMEMBER TO EQUIP BASE STARTING WEAPON
+#WHEN ENTER NAME NOT WORK, WHY>
 
 from characters import Character
 from weapons import Sword
@@ -209,6 +214,7 @@ print("Looking to your right, you see a stall, populated with a human like figur
 print(" ~ Be not scared. I teleported my loyal follower, Kun, to your location to aid you in your survival. He will sell you items and... who knows, maybe he'll be able to help you with your mentality as well. ~")
 print("With that statement, you hear a sudden bang.")
 print(" ~ Sorry, it appears I am unable to say more. Good luck! ~ ")
+input("[Enter any key to continue.]")
 
 
 eyDict = {
@@ -221,37 +227,49 @@ rnd = Battle(eyDict, player, weapon)
 result_temp = "TEMP"
 round_counter = 0
 
-#TO DO LATER
 shop = Shop(player)
 shop.create_items([10, 10, 10, 10])
 
+POSSIBLE = {
+    "I": "Open Inventory",
+    "S": "Open Status",
+    "B": "Buy Items from the Shop",
+    "E": "Equip Equipment",
+    "F": "Fight"
+}
+
+
+os.system('cls')
+print("What will you do now?")
+print_options(POSSIBLE)
+choice = input("  >>  ")
+
 while result_temp != "DEAD":
-    possible = {
-        "I": "Open Inventory",
-        "S": "Open Status",
-        "B": "Buy Items from the Shop",
-        "F": "Fight the Next Round"
-    }
     while choice.lower() != "f":
         if choice.lower() == "i":
             check_inventory(player)
             os.system('cls')
-            print_options(possible)
+            print_options(POSSIBLE)
             choice = input("  >>  ")
         elif choice.lower() == "s":
             check_profile(player, weapon)
             os.system('cls')
-            print_options(possible)
+            print_options(POSSIBLE)
             choice = input("  >>  ")
         elif choice.lower() == "b":
             shop.open_shop()
             os.system('cls')
-            print_options(possible)
+            print_options(POSSIBLE)
+            choice = input("  >>  ")
+        elif choice.lower() == "e":
+            player.equip_equipment()
+            os.system('cls')
+            print_options(POSSIBLE)
             choice = input("  >>  ")
         elif choice.lower() != "f":
             print(" ~ That was not one of the options. The options are: ~ ")
             os.system('cls')
-            print_options(possible)
+            print_options(POSSIBLE)
             choice = input("  >>  ")
 
     print("ROUND", round_counter+1)
