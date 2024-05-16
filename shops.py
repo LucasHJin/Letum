@@ -485,4 +485,34 @@ class Shop:
                 choice = input("  >>  ").split()
                 
                 
-        
+    def print_item(self, val, choice, letter):
+        if val==0:
+            POSSIBLEDICT = {
+                'h': "Helmet",
+                'a': "Armor",
+                'r': "Ring",
+            }
+            os.system('cls')
+            inst = self.items[POSSIBLEDICT[letter.lower()]][int(choice[1])-1]
+            print(inst.name)
+            print("{---------------------------------------------------------------}")
+            print("  >>  Cost:", inst.buy_value)
+            print("  >>  Rarity:", inst.rarity)
+            if inst.added_stats['str']>0 or inst.added_stats['dex']>0 or inst.added_stats['con']>0:
+                print("  >>  Added Stats:")
+                if inst.added_stats['str']>0:
+                    print("    >>  Strength: +"+str(inst.added_stats['str']))
+                if inst.added_stats['dex']>0:
+                    print("    >>  Dexterity: +"+str(inst.added_stats['dex']))
+                if inst.added_stats['con']>0:
+                    print("    >>  Constitution: +"+str(inst.added_stats['con']))
+            print("  >>  Added Benefits:")
+            print("    >>  Health: +"+str(inst.added_extra['hp']))
+            print("    >>  Damage: +"+str(inst.added_extra['dmg']))
+            print("    >>  Armor Class: +"+str(inst.added_extra['ac']))
+            input("[Press any button to return.]")
+        elif val==1:
+            
+
+
+    def not_option(self):

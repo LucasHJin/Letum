@@ -15,6 +15,7 @@ class Battle:
         self.turn_count = 1
 
     def entire_game(self):
+        os.system('cls')
         if self.turn_count == 1:
             ene_inst = self.create_enemy_instances()
         print("Looking into the distance, you see:")

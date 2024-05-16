@@ -71,7 +71,7 @@ class Character:
         print("{---------------------------------------------------------------}")
         input("[Enter any button to return.]")
 
-
+    #FIX PROBLEM WITH ADDING STATS
     def equip_equipment(self):
         #display message
         print("Current Equipment")
@@ -119,7 +119,6 @@ class Character:
                         if choice2 != self.equipment[POSSIBLEDICT[choice.lower()]]:
                             check = True
                             chosenItem = item
-                            self.equipment[POSSIBLEDICT[choice.lower()]] = item
                             break
         while not check:
             print("What will you do now?. Please make sure that you are equipping a new piece of equipment. [Enter the name of the equipment (exactly as written) or enter [I] to check your inventory.]")
@@ -133,7 +132,6 @@ class Character:
                             if choice2 != self.equipment[POSSIBLEDICT[choice.lower()]]:
                                 check = True
                                 chosenItem = item
-                                self.equipment[POSSIBLEDICT[choice.lower()]] = item
                                 break
         #finding currently equipped equipment and the stats they would add
         if POSSIBLEDICT[choice.lower()] == "Weapon":
@@ -144,11 +142,12 @@ class Character:
             }
             if self.equipment[POSSIBLEDICT[choice.lower()]] != "None":
                 for item in self.inventory:
-                    if isinstance(self.inventory[item], Sword):
-                        if self.equipment[POSSIBLEDICT[choice.lower()]] == self.inventory[item].name:
-                            remove_stats['str'] = self.inventory[item].added_stats['str']
-                            remove_stats['dex'] = self.inventory[item].added_stats['dex']
-                            remove_stats['con'] = self.inventory[item].added_stats['con']
+                    if isinstance(item, Sword):
+                        if self.equipment[POSSIBLEDICT[choice.lower()]].name == item.name:
+                            remove_stats['str'] = item.added_stats['str']
+                            remove_stats['dex'] = item.added_stats['dex']
+                            remove_stats['con'] = item.added_stats['con']
+
         else:
             remove_stats = {
                 'str': 0,
@@ -162,14 +161,15 @@ class Character:
             }
             if self.equipment[POSSIBLEDICT[choice.lower()]] != "None":
                 for item in self.inventory:
-                    if isinstance(self.inventory[item], Head) or isinstance(self.inventory[item], Body) or isinstance(self.inventory[item], Ring):
-                        if self.equipment[POSSIBLEDICT[choice.lower()]] == self.inventory[item].name:
-                            remove_stats['str'] = self.inventory[item].added_stats['str']
-                            remove_stats['dex'] = self.inventory[item].added_stats['dex']
-                            remove_stats['con'] = self.inventory[item].added_stats['con']
-                            remove_extra['ac'] = self.inventory[item].added_extra['ac']
-                            remove_extra['hp'] = self.inventory[item].added_extra['hp']
-                            remove_extra['dmg'] = self.inventory[item].added_extra['dmg']
+                    if isinstance(item, (Ring, Head, Body)):
+                        if self.equipment[POSSIBLEDICT[choice.lower()]].name == item.name:
+                            remove_stats['str'] = item.added_stats['str']
+                            remove_stats['dex'] = item.added_stats['dex']
+                            remove_stats['con'] = item.added_stats['con']
+                            remove_extra['ac'] = item.added_extra['ac']
+                            remove_extra['hp'] = item.added_extra['hp']
+                            remove_extra['dmg'] = item.added_extra['dmg']
+        
 
         #changing stats to remove old and add new equipment
         self.stats['str'] = self.stats['str'] - remove_stats['str'] + chosenItem.added_stats['str']
@@ -185,6 +185,10 @@ class Character:
             self.armor_class = self.armor_class + self.added_ac
             self.health = self.health + self.added_hp
             self.attack_damage = self.attack_damage + self.added_dmg
+
+        self.equipment[POSSIBLEDICT[choice.lower()]] = item
+
+        input("You have equipped " + chosenItem.name + ". [Enter any key to continue.]")
         
         
     def check_inventory(self):
