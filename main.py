@@ -7,14 +7,13 @@ History:
 April 13, 2023: Program Creation
 """
 #NOT ONE OF THE OPTIONS CODE APPEARING RANDOMLY
-#ENEMIES DROP ARMOUR AND WEAPONS?!!!
+#ENEMIES DROP ARMOUR AND WEAPONS?!!! AND CHEST
 #FIX AFTER FINISHING R1, GOES TO R2 WITH 0 IN EVERYTHING -> NEED TO GO THROUGH TOP PART AGAIN
 #ADD EQUIPPING WEAPONS AND ARMOR
 #ADD MAC AND OS CLEAR, NOT JUST OS
-#MOVE CHECK PROFILE AND INVENTORY
-#NEED TO ADD LEAVE FROM EQUIPPING
-#REMEMBER TO EQUIP BASE STARTING WEAPON
-#WHEN ENTER NAME NOT WORK, WHY>
+#NEED TO ADD LEAVE FROM EQUIPPING AND LOOP AND STUFF
+#SHOW STATS OF ARMOR IF INSPECTED IN INVENTORY
+#ADD STOP OF EQUIP ARMOR MULTIPLE TIMES
 
 from characters import Character
 from weapons import Sword
@@ -35,48 +34,6 @@ def open_chest(items):
             print(i+":", items[i])
         else:
             print(i.name+":", items[i])
-
-def check_profile(person, wpn):
-    os.system('cls')
-    print("STATUS")
-    print(person.name)
-    print("Level:", person.level)
-    print("Experience: "+str(person.exp)+"/"+str(person.needed_exp))
-    print("{---------------------------------------------------------------}")
-    print("  >>  Health:", person.health)
-    print("  >>  Weapon:", wpn.name)
-    print("{---------------------------------------------------------------}")
-    print("  >>  Strength:", person.stats['str'])
-    print("  >>  Dexterity:", person.stats['dex'])
-    print("  >>  Constitution:", person.stats['con'])
-    print("{---------------------------------------------------------------}")
-    if person.equipment['Helmet'] == "None":
-        print("  >>  Helmet: N/A")
-    else:
-        print("  >>  Helmet:", person.equipment['Helmet'].name)
-    if person.equipment['Armor'] == "None":
-        print("  >>  Armor: N/A")
-    else:
-        print("  >>  Armor:", person.equipment['Armor'].name)
-    if person.equipment['Ring'] == "None":
-        print("  >>  Ring: N/A")
-    else:
-        print("  >>  Ring:", person.equipment['Ring'].name)
-    print("{---------------------------------------------------------------}")
-    input("[Enter any button to return.]")
-
-def check_inventory(person):
-    os.system('cls')
-    print("INVENTORY")
-    print("{---------------------------------------------------------------}")
-    for i in person.inventory.keys():
-        if not isinstance(i, Sword) and not isinstance(i, Head) and not isinstance(i, Body) and not isinstance(i, Ring):
-            print(i+":", person.inventory[i])
-        else:
-            print(i.name+":", person.inventory[i])
-    print("{---------------------------------------------------------------}")
-    input("[Enter any button to return.]")
-
 
 def print_options(statements):
     for k, v in statements.items():
@@ -161,6 +118,7 @@ print("\nAs you open the rotting chest, its hinges slowly creaking like the gutt
 #only do ^^ if there are optional paramaters that could be passed but aren't
 player = Character(name, int(stats_input[0]), int(stats_input[1]), int(stats_input[2]), 1, 0)
 weapon = Sword("Old Iron Sword", "Common", player, 0, 0, 0, 0, 0)
+player.equipment['Weapon'] = weapon
 #refresh stats to set proper stats (like initializing) for player
 player.refresh_stats()
 #add obtained items to inventory
@@ -190,12 +148,12 @@ print_options(possible)
 choice = input("  >>  ")
 while choice.lower() != "c":
     if choice.lower() == "i":
-        check_inventory(player)
+        player.check_inventory()
         os.system('cls')
         print_options(possible)
         choice = input("  >>  ")
     elif choice.lower() == "s":
-        check_profile(player, weapon)
+        player.check_profile()
         os.system('cls')
         print_options(possible)
         choice = input("  >>  ")
@@ -247,12 +205,12 @@ choice = input("  >>  ")
 while result_temp != "DEAD":
     while choice.lower() != "f":
         if choice.lower() == "i":
-            check_inventory(player)
+            player.check_inventory()
             os.system('cls')
             print_options(POSSIBLE)
             choice = input("  >>  ")
         elif choice.lower() == "s":
-            check_profile(player, weapon)
+            player.check_profile()
             os.system('cls')
             print_options(POSSIBLE)
             choice = input("  >>  ")

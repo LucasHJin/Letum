@@ -5,7 +5,6 @@ from armor import Head
 from armor import Body
 from armor import Ring
 
-
 class Character:
     def __init__(self, name, srn, dex, con, level, exp):
         self.name = name
@@ -42,6 +41,35 @@ class Character:
         self.added_ac = 0
         self.added_hp = 0
         self.added_dmg = 0
+
+    def check_profile(self):
+        os.system('cls')
+        print("STATUS")
+        print(self.name)
+        print("Level:", self.level)
+        print("Experience: "+str(self.exp)+"/"+str(self.needed_exp))
+        print("{---------------------------------------------------------------}")
+        print("  >>  Health:", self.health)
+        print("  >>  Weapon:", self.equipment['Weapon'].name)
+        print("{---------------------------------------------------------------}")
+        print("  >>  Strength:", self.stats['str'])
+        print("  >>  Dexterity:", self.stats['dex'])
+        print("  >>  Constitution:", self.stats['con'])
+        print("{---------------------------------------------------------------}")
+        if self.equipment['Helmet'] == "None":
+            print("  >>  Helmet: N/A")
+        else:
+            print("  >>  Helmet:", self.equipment['Helmet'].name)
+        if self.equipment['Armor'] == "None":
+            print("  >>  Armor: N/A")
+        else:
+            print("  >>  Armor:", self.equipment['Armor'].name)
+        if self.equipment['Ring'] == "None":
+            print("  >>  Ring: N/A")
+        else:
+            print("  >>  Ring:", self.equipment['Ring'].name)
+        print("{---------------------------------------------------------------}")
+        input("[Enter any button to return.]")
 
 
     def equip_equipment(self):
@@ -86,11 +114,13 @@ class Character:
             self.check_inventory()
         else:
             for item in self.inventory:
-                if isinstance(self.inventory[item], Sword) or isinstance(self.inventory[item], Ring) or isinstance(self.inventory[item], Head) or isinstance(self.inventory[item], Body):
-                    if choice2 == self.inventory[item].name and choice2 != self.equipment[POSSIBLEDICT[choice.lower()]]:
-                        check = True
-                        chosenItem = self.inventory[item]
-                        break
+                if isinstance(item, (Sword, Ring, Head, Body)):
+                    if choice2 == item.name:
+                        if choice2 != self.equipment[POSSIBLEDICT[choice.lower()]]:
+                            check = True
+                            chosenItem = item
+                            self.equipment[POSSIBLEDICT[choice.lower()]] = item
+                            break
         while not check:
             print("What will you do now?. Please make sure that you are equipping a new piece of equipment. [Enter the name of the equipment (exactly as written) or enter [I] to check your inventory.]")
             choice2 = input("  >>  ")
@@ -98,13 +128,13 @@ class Character:
                 self.check_inventory()
             else:
                 for item in self.inventory:
-                    if isinstance(self.inventory[item], Sword) or isinstance(self.inventory[item], Ring) or isinstance(self.inventory[item], Head) or isinstance(self.inventory[item], Body):
-                        if choice2 == self.inventory[item].name and choice2 != self.equipment[POSSIBLEDICT[choice.lower()]]:
-                            check = True
-                            chosenItem = self.inventory[item]
-                            break
-        print(self.stats)
-        print(self.equipment)
+                    if isinstance(item, (Sword, Ring, Head, Body)):
+                        if choice2 == item.name:
+                            if choice2 != self.equipment[POSSIBLEDICT[choice.lower()]]:
+                                check = True
+                                chosenItem = item
+                                self.equipment[POSSIBLEDICT[choice.lower()]] = item
+                                break
         #finding currently equipped equipment and the stats they would add
         if POSSIBLEDICT[choice.lower()] == "Weapon":
             remove_stats = {
@@ -148,15 +178,13 @@ class Character:
         #Refresh all the values on status
         self.refresh_stats()
         #Need to add on calced values again
-        self.added_ac = self.added_ac - remove_extra['ac'] + chosenItem.added_extra['ac']
-        self.added_hp = self.added_hp - remove_extra['hp'] + chosenItem.added_extra['hp']
-        self.added_dmg = self.added_dmg - remove_extra['dmg'] + chosenItem.added_extra['dmg']
-        self.armor_class = self.armor_class + self.added_ac
-        self.health = self.health + self.added_hp
-        self.attack_damage = self.attack_damage + self.added_dmg
-
-        print(self.stats)
-        print(self.equipment)
+        if POSSIBLEDICT[choice.lower()] != "Weapon":
+            self.added_ac = self.added_ac - remove_extra['ac'] + chosenItem.added_extra['ac']
+            self.added_hp = self.added_hp - remove_extra['hp'] + chosenItem.added_extra['hp']
+            self.added_dmg = self.added_dmg - remove_extra['dmg'] + chosenItem.added_extra['dmg']
+            self.armor_class = self.armor_class + self.added_ac
+            self.health = self.health + self.added_hp
+            self.attack_damage = self.attack_damage + self.added_dmg
         
         
     def check_inventory(self):
