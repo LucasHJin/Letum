@@ -188,10 +188,12 @@ class Shop:
 
     def open_shop(self):
         self.display_shop()
-        print("[Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
-        print("[Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
-        print("[Press L to return.]")
-        choice = input("  >>  ").split()
+        self.print_instructions()
+        choice = input("  >>  ")
+        if choice == "":
+            choice = self.not_option()
+        choice = choice.split()
+            
         while choice[0].lower() != "l":
             if choice[0].lower() == "u":
                 if len(choice) == 2:
@@ -201,210 +203,88 @@ class Shop:
                             print("Heals 40HP. Takes up 1 turn.")
                             input("[Press any button to return.]")
                             self.display_shop()
-                            print("[Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
-                            print("[Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
-                            print("[Press L to return.]")
-                            choice = input("  >>  ").split()
+                            self.print_instructions()
+                            choice = input("  >>  ")
+                            if choice == "":
+                                choice = self.not_option()
+                            choice = choice.split()
                         else:
-                            print("That was not an option.")
-                            print("[Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
-                            print("[Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
-                            print("[Press L to return.]")
-                            choice = input("  >>  ").split()
+                            choice = self.not_option()
                     else:
-                        print("That was not an option.")
-                        print("[Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
-                        print("[Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
-                        print("[Press L to return.]")
-                        choice = input("  >>  ").split()
+                        choice = self.not_option()
                 else:
-                    print("That was not an option.")
-                    print("[Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
-                    print("[Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
-                    print("[Press L to return.]")
-                    choice = input("  >>  ").split()
+                    choice = self.not_option()
             elif choice[0].lower() == "w":
                 if len(choice) == 2:
                     if choice[1].isdigit():
                         if int(choice[1])>=1 and int(choice[1])<=10:
-                            os.system('cls')
-                            inst = self.items['Weapons'][int(choice[1])-1]
-                            print(inst.name)
-                            print("{---------------------------------------------------------------}")
-                            print("  >>  Cost:", inst.buy_value)
-                            print("  >>  Rarity:", inst.rarity)
-                            print("  >>  Damage:", inst.damage)
-                            if inst.added_stats['str']>0 or inst.added_stats['dex']>0 or inst.added_stats['con']>0:
-                                print("  >>  Added Stats:")
-                                if inst.added_stats['str']>0:
-                                    print("    >>  Strength: +"+str(inst.added_stats['str']))
-                                if inst.added_stats['dex']>0:
-                                    print("    >>  Dexterity: +"+str(inst.added_stats['dex']))
-                                if inst.added_stats['con']>0:
-                                    print("    >>  Constitution: +"+str(inst.added_stats['con']))
-                            input("[Press any button to return.]")
+                            self.print_item(1, choice, choice[0].lower())
                             self.display_shop()
-                            print("[Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
-                            print("[Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
-                            print("[Press L to return.]")
-                            choice = input("  >>  ").split()
+                            self.print_instructions()
+                            choice = input("  >>  ")
+                            if choice == "":
+                                choice = self.not_option()
+                            choice = choice.split()
                         else:
-                            print("That was not an option.")
-                            print("[Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
-                            print("[Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
-                            print("[Press L to return.]")
-                            choice = input("  >>  ").split()
+                            choice = self.not_option()
                     else:
-                        print("That was not an option.")
-                        print("[Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
-                        print("[Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
-                        print("[Press L to return.]")
-                        choice = input("  >>  ").split()
+                        choice = self.not_option()
                 else:
-                    print("That was not an option.")
-                    print("[Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
-                    print("[Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
-                    print("[Press L to return.]")
-                    choice = input("  >>  ").split()
+                    choice = self.not_option()
             elif choice[0].lower() == "h":
                 if len(choice) == 2:
                     if choice[1].isdigit():
                         if int(choice[1])>=1 and int(choice[1])<=10:
-                            os.system('cls')
-                            inst = self.items['Helmets'][int(choice[1])-1]
-                            print(inst.name)
-                            print("{---------------------------------------------------------------}")
-                            print("  >>  Cost:", inst.buy_value)
-                            print("  >>  Rarity:", inst.rarity)
-                            if inst.added_stats['str']>0 or inst.added_stats['dex']>0 or inst.added_stats['con']>0:
-                                print("  >>  Added Stats:")
-                                if inst.added_stats['str']>0:
-                                    print("    >>  Strength: +"+str(inst.added_stats['str']))
-                                if inst.added_stats['dex']>0:
-                                    print("    >>  Dexterity: +"+str(inst.added_stats['dex']))
-                                if inst.added_stats['con']>0:
-                                    print("    >>  Constitution: +"+str(inst.added_stats['con']))
-                            print("  >>  Added Benefits:")
-                            print("    >>  Health: +"+str(inst.added_extra['hp']))
-                            print("    >>  Damage: +"+str(inst.added_extra['dmg']))
-                            print("    >>  Armor Class: +"+str(inst.added_extra['ac']))
-                            input("[Press any button to return.]")
+                            self.print_item(0, choice, choice[0].lower())
                             self.display_shop()
-                            print("[Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
-                            print("[Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
-                            print("[Press L to return.]")
-                            choice = input("  >>  ").split()
+                            self.print_instructions()
+                            choice = input("  >>  ")
+                            if choice == "":
+                                choice = self.not_option()
+                            choice = choice.split()
                         else:
-                            print("That was not an option.")
-                            print("[Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
-                            print("[Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
-                            print("[Press L to return.]")
-                            choice = input("  >>  ").split()
+                            choice = self.not_option()
                     else:
-                        print("That was not an option.")
-                        print("[Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
-                        print("[Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
-                        print("[Press L to return.]")
-                        choice = input("  >>  ").split()
+                        choice = self.not_option()
                 else:
-                    print("That was not an option.")
-                    print("[Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
-                    print("[Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
-                    print("[Press L to return.]")
-                    choice = input("  >>  ").split()
+                    choice = self.not_option()
             elif choice[0].lower() == "a":
+                print("A")
                 if len(choice) == 2:
+                    print("B")
                     if choice[1].isdigit():
+                        print("C")
                         if int(choice[1])>=1 and int(choice[1])<=10:
-                            os.system('cls')
-                            inst = self.items['Body Armor'][int(choice[1])-1]
-                            print(inst.name)
-                            print("{---------------------------------------------------------------}")
-                            print("  >>  Cost:", inst.buy_value)
-                            print("  >>  Rarity:", inst.rarity)
-                            print("  >>  Added Stats:")
-                            if inst.added_stats['str']>0 or inst.added_stats['dex']>0 or inst.added_stats['con']>0:
-                                print("  >>  Added Stats:")
-                                if inst.added_stats['str']>0:
-                                    print("    >>  Strength: +"+str(inst.added_stats['str']))
-                                if inst.added_stats['dex']>0:
-                                    print("    >>  Dexterity: +"+str(inst.added_stats['dex']))
-                                if inst.added_stats['con']>0:
-                                    print("    >>  Constitution: +"+str(inst.added_stats['con']))
-                            print("  >>  Added Benefits:")
-                            print("    >>  Health: +"+str(inst.added_extra['hp']))
-                            print("    >>  Damage: +"+str(inst.added_extra['dmg']))
-                            print("    >>  Armor Class: +"+str(inst.added_extra['ac']))
-                            input("[Press any button to return.]")
+                            self.print_item(0, choice, choice[0].lower())
                             self.display_shop()
-                            print("[Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
-                            print("[Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
-                            print("[Press L to return.]")
-                            choice = input("  >>  ").split()
+                            self.print_instructions()
+                            choice = input("  >>  ")
+                            if choice == "":
+                                choice = self.not_option()
+                            choice = choice.split()
                         else:
-                            print("That was not an option.")
-                            print("[Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
-                            print("[Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
-                            print("[Press L to return.]")
-                            choice = input("  >>  ").split()
+                            choice = self.not_option()
                     else:
-                        print("That was not an option.")
-                        print("[Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
-                        print("[Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
-                        print("[Press L to return.]")
-                        choice = input("  >>  ").split()
+                        choice = self.not_option()
                 else:
-                    print("That was not an option.")
-                    print("[Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
-                    print("[Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
-                    print("[Press L to return.]")
-                    choice = input("  >>  ").split()
+                    choice = self.not_option()
             elif choice[0].lower() == "r":
                 if len(choice) == 2:
                     if choice[1].isdigit():
                         if int(choice[1])>=1 and int(choice[1])<=10:
-                            os.system('cls')
-                            inst = self.items['Rings'][int(choice[1])-1]
-                            print(inst.name)
-                            print("{---------------------------------------------------------------}")
-                            print("  >>  Cost:", inst.buy_value)
-                            print("  >>  Rarity:", inst.rarity)
-                            if inst.added_stats['str']>0 or inst.added_stats['dex']>0 or inst.added_stats['con']>0:
-                                print("  >>  Added Stats:")
-                                if inst.added_stats['str']>0:
-                                    print("    >>  Strength: +"+str(inst.added_stats['str']))
-                                if inst.added_stats['dex']>0:
-                                    print("    >>  Dexterity: +"+str(inst.added_stats['dex']))
-                                if inst.added_stats['con']>0:
-                                    print("    >>  Constitution: +"+str(inst.added_stats['con']))
-                            print("  >>  Added Benefits:")
-                            print("    >>  Health: +"+str(inst.added_extra['hp']))
-                            print("    >>  Damage: +"+str(inst.added_extra['dmg']))
-                            print("    >>  Armor Class: +"+str(inst.added_extra['ac']))
-                            input("[Press any button to return.]")
+                            self.print_item(0, choice, choice[0].lower())
                             self.display_shop()
-                            print("[Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
-                            print("[Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
-                            print("[Press L to return.]")
-                            choice = input("  >>  ").split()
+                            self.print_instructions()
+                            choice = input("  >>  ")
+                            if choice == "":
+                                choice = self.not_option()
+                            choice = choice.split()
                         else:
-                            print("That was not an option.")
-                            print("[Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
-                            print("[Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
-                            print("[Press L to return.]")
-                            choice = input("  >>  ").split()
+                            choice = self.not_option()
                     else:
-                        print("That was not an option.")
-                        print("[Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
-                        print("[Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
-                        print("[Press L to return.]")
-                        choice = input("  >>  ").split()
+                        choice = self.not_option()
                 else:
-                    print("That was not an option.")
-                    print("[Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
-                    print("[Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
-                    print("[Press L to return.]")
-                    choice = input("  >>  ").split()
+                    choice = self.not_option()
             elif choice[0].lower() == "b":
                 if len(choice) == 3:
                     POSSIBLE = ['u', 'w', 'h', 'a', 'r']
@@ -422,11 +302,7 @@ class Shop:
                             found = True
                             category = i
                     if not found:
-                        print("That was not an option.")
-                        print("[Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
-                        print("[Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
-                        print("[Press L to return.]")
-                        choice = input("  >>  ").split()
+                        choice = self.not_option()
                     else:
                         if choice[2].isdigit():
                             if int(choice[2])>=1 and int(choice[2])<=10:
@@ -447,50 +323,36 @@ class Shop:
                                         self.character.inventory[inst]=1
                                     os.system('cls')
                                     self.display_shop()
-                                    print("Thanks for buying an item. What will you do now?")
-                                    print("[Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
-                                    print("[Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
-                                    print("[Press L to return.]")
-                                    choice = input("  >>  ").split()
+                                    print("Thanks for buying an item. Would you like to buy anything else?")
+                                    self.print_instructions()
+                                    choice = input("  >>  ")
+                                    if choice == "":
+                                        choice = self.not_option()
+                                    choice = choice.split()
                                 else:
-                                    print("Sorry, you do not have enough Gold. What will you do now?")
-                                    print("[Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
-                                    print("[Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
-                                    print("[Press L to return.]")
-                                    choice = input("  >>  ").split()
+                                    print("Sorry, you do not have enough Gold. Would you like to buy anything else?")
+                                    self.print_instructions()
+                                    choice = input("  >>  ")
+                                    if choice == "":
+                                        choice = self.not_option()
+                                    choice = choice.split()
                             else:
-                                print("That was not an option.")
-                                print("[Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
-                                print("[Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
-                                print("[Press L to return.]")
-                                choice = input("  >>  ").split()
+                                choice = self.not_option()
                         else:
-                            print("That was not an option.")
-                            print("[Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
-                            print("[Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
-                            print("[Press L to return.]")
-                            choice = input("  >>  ").split()
+                            choice = self.not_option()
                         
                 else:
-                    print("That was not an option.")
-                    print("[Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
-                    print("[Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
-                    print("[Press L to return.]")
-                    choice = input("  >>  ").split()
+                    choice = self.not_option()
             else:
-                print("That was not an option.")
-                print("[Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
-                print("[Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
-                print("[Press L to return.]")
-                choice = input("  >>  ").split()
+                choice = self.not_option()
                 
                 
     def print_item(self, val, choice, letter):
         if val==0:
             POSSIBLEDICT = {
-                'h': "Helmet",
-                'a': "Armor",
-                'r': "Ring",
+                'h': "Helmets",
+                'a': "Body Armor",
+                'r': "Rings"
             }
             os.system('cls')
             inst = self.items[POSSIBLEDICT[letter.lower()]][int(choice[1])-1]
@@ -512,7 +374,34 @@ class Shop:
             print("    >>  Armor Class: +"+str(inst.added_extra['ac']))
             input("[Press any button to return.]")
         elif val==1:
-            
+            os.system('cls')
+            inst = self.items["Weapons"][int(choice[1])-1]
+            print(inst.name)
+            print("{---------------------------------------------------------------}")
+            print("  >>  Cost:", inst.buy_value)
+            print("  >>  Rarity:", inst.rarity)
+            if inst.added_stats['str']>0 or inst.added_stats['dex']>0 or inst.added_stats['con']>0:
+                print("  >>  Added Stats:")
+                if inst.added_stats['str']>0:
+                    print("    >>  Strength: +"+str(inst.added_stats['str']))
+                if inst.added_stats['dex']>0:
+                    print("    >>  Dexterity: +"+str(inst.added_stats['dex']))
+                if inst.added_stats['con']>0:
+                    print("    >>  Constitution: +"+str(inst.added_stats['con']))
+            input("[Press any button to return.]")
 
+    def print_instructions(self):
+        print("[Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
+        print("[Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
+        print("[Press L to return.]")
 
     def not_option(self):
+        print("That was not an option.")
+        self.print_instructions()
+        choice = input("  >>  ")
+        while choice == "":
+            print("That was not an option.")
+            self.print_instructions()
+            choice = input("  >>  ")
+        choice = choice.split()
+        return choice

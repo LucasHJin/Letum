@@ -71,7 +71,6 @@ class Character:
         print("{---------------------------------------------------------------}")
         input("[Enter any button to return.]")
 
-    #FIX PROBLEM WITH ADDING STATS
     def equip_equipment(self):
         #display message
         print("Current Equipment")
