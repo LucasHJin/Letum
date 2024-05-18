@@ -2,6 +2,10 @@ from enemies import Rat
 from enemies import Goblin
 from enemies import Skeleton
 from enemies import Demon
+from weapons import Sword
+from armor import Head
+from armor import Body
+from armor import Ring
 import os
 import math
 import random
@@ -13,6 +17,133 @@ class Battle:
         self.character = character
         self.weapon = weapon
         self.turn_count = 1
+        
+    def create_item(self):
+        RARITY_MULT = {
+            'Common': 1.0,
+            'Uncommon': 1.2,
+            'Rare': 1.5,
+            'Epic': 2.0,
+            'Legendary': 3.0
+        }
+            
+        #Generated these lists with AI
+        WORSE_ADJECTIVES = [
+            "Rusty", "Old", "Worn", "Tarnished", "Dull", "Faded", "Cracked", 
+            "Chipped", "Broken", "Weathered", "Battered", "Fractured", "Rugged", 
+            "Scratched", "Bent", "Corroded", "Decayed", "Moldy", "Musty", "Tattered"
+        ]
+        ADJECTIVES = [
+            "Mighty", "Eternal", "Ancient", "Legendary", "Unyielding", "Glorious", 
+            "Venerable", "Resplendent", "Mysterious", "Mythical", "Swift", "Stalwart", 
+            "Valiant", "Enchanted", "Radiant", "Arcane", "Ethereal", "Spectral", 
+            "Blazing", "Gleaming"
+        ]
+        PREFIXES = [
+            "Shadow", "Blood", "Dawn", "Death", "Fire", "Ice", "Storm", "Soul", 
+            "Void", "Frost", "Sun", "Moon", "Thunder", "Dragon", "Celestial", 
+            "Inferno", "Oath", "Demon", "Fey", "Rune"
+        ]
+        SUFFIXES = [
+            "blade", "edge", "fang", "brand", "caller", "reaver", "thirster", 
+            "keeper", "slayer", "whisper", "bane", "strike", "clap", "shadow", 
+            "thunder", "claw", "hammer", "crown", "crescent", "harbinger", "hunter"
+        ]
+        NOUNS = [
+            "Sword", "Blade", "Saber", "Scimitar", "Rapier", "Cutlass", "Katana", 
+            "Longsword", "Bastard Sword", "Greatsword", "Claymore", "Dagger", 
+            "Broadsword", "Warblade", "Falchion", "Gladius", "Dirk", "Kris", 
+            "Katana", "Tanto"
+        ]
+        HEAD_NOUNS = [
+            "Helm", "Visage", "Headgear", "Cap", "Crown", "Mask", "Veil", "Crest", 
+            "Hood", "Visor", "Coif", "Circlet", "Tiara", "Casque", "Cowl"
+        ]
+        BODY_NOUNS = [
+            "Armor", "Cuirass", "Plate", "Harness", "Mail", "Hauberk", "Vest", "Jacket", 
+            "Robe", "Garb", "Tabard", "Tunic", "Brigandine", "Vestments", "Surcoat"
+        ]
+        RING_NOUNS = [
+            "Ring", "Band", "Circle", "Loop", "Hoop", "Bandlet", "Bangle", "Orb", 
+            "Sphere", "Jewel", "Gem", "Stone", "Amulet", "Charm", "Token"
+        ]
+        item_a = random.choice(ADJECTIVES)
+        item_a2 = random.choice(WORSE_ADJECTIVES)
+        item_p = random.choice(PREFIXES)
+        item_s = random.choice(SUFFIXES)
+        item_n = random.choice(NOUNS)
+        item_hn = random.choice(HEAD_NOUNS)
+        item_bn = random.choice(BODY_NOUNS)
+        item_rn = random.choice(RING_NOUNS)
+        
+        RARITY_LIST = ["Common", "Uncommon", "Rare", "Epic", "Legendary"]
+        item_rarity = random.choices(RARITY_LIST, weights = [50, 25, 15, 7.5, 2.5], k=1)
+        item_type = random.choices(["Weapon", "Head", "Body", "Ring"], weights = [30, 30, 15, 25], k=1)
+        
+        if item_type == "Weapon":
+            if item_rarity[0]=="Common" or item_rarity[0]=="Uncommon":
+                item_name = item_a2 + " " + item_p + item_s + "'s " + item_n
+                inst = Sword(item_name, item_rarity[0], self.character, 0, 0, 0, 0, 0)
+                item_cost = inst.damage*225 + int(inst.damage*inst.damage_multiplier*10)
+                item_sell = int(item_cost * 0.7)
+                inst.buy_value = item_cost
+                inst.sell_value = item_sell
+            else:
+                item_name = item_a + " " + item_p + item_s + "'s " + item_n
+                points = int(random.randint(1, 2) * RARITY_MULT[item_rarity[0]])
+                #print("POINTS", points)
+                split_points = random.choices(['str', 'dex', 'con'], weights=[2, 1, 1], k=points)
+                #print("SPLIT POINTS", split_points)
+                added_stats = {
+                    'str': 0,
+                    'dex': 0,
+                    'con': 0
+                }
+                added_stats['str']=split_points.count('str')
+                added_stats['dex']=split_points.count('dex')
+                added_stats['con']=split_points.count('con')
+                #print("ADDED", added_stats)
+                inst = Sword(item_name, item_rarity[0], self.character, 0, 0, int(added_stats["str"]), int(added_stats["dex"]), int(added_stats["con"]))
+                #print("AFTER", inst.added_stats)
+                item_cost = points*300 + inst.damage*250 + int(inst.damage*inst.damage_multiplier*10)
+                item_sell = int(item_cost * 0.7)
+                inst.buy_value = item_cost
+                inst.sell_value = item_sell
+        elif item_type == "Head":
+            item_name = item_a2 + " " + item_p + item_s + "'s " + item_hn
+            inst = Head(name=item_name, rarity=item_rarity[0], buy_value=0, sell_value=0)
+            inst.decide_stats()
+            item_cost = 0
+            for extra in inst.added_extra:
+                item_cost += inst.added_extra[extra]*50
+            for stat in inst.added_stats:
+                item_cost += inst.added_stats[stat]*100
+            inst.buy_value = item_cost
+            inst.sell_value = int(item_cost * 0.7)
+        elif item_type == "Armor":
+            item_name = item_a2 + " " + item_p + item_s + "'s " + item_bn
+            inst = Body(name=item_name, rarity=item_rarity[0], buy_value=0, sell_value=0)
+            inst.decide_stats()
+            item_cost = 0
+            for extra in inst.added_extra:
+                item_cost += inst.added_extra[extra]*50
+            for stat in inst.added_stats:
+                item_cost += inst.added_stats[stat]*100
+            inst.buy_value = item_cost
+            inst.sell_value = int(item_cost * 0.7)
+        else:
+            item_name = item_a2 + " " + item_p + item_s + "'s " + item_rn
+            inst = Ring(name=item_name, rarity=item_rarity[0], buy_value=0, sell_value=0)
+            inst.decide_stats()
+            item_cost = 0
+            for extra in inst.added_extra:
+                item_cost += inst.added_extra[extra]*50
+            for stat in inst.added_stats:
+                item_cost += inst.added_stats[stat]*100
+            inst.buy_value = item_cost
+            inst.sell_value = int(item_cost * 0.7)
+        
+        return inst
 
     def entire_game(self):
         os.system('cls')
@@ -203,6 +334,19 @@ class Battle:
                         self.character.inventory['Gold'] += int(inst.gold)
                         self.character.exp += int(inst.exp)
                         en_inst[enemy_key].remove(inst) 
+                        temp_prob = random.random()
+                        if temp_prob<0.3:
+                            amount_HP = random.randint(1, 2)
+                            self.character.inventory['Health Potion'] += amount_HP
+                            print(" ~ +"+str(amount_HP)+" Health Potions ~ ")
+                        if temp_prob<1:
+                            item = self.create_item()
+                            if item in self.character.inventory:
+                                self.character.inventory+=1
+                            else:
+                                self.character.inventory[item]=1
+                            print(" ~ +1 "+item.name+" ~ ")
+                            self.character.display_inventory()
                     else:
                         if not inst.used:
                             inst.used = True
