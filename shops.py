@@ -380,6 +380,7 @@ class Shop:
             print("{---------------------------------------------------------------}")
             print("  >>  Cost:", inst.buy_value)
             print("  >>  Rarity:", inst.rarity)
+            print("  >>  Damage:", int(inst.damage * inst.damage_multiplier))
             if inst.added_stats['str']>0 or inst.added_stats['dex']>0 or inst.added_stats['con']>0:
                 print("  >>  Added Stats:")
                 if inst.added_stats['str']>0:
