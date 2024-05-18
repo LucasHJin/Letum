@@ -70,49 +70,6 @@ class Character:
             print("  >>  Ring:", self.equipment['Ring'].name)
         print("{---------------------------------------------------------------}")
         input("[Enter any button to return.]")
-        
-    def print_single_equipment(self, val, choice, letter):
-        if val==0:
-            POSSIBLEDICT = {
-                'h': "Helmets",
-                'a': "Body Armor",
-                'r': "Rings"
-            }
-            os.system('cls')
-            inst = self.items[POSSIBLEDICT[letter.lower()]][int(choice[1])-1]
-            print(inst.name)
-            print("{---------------------------------------------------------------}")
-            print("  >>  Cost:", inst.buy_value)
-            print("  >>  Rarity:", inst.rarity)
-            if inst.added_stats['str']>0 or inst.added_stats['dex']>0 or inst.added_stats['con']>0:
-                print("  >>  Added Stats:")
-                if inst.added_stats['str']>0:
-                    print("    >>  Strength: +"+str(inst.added_stats['str']))
-                if inst.added_stats['dex']>0:
-                    print("    >>  Dexterity: +"+str(inst.added_stats['dex']))
-                if inst.added_stats['con']>0:
-                    print("    >>  Constitution: +"+str(inst.added_stats['con']))
-            print("  >>  Added Benefits:")
-            print("    >>  Health: +"+str(inst.added_extra['hp']))
-            print("    >>  Damage: +"+str(inst.added_extra['dmg']))
-            print("    >>  Armor Class: +"+str(inst.added_extra['ac']))
-            input("[Press any button to return.]")
-        elif val==1:
-            os.system('cls')
-            inst = self.items["Weapons"][int(choice[1])-1]
-            print(inst.name)
-            print("{---------------------------------------------------------------}")
-            print("  >>  Cost:", inst.buy_value)
-            print("  >>  Rarity:", inst.rarity)
-            if inst.added_stats['str']>0 or inst.added_stats['dex']>0 or inst.added_stats['con']>0:
-                print("  >>  Added Stats:")
-                if inst.added_stats['str']>0:
-                    print("    >>  Strength: +"+str(inst.added_stats['str']))
-                if inst.added_stats['dex']>0:
-                    print("    >>  Dexterity: +"+str(inst.added_stats['dex']))
-                if inst.added_stats['con']>0:
-                    print("    >>  Constitution: +"+str(inst.added_stats['con']))
-            input("[Press any button to return.]")
     
     
     def display_equipments(self):
@@ -140,7 +97,7 @@ class Character:
         #display message
         self.display_equipments()
         #input and finding want to equip equipment
-        POSSIBLE = ['h', 'a', 'r', 'w', 'l']
+        POSSIBLE = ['h', 'a', 'r', 'w', 'l', 'i']
         POSSIBLEDICT = {
             'h': "Helmet",
             'a': "Armor",
@@ -154,16 +111,26 @@ class Character:
             'w': Sword
         }
         
-        print("What would you like to equip right now? [Enter the first letter of the equipment category or [L] to leave.]")
+        print("What would you like to equip right now? [Enter the first letter of the equipment category or [L] to leave or [I] to check your inventory.]")
         choice = input("  >>  ")
         
         while choice.lower() not in POSSIBLE:
-                print("Sorry, that was not an option. What would you like to equip right now? [Enter the FIRST LETTER of the equipment category or [L] to leave.]")
-                choice = input("  >>  ")
+            print("Sorry, that was not an option. What would you like to equip right now? [Enter the first letter of the equipment category or [L] to leave or [I] to check your inventory.]")
+            choice = input("  >>  ")
+        
         
         choice2 = ""
         
         while choice.lower() != "l" and choice2.lower() != "l":
+            while choice.lower() == "i":
+                self.check_inventory()
+                print("What would you like to equip right now? [Enter the first letter of the equipment category or [L] to leave or [I] to check your inventory.]")
+                choice = input("  >>  ")
+                
+                while choice.lower() not in POSSIBLE:
+                    print("Sorry, that was not an option. What would you like to equip right now? [Enter the first letter of the equipment category or [L] to leave or [I] to check your inventory.]")
+                    choice = input("  >>  ")
+                
             print("And what equipment would you like to equip? Please make sure that you are equipping a new piece of equipment. [Enter the name of the equipment (exactly as written) or enter [I] to check your inventory.]")
             choice2 = ""
             choice2 = input("  >>  ")
@@ -266,30 +233,132 @@ class Character:
                     else:
                         print("  >>  "+i+": "+str(PRINTDICT[i]))
             else:
-                print("That was not a valid input. We shall restart.")
+                print("We shall restart.")
             print("")
             self.display_equipments()
             
-            print("What would you like to equip right now? [Enter the first letter of the equipment category or [L] to leave.]")
+            print("What would you like to equip right now? [Enter the first letter of the equipment category or [L] to leave or [I] to check your inventory.]")
             choice = input("  >>  ")
+            
             while choice.lower() not in POSSIBLE:
-                print("Sorry, that was not an option. What would you like to equip right now? [Enter the FIRST LETTER of the equipment category or [L] to leave.]")
+                print("Sorry, that was not an option. What would you like to equip right now? [Enter the first letter of the equipment category or [L] to leave or [I] to check your inventory.]")
                 choice = input("  >>  ")
         input("Thank you for your business. I hope to see you soon. [Press enter to continue.]")
         
         
-    def check_inventory(self):
+    def print_single_equipment(self, val, inst):
+        if val==0:
+            POSSIBLEDICT = {
+                'h': "Helmet",
+                'a': "Armor",
+                'r': "Ring"
+            }
+            os.system('cls')
+            print(inst.name)
+            print("{---------------------------------------------------------------}")
+            print("  >>  Cost:", inst.buy_value)
+            print("  >>  Rarity:", inst.rarity)
+            if inst.added_stats['str']>0 or inst.added_stats['dex']>0 or inst.added_stats['con']>0:
+                print("  >>  Added Stats:")
+                if inst.added_stats['str']>0:
+                    print("    >>  Strength: +"+str(inst.added_stats['str']))
+                if inst.added_stats['dex']>0:
+                    print("    >>  Dexterity: +"+str(inst.added_stats['dex']))
+                if inst.added_stats['con']>0:
+                    print("    >>  Constitution: +"+str(inst.added_stats['con']))
+            print("  >>  Added Benefits:")
+            print("    >>  Health: +"+str(inst.added_extra['hp']))
+            print("    >>  Damage: +"+str(inst.added_extra['dmg']))
+            print("    >>  Armor Class: +"+str(inst.added_extra['ac']))
+            input("[Press any button to return.]")
+        elif val==1:
+            os.system('cls')
+            print(inst.name)
+            print("{---------------------------------------------------------------}")
+            print("  >>  Cost:", inst.buy_value)
+            print("  >>  Rarity:", inst.rarity)
+            if inst.added_stats['str']>0 or inst.added_stats['dex']>0 or inst.added_stats['con']>0:
+                print("  >>  Added Stats:")
+                if inst.added_stats['str']>0:
+                    print("    >>  Strength: +"+str(inst.added_stats['str']))
+                if inst.added_stats['dex']>0:
+                    print("    >>  Dexterity: +"+str(inst.added_stats['dex']))
+                if inst.added_stats['con']>0:
+                    print("    >>  Constitution: +"+str(inst.added_stats['con']))
+            input("[Press any button to return.]")    
+    
+    def display_inventory(self):
         os.system('cls')
+        inventoryList = []
+        count = 0
         print("INVENTORY")
         print("{---------------------------------------------------------------}")
         for i in self.inventory.keys():
             if not isinstance(i, Sword) and not isinstance(i, Head) and not isinstance(i, Body) and not isinstance(i, Ring):
-                print(i+":", self.inventory[i])
+                print("["+str(count+1)+"] "+i+":", self.inventory[i])
             else:
-                print(i.name+":", self.inventory[i])
+                print("["+str(count+1)+"] "+i.name+":", self.inventory[i])
+            inventoryList.append(i)
+            count+=1
         print("{---------------------------------------------------------------}")
-        input("[Enter any button to return.]")
-        
+        return [inventoryList, count]
+    
+    def check_inventory(self):
+        temp = self.display_inventory()
+        inventoryList = temp[0]
+        count = temp[1]
+        print("[Enter [L] to leave or enter the number of a specific item to learn more about it.]")
+        choice = input("  >>  ")
+        while choice != "l":
+            if choice.isdigit():
+                if choice == "1":
+                    print("Gold is the currency of the realm you currently reside in. It drops from monsters and chests and can be used to purchase equipment and consumables.")
+                    input("[Press any button to return.]")
+                    print("What will you do now?")
+                    print("[Enter [L] to leave or enter the number of a specific item to learn more about it.]")
+                    choice = input("  >>  ")
+                elif choice == "2":
+                    print("Health potions are an essential part of your kit. They will help you stay alive during battles, healing 40HP every use.")
+                    input("[Press any button to return.]")    
+                    print("What will you do now?")
+                    print("[Enter [L] to leave or enter the number of a specific item to learn more about it.]")
+                    choice = input("  >>  ")
+                elif int(choice)-1<len(inventoryList) and int(choice)-1>=0:
+                    if isinstance(inventoryList[int(choice)-1], Sword):
+                        self.print_single_equipment(1, inventoryList[int(choice)-1])
+                        print("What will you do now?")
+                        print("[Enter [L] to leave or enter the number of a specific item to learn more about it.]")
+                        choice = input("  >>  ")
+                    elif isinstance(inventoryList[int(choice)-1], Head):
+                        self.print_single_equipment(0, inventoryList[int(choice)]-1)
+                        print("What will you do now?")
+                        print("[Enter [L] to leave or enter the number of a specific item to learn more about it.]")
+                        choice = input("  >>  ")
+                    elif isinstance(inventoryList[int(choice)-1], Body):
+                        self.print_single_equipment(0, inventoryList[int(choice)-1])
+                        print("What will you do now?")
+                        print("[Enter [L] to leave or enter the number of a specific item to learn more about it.]")
+                        choice = input("  >>  ")
+                    elif isinstance(inventoryList[int(choice)-1], Ring):
+                        self.print_single_equipment(0, inventoryList[int(choice)-1])
+                        print("What will you do now?")
+                        print("[Enter [L] to leave or enter the number of a specific item to learn more about it.]")
+                        choice = input("  >>  ")
+                    else:
+                        print("That was not an option.")
+                        print("[Enter [L] to leave or enter the number of a specific item to learn more about it.]")
+                        choice = input("  >>  ")
+                else:
+                    print("That was not an option.")
+                    print("[Enter [L] to leave or enter the number of a specific item to learn more about it.]")
+                    choice = input("  >>  ")
+            else:
+                print("That was not an option.")
+                print("[Enter [L] to leave or enter the number of a specific item to learn more about it.]")
+                choice = input("  >>  ")
+            
+                
+                    
 
     def refresh_current_health(self): #for after level up or clear room 
         self.current_health = self.health
