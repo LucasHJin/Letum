@@ -453,21 +453,29 @@ class Character:
             good = False
             if stat_choice.lower() in self.stats:
                 self.stats[stat_choice] += 1
-            else:
-                while not good:
-                    print(" ~ Invalid choice. Please choose from 'str', 'dex', or 'con'. ~ ")
-                    stat_choice = input("  >>  ")
-                    if stat_choice.lower() in self.stats:
-                        self.stats[stat_choice] += 1
-                        good = True
-                        print("{---------------------------------------------------------------}")
-                        if self.stats.choice.lower() == 'str':
-                            print("  >>  Strength:", self.stats['str'], "↑")
-                        elif self.stats.choice.lower() == 'dex':
-                            print("  >>  Dexterity:", self.stats['dex'], "↑")
-                        else:
-                            print("  >>  Constitution:", self.stats['con'], "↑")
-                        print("{---------------------------------------------------------------}")
+                good = True
+                print("{---------------------------------------------------------------}")
+                if stat_choice.lower() == 'str':
+                    print("  >>  Strength:", self.stats['str'], "↑")
+                elif stat_choice.lower() == 'dex':
+                    print("  >>  Dexterity:", self.stats['dex'], "↑")
+                else:
+                    print("  >>  Constitution:", self.stats['con'], "↑")
+                print("{---------------------------------------------------------------}")
+            while not good:
+                print(" ~ Invalid choice. Please choose from 'str', 'dex', or 'con'. ~ ")
+                stat_choice = input("  >>  ")
+                if stat_choice.lower() in self.stats:
+                    self.stats[stat_choice] += 1
+                    good = True
+                    print("{---------------------------------------------------------------}")
+                    if stat_choice.lower() == 'str':
+                        print("  >>  Strength:", self.stats['str'], "↑")
+                    elif stat_choice.lower() == 'dex':
+                        print("  >>  Dexterity:", self.stats['dex'], "↑")
+                    else:
+                        print("  >>  Constitution:", self.stats['con'], "↑")
+                    print("{---------------------------------------------------------------}")
         print(" ~ Level up complete! Your stats are now: ~ ")
         print("{---------------------------------------------------------------}")
         print("  >>  Strength:", self.stats['str'])

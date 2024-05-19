@@ -147,6 +147,8 @@ class Battle:
 
     def entire_game(self):
         os.system('cls')
+        print("ROUND", self.turn_count)
+        print("{---------------------------------------------------------------}")
         if self.turn_count == 1:
             ene_inst = self.create_enemy_instances()
         print("Looking into the distance, you see:")
@@ -154,11 +156,14 @@ class Battle:
             counter = 0
             for amount_enemies in self.enemiesDict[enemy_key]:
                 if counter==0:
-                    print("  [X"+str(amount_enemies)+"]", "Common", enemy_key)
+                    if amount_enemies != 0:
+                        print("  [X"+str(amount_enemies)+"]", "Common", enemy_key)
                 elif counter==1:
-                    print("  [X"+str(amount_enemies)+"]", "Elite", enemy_key)
+                    if amount_enemies != 0:
+                        print("  [X"+str(amount_enemies)+"]", "Elite", enemy_key)
                 else:
-                    print("  [X"+str(amount_enemies)+"]", "Boss", enemy_key)
+                    if amount_enemies != 0:
+                        print("  [X"+str(amount_enemies)+"]", "Boss", enemy_key)
         status = self.turn(ene_inst)
         while status != "DEAD" and status != "WON":
             input("[Press any key to continue.]")
@@ -175,6 +180,30 @@ class Battle:
             return "WON"
 
     def turn(self, en_inst): 
+        CONVERSION_DICT = {
+            'Rat': 'r',
+            'Goblin': 'g',
+            'Skeleton': 's',
+            'Demon': 'd'
+        }
+        RCONVERSION_DICT = {
+            'r': 'Rat',
+            'g': 'Goblin',
+            's': 'Skeleton',
+            'd': 'Demon'
+        }
+        POSSIBLE_LETTER = ['r', 'g', 's', 'd']
+        RARITY_DROP_CHANCE = {
+            'Common': 1.0,
+            'Elite': 2.0,
+            'Boss': 3.0,
+        }
+        TYPE_DROP_CHANCE = {
+            "Rat": 1.0,
+            "Goblin": 1.5,
+            "Skeleton": 2.0,
+            "Demon": 2.5
+        }
         #player turn
         print("\nYour Turn:")
         print("{---------------------------------------------------------------}")
@@ -292,34 +321,45 @@ class Battle:
                         inst.health -= dmg
                 print("Throwing a wide slash, you hit all the enemies, dealing", dmg, "damage to each one of them.")
             elif choice_action != "HP" and choice_action != "Holy Aura":
-                print("Who do you wish to attack? (Make sure to type the name exactly as displayed.)")
+                print("Who do you wish to attack? (Make sure to type the displayed letter and number. I.e. [s1] to attack Skeleton #1)")
                 for enemy_key in self.enemiesDict:
+                    counter2 = 1
                     for inst in en_inst[enemy_key]:
-                        print("  ["+inst.name+"] - Current Health:", inst.health)
+                        print("  ["+CONVERSION_DICT[enemy_key]+str(counter2)+"] "+inst.name+" - Current Health:", inst.health)
+                        counter2+=1
                 who = input("  >>  ")
                 chosen = False
-                for enemy_key in self.enemiesDict:
-                    for inst in en_inst[enemy_key]:
-                        if inst.name == who:
-                            chosen = True
+                if who.strip() != "": #not empty
+                        if who[0].isalpha():
+                            if who[0].lower() in POSSIBLE_LETTER and who[1:].isdigit():
+                                #amount of enemies in that type
+                                #https://www.geeksforgeeks.org/sum-function-python/
+                                sum_amount = sum(self.enemiesDict[RCONVERSION_DICT[who[0].lower()]])
+                                if int(who[1:])>0 and int(who[1:])<=sum_amount:
+                                    chosen = True
                 while not chosen:
-                    print("That was not the option. (Make sure to type the name exactly as displayed.) The options are: ")
+                    print("That was not the option. (Make sure to type the letter and number exactly as displayed.) The options are: ")
                     for enemy_key in self.enemiesDict:
+                        counter2 = 1
                         for inst in en_inst[enemy_key]:
-                            print("  ["+inst.name+"] -> Current Health:", inst.health)
+                            print("  ["+CONVERSION_DICT[enemy_key]+str(counter2)+"] "+inst.name+" - Current Health:", inst.health)
+                            counter2+=1
                     who = input("  >>  ")
-                    for enemy_key in self.enemiesDict:
-                        for inst in en_inst[enemy_key]:
-                            if inst.name == who:
-                                chosen = True
-                for enemy_key in self.enemiesDict:
-                    for inst in en_inst[enemy_key]:
-                        if inst.name == who:
-                            inst.health -= dmg
+                    if who.strip() != "": #not empty
+                        if who[0].isalpha():
+                            if who[0].lower() in POSSIBLE_LETTER and who[1:].isdigit():
+                                #amount of enemies in that type
+                                sum_amount = sum(self.enemiesDict[RCONVERSION_DICT[who[0].lower()]])
+                                if int(who[1:])>0 and int(who[1:])<=sum_amount:
+                                    chosen = True
+                                    
+                #dmg to chosen enemy
+                en_inst[RCONVERSION_DICT[who[0].lower()]][int(who[1:])-1].health -= dmg
+                
                 if choice_action == "Slash":
-                    print("You slash your sword through the enemy's grotesque cadaver. You deal", dmg, "damage.")
+                    print("You slash your sword through "+en_inst[RCONVERSION_DICT[who[0].lower()]][int(who[1:])-1].name+"'s grotesque cadaver. You deal", dmg, "damage.")
                 elif choice_action == "Holy Blow":
-                    print("Smiting the enemy down, you deal", dmg, "damage.")
+                    print("Smiting "+en_inst[RCONVERSION_DICT[who[0].lower()]][int(who[1:])-1].name+" down, you deal", dmg, "damage.")
             
         for enemy_key in self.enemiesDict: 
             #iterate over copy -> no uninteded problems if multiple enemies are killed at the same time
@@ -339,7 +379,7 @@ class Battle:
                             amount_HP = random.randint(1, 2)
                             self.character.inventory['Health Potion'] += amount_HP
                             print("  >>  +"+str(amount_HP)+" Health Potions")
-                        if temp_prob<1:
+                        if temp_prob<(0.05 * RARITY_DROP_CHANCE[inst.tpe] * TYPE_DROP_CHANCE[enemy_key]):
                             item = self.create_item()
                             if item in self.character.inventory:
                                 self.character.inventory+=1
@@ -357,6 +397,18 @@ class Battle:
                             self.character.inventory['Gold'] += int(inst.gold)
                             self.character.exp += int(inst.exp)
                             en_inst[enemy_key].remove(inst)
+                            temp_prob = random.random()
+                            if temp_prob<0.3:
+                                amount_HP = random.randint(1, 2)
+                                self.character.inventory['Health Potion'] += amount_HP
+                                print("  >>  +"+str(amount_HP)+" Health Potions")
+                            if temp_prob<(0.05 * RARITY_DROP_CHANCE[inst.tpe] * TYPE_DROP_CHANCE[enemy_key]):
+                                item = self.create_item()
+                                if item in self.character.inventory:
+                                    self.character.inventory+=1
+                                else:
+                                    self.character.inventory[item]=1
+                                print("  >>  +1 "+item.name+" ~ ")
 
         print("{---------------------------------------------------------------}")
         input("[Press any key to continue.]\n")
