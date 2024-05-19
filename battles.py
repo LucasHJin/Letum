@@ -329,8 +329,8 @@ class Battle:
                     if not isinstance(inst, Skeleton): 
                         #https://www.w3schools.com/python/python_lists_remove.asp
                         print(" ~ Congratulations, you have slain an enemy! ["+inst.name+"] ~ ")
-                        print(" ~ +"+str(int(inst.exp))+" EXP ~ ")
-                        print(" ~ +"+str(int(inst.gold))+" Gold ~ ")
+                        print("  >>  +"+str(int(inst.exp))+" EXP")
+                        print("  >>  +"+str(int(inst.gold))+" Gold")
                         self.character.inventory['Gold'] += int(inst.gold)
                         self.character.exp += int(inst.exp)
                         en_inst[enemy_key].remove(inst) 
@@ -338,23 +338,22 @@ class Battle:
                         if temp_prob<0.3:
                             amount_HP = random.randint(1, 2)
                             self.character.inventory['Health Potion'] += amount_HP
-                            print(" ~ +"+str(amount_HP)+" Health Potions ~ ")
+                            print("  >>  +"+str(amount_HP)+" Health Potions")
                         if temp_prob<1:
                             item = self.create_item()
                             if item in self.character.inventory:
                                 self.character.inventory+=1
                             else:
                                 self.character.inventory[item]=1
-                            print(" ~ +1 "+item.name+" ~ ")
-                            self.character.display_inventory()
+                            print("  >>  +1 "+item.name+" ~ ")
                     else:
                         if not inst.used:
                             inst.used = True
                             inst.escape_death()
                         else:
                             print(" ~ You have overcome a skeleton's innate trait and slain them. ["+inst.name+"] ~ ")
-                            print(" ~ +"+str(int(inst.exp))+" EXP ~ ")
-                            print(" ~ +"+str(int(inst.gold))+" Gold ~ ")
+                            print("  >>  +"+str(int(inst.exp))+" EXP")
+                            print("  >>  +"+str(int(inst.gold))+" Gold")
                             self.character.inventory['Gold'] += int(inst.gold)
                             self.character.exp += int(inst.exp)
                             en_inst[enemy_key].remove(inst)

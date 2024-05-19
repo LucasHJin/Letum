@@ -7,8 +7,7 @@ History:
 April 13, 2023: Program Creation
 """
 
-#DROP ARMOUR AND WEAPONS?!!! AND CHEST
-#FIX AFTER FINISHING R1, GOES TO R2 WITH 0 IN EVERYTHING -> NEED TO GO THROUGH TOP PART AGAIN
+#Test dying
 #OPTIONAL -> ORDER ITEMS IN SHOP
 #OPTIONAL -> MAKE NUMBERS INSTEAD OF NAMES FOR ENEMIES
 #REPLACE ALL THE ARMOR NAMINGS WITH ONE CONSISTENT NAMING
@@ -28,11 +27,14 @@ import random
 
 #FUNCTIONS
 def open_chest(items):
+    print("\nCHEST")
+    print("{---------------------------------------------------------------}")
     for i in items.keys():
         if not isinstance(i, Sword) and not isinstance(i, Head) and not isinstance(i, Body) and not isinstance(i, Ring):
-            print(i+":", items[i])
+            print("  >>  "+i+":", items[i])
         else:
-            print(i.name+":", items[i])
+            print("  >>  "+i.name+":", items[i])
+    print("{---------------------------------------------------------------}")
 
 def print_options(statements):
     for k, v in statements.items():
@@ -44,6 +46,22 @@ def not_option(statements):
     temp = input("  >>  ")
     return temp
 
+def random_items(round_num, battle_inst):
+    contain = {}
+    gold_amount = random.randint(75, 110) * round_num // 2
+    hp_amount = random.randint(0, 1) * round_num // 2
+    player.inventory['Gold'] += gold_amount
+    player.inventory['Health Potion'] += hp_amount
+    contain['Gold'] = gold_amount
+    contain['Health Potion'] = hp_amount
+    #Items
+    temp_item = battle_inst.create_item()
+    player.inventory[temp_item] = 1
+    contain[temp_item] = 1
+    
+    return contain
+    
+    
 
 #CHARACTER CREATION
 os.system('cls')
@@ -116,7 +134,7 @@ print("\nAs you open the rotting chest, its hinges slowly creaking like the gutt
 #player = Character(name=name, srn=int(stats_input[0]), dex=int(stats_input[1]), con=int(stats_input[2]), level=1, exp=0)
 #only do ^^ if there are optional paramaters that could be passed but aren't
 player = Character(name, int(stats_input[0]), int(stats_input[1]), int(stats_input[2]), 1, 0)
-weapon = Sword("Old Iron Sword", "Common", player, 0, 0, 0, 0, 0)
+weapon = Sword("Old Iron Sword", "Legendary", player, 0, 0, 0, 0, 0)
 player.equipment['Weapon'] = weapon
 #refresh stats to set proper stats (like initializing) for player
 player.refresh_stats()
@@ -181,7 +199,7 @@ eyDict = {
     'Demon': [0, 0, 0]
 }
 rnd = Battle(eyDict, player, weapon)
-result_temp = "TEMP"
+result = "TEMP"
 round_counter = 0
 
 shop = Shop(player)
@@ -195,13 +213,18 @@ POSSIBLE = {
     "F": "Fight"
 }
 
-
 os.system('cls')
 print("What will you do now?")
 print_options(POSSIBLE)
 choice = input("  >>  ")
 
-while result_temp != "DEAD":
+while choice.upper() not in POSSIBLE:
+    os.system('cls')
+    print(" ~ That was not one of the options. The options are: ~ ")
+    print_options(POSSIBLE)
+    choice = input("  >>  ")
+
+while result != "DEAD":
     while choice.lower() != "f":
         if choice.lower() == "i":
             player.check_inventory()
@@ -224,8 +247,8 @@ while result_temp != "DEAD":
             print_options(POSSIBLE)
             choice = input("  >>  ")
         elif choice.lower() != "f":
-            print(" ~ That was not one of the options. The options are: ~ ")
             os.system('cls')
+            print(" ~ That was not one of the options. The options are: ~ ")
             print_options(POSSIBLE)
             choice = input("  >>  ")
 
@@ -233,7 +256,6 @@ while result_temp != "DEAD":
     print("{---------------------------------------------------------------}")
     result = rnd.entire_game()
     round_counter += 1
-    result_temp = result
 
     generate_multipliers = {
         'Rat': [5, 3, 1.5],    
@@ -251,5 +273,28 @@ while result_temp != "DEAD":
             eyDict[enemy][enemy_type_num] = amount_enemies
 
     rnd.enemiesDict = eyDict
+    
+    print("Congratulations for surviving Round", str(round_counter)+". Press [O] to open up your reward chest.")
+    choice = input("  >>  ")
+    
+    while choice.lower() != 'o':
+        print("That was not an option. Press [O] to open up your reward chest.")
+        choice = input("  >>  ")
+    
+    contain = random_items(round_counter, rnd)
+    open_chest(contain)
+    input("[Press enter to continue.]")
+    
+    os.system('cls')
+    print("What will you do now?")
+    print_options(POSSIBLE)
+    choice = input("  >>  ")
+    
+    while choice.upper() not in POSSIBLE:
+        os.system('cls')
+        print(" ~ That was not one of the options. The options are: ~ ")
+        print_options(POSSIBLE)
+        choice = input("  >>  ")
+    
 
 print("YOU SURVIVED", round_counter, "ROUNDS. CONGRATULATIONS,", player.name+".")
