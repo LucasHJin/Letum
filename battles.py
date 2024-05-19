@@ -3,8 +3,8 @@ from enemies import Goblin
 from enemies import Skeleton
 from enemies import Demon
 from weapons import Sword
-from armor import Head
-from armor import Body
+from armor import Helmet
+from armor import Armor
 from armor import Ring
 import os
 import math
@@ -55,11 +55,11 @@ class Battle:
             "Broadsword", "Warblade", "Falchion", "Gladius", "Dirk", "Kris", 
             "Katana", "Tanto"
         ]
-        HEAD_NOUNS = [
+        HELMET_NOUNS = [
             "Helm", "Visage", "Headgear", "Cap", "Crown", "Mask", "Veil", "Crest", 
             "Hood", "Visor", "Coif", "Circlet", "Tiara", "Casque", "Cowl"
         ]
-        BODY_NOUNS = [
+        ARMOR_NOUNS = [
             "Armor", "Cuirass", "Plate", "Harness", "Mail", "Hauberk", "Vest", "Jacket", 
             "Robe", "Garb", "Tabard", "Tunic", "Brigandine", "Vestments", "Surcoat"
         ]
@@ -72,13 +72,13 @@ class Battle:
         item_p = random.choice(PREFIXES)
         item_s = random.choice(SUFFIXES)
         item_n = random.choice(NOUNS)
-        item_hn = random.choice(HEAD_NOUNS)
-        item_bn = random.choice(BODY_NOUNS)
+        item_hn = random.choice(HELMET_NOUNS)
+        item_bn = random.choice(ARMOR_NOUNS)
         item_rn = random.choice(RING_NOUNS)
         
         RARITY_LIST = ["Common", "Uncommon", "Rare", "Epic", "Legendary"]
         item_rarity = random.choices(RARITY_LIST, weights = [50, 25, 15, 7.5, 2.5], k=1)
-        item_type = random.choices(["Weapon", "Head", "Body", "Ring"], weights = [30, 30, 15, 25], k=1)
+        item_type = random.choices(["Weapon", "Helmet", "Armor", "Ring"], weights = [30, 30, 15, 25], k=1)
         
         if item_type == "Weapon":
             if item_rarity[0]=="Common" or item_rarity[0]=="Uncommon":
@@ -109,9 +109,9 @@ class Battle:
                 item_sell = int(item_cost * 0.7)
                 inst.buy_value = item_cost
                 inst.sell_value = item_sell
-        elif item_type == "Head":
+        elif item_type == "Helmet":
             item_name = item_a2 + " " + item_p + item_s + "'s " + item_hn
-            inst = Head(name=item_name, rarity=item_rarity[0], buy_value=0, sell_value=0)
+            inst = Helmet(name=item_name, rarity=item_rarity[0], buy_value=0, sell_value=0)
             inst.decide_stats()
             item_cost = 0
             for extra in inst.added_extra:
@@ -122,7 +122,7 @@ class Battle:
             inst.sell_value = int(item_cost * 0.7)
         elif item_type == "Armor":
             item_name = item_a2 + " " + item_p + item_s + "'s " + item_bn
-            inst = Body(name=item_name, rarity=item_rarity[0], buy_value=0, sell_value=0)
+            inst = Armor(name=item_name, rarity=item_rarity[0], buy_value=0, sell_value=0)
             inst.decide_stats()
             item_cost = 0
             for extra in inst.added_extra:

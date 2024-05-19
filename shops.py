@@ -1,6 +1,6 @@
 from weapons import Sword
-from armor import Head
-from armor import Body
+from armor import Helmet
+from armor import Armor
 from armor import Ring
 import random
 import os
@@ -15,12 +15,12 @@ class Shop:
             'Utility': ["Health Potion"],
             'Weapons': [],
             'Helmets': [],
-            'Body Armor': [],
+            'Armor': [],
             'Rings': []
         }
         
     def create_items(self, items_amount):
-        #items -> amount [weapon, head, body, ring]
+        #items -> amount [weapon, helmet, armor, ring]
         RARITY_MULT = {
             'Common': 1.0,
             'Uncommon': 1.2,
@@ -57,11 +57,11 @@ class Shop:
             "Broadsword", "Warblade", "Falchion", "Gladius", "Dirk", "Kris", 
             "Katana", "Tanto"
         ]
-        HEAD_NOUNS = [
+        HELMET_NOUNS = [
             "Helm", "Visage", "Headgear", "Cap", "Crown", "Mask", "Veil", "Crest", 
             "Hood", "Visor", "Coif", "Circlet", "Tiara", "Casque", "Cowl"
         ]
-        BODY_NOUNS = [
+        ARMOR_NOUNS = [
             "Armor", "Cuirass", "Plate", "Harness", "Mail", "Hauberk", "Vest", "Jacket", 
             "Robe", "Garb", "Tabard", "Tunic", "Brigandine", "Vestments", "Surcoat"
         ]
@@ -76,8 +76,8 @@ class Shop:
                 item_p = random.choice(PREFIXES)
                 item_s = random.choice(SUFFIXES)
                 item_n = random.choice(NOUNS)
-                item_hn = random.choice(HEAD_NOUNS)
-                item_bn = random.choice(BODY_NOUNS)
+                item_hn = random.choice(HELMET_NOUNS)
+                item_bn = random.choice(ARMOR_NOUNS)
                 item_rn = random.choice(RING_NOUNS)
                 
                 RARITY_LIST = ["Common", "Uncommon", "Rare", "Epic", "Legendary"]
@@ -115,7 +115,7 @@ class Shop:
                     self.items['Weapons'].append(inst)
                 elif amount == 1:
                     item_name = item_a2 + " " + item_p + item_s + "'s " + item_hn
-                    inst = Head(name=item_name, rarity=item_rarity[0], buy_value=0, sell_value=0)
+                    inst = Helmet(name=item_name, rarity=item_rarity[0], buy_value=0, sell_value=0)
                     inst.decide_stats()
                     item_cost = 0
                     for extra in inst.added_extra:
@@ -127,7 +127,7 @@ class Shop:
                     self.items['Helmets'].append(inst)
                 elif amount == 2:
                     item_name = item_a2 + " " + item_p + item_s + "'s " + item_bn
-                    inst = Body(name=item_name, rarity=item_rarity[0], buy_value=0, sell_value=0)
+                    inst = Armor(name=item_name, rarity=item_rarity[0], buy_value=0, sell_value=0)
                     inst.decide_stats()
                     item_cost = 0
                     for extra in inst.added_extra:
@@ -136,7 +136,7 @@ class Shop:
                         item_cost += inst.added_stats[stat]*100
                     inst.buy_value = item_cost
                     inst.sell_value = int(item_cost * 0.7)
-                    self.items['Body Armor'].append(inst)
+                    self.items['Armor'].append(inst)
                 else:
                     item_name = item_a2 + " " + item_p + item_s + "'s " + item_rn
                     inst = Ring(name=item_name, rarity=item_rarity[0], buy_value=0, sell_value=0)
@@ -174,7 +174,7 @@ class Shop:
         print("Armor")
         print("{---------------------------------------------------------------}")
         counter = 1
-        for item in self.items['Body Armor']:
+        for item in self.items['Armor']:
             print("  >>  "+item.name, "-", item.buy_value, "["+str(counter)+"]")
             counter+=1
         print("{---------------------------------------------------------------}\n")
@@ -249,11 +249,8 @@ class Shop:
                 else:
                     choice = self.not_option()
             elif choice[0].lower() == "a":
-                print("A")
                 if len(choice) == 2:
-                    print("B")
                     if choice[1].isdigit():
-                        print("C")
                         if int(choice[1])>=1 and int(choice[1])<=10:
                             self.print_item(0, choice, choice[0].lower())
                             self.display_shop()
@@ -292,7 +289,7 @@ class Shop:
                         'u': "Utility",
                         'w': "Weapons", 
                         'h': "Helmets",
-                        'a': "Body Armor",
+                        'a': "Armor",
                         'r': "Rings"
                     }
                     found = False
@@ -351,7 +348,7 @@ class Shop:
         if val==0:
             POSSIBLEDICT = {
                 'h': "Helmets",
-                'a': "Body Armor",
+                'a': "Armor",
                 'r': "Rings"
             }
             os.system('cls')

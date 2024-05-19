@@ -1,8 +1,8 @@
 import random
 import os
 from weapons import Sword
-from armor import Head
-from armor import Body
+from armor import Helmet
+from armor import Armor
 from armor import Ring
 
 class Character:
@@ -105,8 +105,8 @@ class Character:
             'w': "Weapon"
         }
         POSSIBLEDICT2 = {
-            'h': Head,
-            'a': Body,
+            'h': Helmet,
+            'a': Armor,
             'r': Ring,
             'w': Sword
         }
@@ -178,7 +178,7 @@ class Character:
                     }
                     if self.equipment[POSSIBLEDICT[choice.lower()]] != "None":
                         for item in self.inventory:
-                            if isinstance(item, (Ring, Head, Body)):
+                            if isinstance(item, (Ring, Helmet, Armor)):
                                 if self.equipment[POSSIBLEDICT[choice.lower()]].name == item.name:
                                     remove_stats['str'] = item.added_stats['str']
                                     remove_stats['dex'] = item.added_stats['dex']
@@ -295,7 +295,7 @@ class Character:
         print("INVENTORY")
         print("{---------------------------------------------------------------}")
         for i in self.inventory.keys():
-            if not isinstance(i, Sword) and not isinstance(i, Head) and not isinstance(i, Body) and not isinstance(i, Ring):
+            if not isinstance(i, Sword) and not isinstance(i, Helmet) and not isinstance(i, Armor) and not isinstance(i, Ring):
                 print("["+str(count+1)+"] "+i+":", self.inventory[i])
             else:
                 print("["+str(count+1)+"] "+i.name+":", self.inventory[i])
@@ -330,12 +330,12 @@ class Character:
                         print("What will you do now?")
                         print("[Enter [L] to leave or enter the number of a specific item to learn more about it.]")
                         choice = input("  >>  ")
-                    elif isinstance(inventoryList[int(choice)-1], Head):
+                    elif isinstance(inventoryList[int(choice)-1], Helmet):
                         self.print_single_equipment(0, inventoryList[int(choice)]-1)
                         print("What will you do now?")
                         print("[Enter [L] to leave or enter the number of a specific item to learn more about it.]")
                         choice = input("  >>  ")
-                    elif isinstance(inventoryList[int(choice)-1], Body):
+                    elif isinstance(inventoryList[int(choice)-1], Armor):
                         self.print_single_equipment(0, inventoryList[int(choice)-1])
                         print("What will you do now?")
                         print("[Enter [L] to leave or enter the number of a specific item to learn more about it.]")

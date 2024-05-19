@@ -16,8 +16,8 @@ April 13, 2023: Program Creation
 from characters import Character
 from weapons import Sword
 from battles import Battle
-from armor import Head
-from armor import Body
+from armor import Helmet
+from armor import Armor
 from armor import Ring
 import os
 import time
@@ -30,7 +30,7 @@ def open_chest(items):
     print("\nCHEST")
     print("{---------------------------------------------------------------}")
     for i in items.keys():
-        if not isinstance(i, Sword) and not isinstance(i, Head) and not isinstance(i, Body) and not isinstance(i, Ring):
+        if not isinstance(i, Sword) and not isinstance(i, Helmet) and not isinstance(i, Armor) and not isinstance(i, Ring):
             print("  >>  "+i+":", items[i])
         else:
             print("  >>  "+i.name+":", items[i])

@@ -1,6 +1,6 @@
 import random
 
-class Armor:
+class Base:
     RARITY_MULT = {
         'Common': 1.0,
         'Uncommon': 1.2,
@@ -24,7 +24,7 @@ class Armor:
             'dmg': 0
         }
 
-class Head(Armor):
+class Helmet(Base):
     def __init__(self, name, rarity, buy_value, sell_value, added_stats=None, added_extra=None):
         super().__init__(name, rarity)
         self.added_stats = added_stats if added_stats is not None else {'str': 0, 'dex': 0, 'con': 0}
@@ -43,7 +43,7 @@ class Head(Armor):
         self.added_extra['dmg']=split_points_extra.count('dmg')//2
 
 
-class Body(Armor):
+class Armor(Base):
     def __init__(self, name, rarity, buy_value, sell_value, added_stats=None, added_extra=None):
         super().__init__(name, rarity)
         self.added_stats = added_stats if added_stats is not None else {'str': 0, 'dex': 0, 'con': 0}
@@ -62,7 +62,7 @@ class Body(Armor):
         self.added_extra['dmg']=split_points_extra.count('dmg')//2
 
 
-class Ring(Armor):
+class Ring(Base):
     def __init__(self, name, rarity, buy_value, sell_value, added_stats=None, added_extra=None):
         super().__init__(name, rarity)
         self.added_stats = added_stats if added_stats is not None else {'str': 0, 'dex': 0, 'con': 0}
