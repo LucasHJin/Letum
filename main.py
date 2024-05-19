@@ -189,7 +189,7 @@ print("Looking to your right, you see a stall, populated with a human like figur
 print(" ~ Be not scared. I teleported my loyal follower, Kun, to your location to aid you in your survival. He will sell you items and... who knows, maybe he'll be able to help you with your mentality as well. ~")
 print("With that statement, you hear a sudden bang.")
 print(" ~ Sorry, it appears I am unable to say more. Good luck! ~ ")
-input("[Enter any key to continue.]")
+input("[Press enter to continue.]")
 
 
 eyDict = {

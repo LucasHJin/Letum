@@ -226,7 +226,7 @@ class Battle:
                     for enemy_key in self.enemiesDict:
                         for inst in en_inst[enemy_key]:
                             print("  ["+inst.name+"] - Current Health:", inst.health)
-                    input("[Enter any key to continue.]")
+                    input("[Press enter to continue.]")
                     print("{---------------------------------------------------------------}")
             check_answer = False
             for j in range(len(self.weapon.abilityDict[self.weapon.rarity])):
@@ -256,7 +256,7 @@ class Battle:
                         for enemy_key in self.enemiesDict:
                             for inst in en_inst[enemy_key]:
                                 print("  ["+inst.name+"] - Current Health:", inst.health)
-                        input("[Enter any key to continue.]")
+                        input("[Press enter to continue.]")
                         print("{---------------------------------------------------------------}")
                 for j in range(len(self.weapon.abilityDict[self.weapon.rarity])):
                     if choice == str(j+1):

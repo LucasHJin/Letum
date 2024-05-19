@@ -69,7 +69,7 @@ class Character:
         else:
             print("  >>  Ring:", self.equipment['Ring'].name)
         print("{---------------------------------------------------------------}")
-        input("[Enter any button to return.]")
+        input("[Press enter to continue.]")
     
     
     def display_equipments(self):
@@ -476,7 +476,7 @@ class Character:
         print("  >>  Dexterity:", self.stats['dex'])
         print("  >>  Constitution:", self.stats['con'])
         print("{---------------------------------------------------------------}")
-        input("[Enter any button to continue.]")
+        input("[Press enter to continue.]")
 
 
     def all_level_up(self):
