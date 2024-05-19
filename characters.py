@@ -257,6 +257,7 @@ class Character:
             print(inst.name)
             print("{---------------------------------------------------------------}")
             print("  >>  Cost:", inst.buy_value)
+            print("  >>  Sell Value:", inst.sell_value)
             print("  >>  Rarity:", inst.rarity)
             if inst.added_stats['str']>0 or inst.added_stats['dex']>0 or inst.added_stats['con']>0:
                 print("  >>  Added Stats:")
@@ -276,6 +277,7 @@ class Character:
             print(inst.name)
             print("{---------------------------------------------------------------}")
             print("  >>  Cost:", inst.buy_value)
+            print("  >>  Sell Value:", inst.sell_value)
             print("  >>  Rarity:", inst.rarity)
             print("  >>  Damage:", int(inst.damage * inst.damage_multiplier))
             if inst.added_stats['str']>0 or inst.added_stats['dex']>0 or inst.added_stats['con']>0:
@@ -286,6 +288,9 @@ class Character:
                     print("    >>  Dexterity: +"+str(inst.added_stats['dex']))
                 if inst.added_stats['con']>0:
                     print("    >>  Constitution: +"+str(inst.added_stats['con']))
+            print("  >>  Available Abilities:")
+            for ability in range(len(inst.abilityDict[inst.rarity])-1):
+                print("    >>  "+inst.abilityDict[inst.rarity][ability])
             input("[Press any button to return.]")    
     
     def display_inventory(self):

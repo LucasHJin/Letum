@@ -167,28 +167,28 @@ class Shop:
         print("{---------------------------------------------------------------}")
         counter = 1
         for item in self.items['Weapons']:
-            print("  >>  "+item.name, "-", item.buy_value, "["+str(counter)+"]")
+            print("  ["+str(counter)+"]  "+item.name, "-", str(item.buy_value)+"G - "+item.rarity)
             counter+=1
         print("{---------------------------------------------------------------}\n")
         print("Helmets")
         print("{---------------------------------------------------------------}")
         counter = 1
         for item in self.items['Helmets']:
-            print("  >>  "+item.name, "-", item.buy_value, "["+str(counter)+"]")
+            print("  ["+str(counter)+"]  "+item.name, "-", str(item.buy_value)+"G - "+item.rarity)
             counter+=1
         print("{---------------------------------------------------------------}\n")
         print("Armor")
         print("{---------------------------------------------------------------}")
         counter = 1
         for item in self.items['Armor']:
-            print("  >>  "+item.name, "-", item.buy_value, "["+str(counter)+"]")
+            print("  ["+str(counter)+"]  "+item.name, "-", str(item.buy_value)+"G - "+item.rarity)
             counter+=1
         print("{---------------------------------------------------------------}\n")
         print("Rings")
         print("{---------------------------------------------------------------}")
         counter = 1
         for item in self.items['Rings']:
-            print("  >>  "+item.name, "-", item.buy_value, "["+str(counter)+"]")
+            print("  ["+str(counter)+"]  "+item.name, "-", str(item.buy_value)+"G - "+item.rarity)
             counter+=1
         print("{---------------------------------------------------------------}\n")
 
@@ -204,7 +204,7 @@ class Shop:
             if choice[0].lower() == "u":
                 if len(choice) == 2:
                     if choice[1].isdigit():
-                        if int(choice[1])>=1 and int(choice[1])<=10:
+                        if int(choice[1])==1:
                             os.system('cls')
                             print("Heals 40HP. Takes up 1 turn.")
                             input("[Press any button to return.]")
@@ -223,7 +223,7 @@ class Shop:
             elif choice[0].lower() == "w":
                 if len(choice) == 2:
                     if choice[1].isdigit():
-                        if int(choice[1])>=1 and int(choice[1])<=10:
+                        if int(choice[1])>=1 and int(choice[1])<=20:
                             self.print_item(1, choice, choice[0].lower())
                             self.display_shop()
                             self.print_instructions()
@@ -362,6 +362,7 @@ class Shop:
             print(inst.name)
             print("{---------------------------------------------------------------}")
             print("  >>  Cost:", inst.buy_value)
+            print("  >>  Sell Value:", inst.sell_value)
             print("  >>  Rarity:", inst.rarity)
             if inst.added_stats['str']>0 or inst.added_stats['dex']>0 or inst.added_stats['con']>0:
                 print("  >>  Added Stats:")
@@ -382,6 +383,7 @@ class Shop:
             print(inst.name)
             print("{---------------------------------------------------------------}")
             print("  >>  Cost:", inst.buy_value)
+            print("  >>  Sell Value:", inst.sell_value)
             print("  >>  Rarity:", inst.rarity)
             print("  >>  Damage:", int(inst.damage * inst.damage_multiplier))
             if inst.added_stats['str']>0 or inst.added_stats['dex']>0 or inst.added_stats['con']>0:
@@ -392,6 +394,9 @@ class Shop:
                     print("    >>  Dexterity: +"+str(inst.added_stats['dex']))
                 if inst.added_stats['con']>0:
                     print("    >>  Constitution: +"+str(inst.added_stats['con']))
+            print("  >>  Available Abilities:")
+            for ability in range(len(inst.abilityDict[inst.rarity])-1):
+                print("    >>  "+inst.abilityDict[inst.rarity][ability])
             input("[Press any button to return.]")
 
     def print_instructions(self):

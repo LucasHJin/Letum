@@ -7,8 +7,7 @@ History:
 April 13, 2023: Program Creation
 """
 #ADD COMMENTS
-#REMMBER TO SWITCH BACK THE VALUES FOR SWORD LATER
-#FIX PROBLEM OF GOING TO NEXT ROUND AFTER FINISHING FIRST ROUND
+#add ability to sell weapons/equipment
 
 from characters import Character
 from weapons import Sword
@@ -134,7 +133,7 @@ print("\nAs you open the rotting chest, its hinges slowly creaking like the gutt
 #player = Character(name=name, srn=int(stats_input[0]), dex=int(stats_input[1]), con=int(stats_input[2]), level=1, exp=0)
 #only do ^^ if there are optional paramaters that could be passed but aren't
 player = Character(name, int(stats_input[0]), int(stats_input[1]), int(stats_input[2]), 1, 0)
-weapon = Sword("Old Iron Sword", "Legendary", player, 0, 0, 0, 0, 0)
+weapon = Sword("Old Iron Sword", "Common", player, 0, 0, 0, 0, 0)
 player.equipment['Weapon'] = weapon
 #refresh stats to set proper stats (like initializing) for player
 player.refresh_stats()
@@ -193,17 +192,17 @@ input("[Press enter to continue.]")
 
 
 eyDict = {
-    'Rat': [3, 0, 0],
+    'Rat': [1, 0, 0],
     'Goblin': [0, 0, 0],
     'Skeleton': [0, 0, 0],
     'Demon': [0, 0, 0]
 }
 rnd = Battle(eyDict, player, weapon)
 result = "TEMP"
-round_counter = 0
+round_counter = 1
 
 shop = Shop(player)
-shop.create_items([10, 10, 10, 10])
+shop.create_items([20, 10, 10, 10])
 shop.sort_items()
 
 POSSIBLE = {
@@ -257,24 +256,43 @@ while result != "DEAD":
     if result != "DEAD":
         round_counter += 1
 
-        generate_multipliers = {
-            'Rat': [5, 3, 1.5],    
-            'Goblin': [2.5, 1.8, 1.2], 
-            'Skeleton': [1.5, 1, 0.8], 
-            'Demon': [0.8, 0.3, 0.1]
+        GENERATE_MULTIPLIERS = {
+            'Rat': [1, 1, 1],    
+            'Goblin': [1, 1, 1], 
+            'Skeleton': [1, 1, 1], 
+            'Demon': [1, 1, 1]
+        }
+        
+        GENERATE_ROUND_RESTRICTION = {
+            'Rat': [1, 5, 10],
+            'Goblin': [5, 10, 15],
+            'Skeleton': [10, 15, 20],
+            'Demon': [15, 20, 25]
         }
 
         for enemy in eyDict:
             for enemy_type_num in range(len(eyDict[enemy])):
+                if round_counter % GENERATE_ROUND_RESTRICTION[enemy][enemy_type_num] == 0 and GENERATE_ROUND_RESTRICTION[enemy][enemy_type_num] != 1:
+                    GENERATE_MULTIPLIERS[enemy][enemy_type_num] += 0.5
+                else:
+                    if round_counter % 3 == 0:
+                        GENERATE_MULTIPLIERS['Rat'][0] += 0.5
+                
                 #amount of enemies
-                amount_enemies = round_counter//10 + random.randint(0, round_counter//5)
+                amount_enemies = 0
+                #creating more
+                if round_counter >= GENERATE_ROUND_RESTRICTION[enemy][enemy_type_num]:
+                    if round_counter == GENERATE_ROUND_RESTRICTION[enemy][enemy_type_num]:
+                        amount_enemies = 1
+                    else:
+                        amount_enemies = round_counter//GENERATE_ROUND_RESTRICTION[enemy][enemy_type_num] + random.randint(1, round_counter//GENERATE_ROUND_RESTRICTION[enemy][enemy_type_num]+1)
                 #multiplier for having more weaker enemies and less stronger enemies
-                amount_enemies *= int(generate_multipliers[enemy][enemy_type_num])
+                amount_enemies *= int(GENERATE_MULTIPLIERS[enemy][enemy_type_num])
                 eyDict[enemy][enemy_type_num] = amount_enemies
 
         rnd.enemiesDict = eyDict
         
-        print("Congratulations for surviving Round", str(round_counter)+". Press [O] to open up your reward chest.")
+        print("Congratulations for surviving Round", str(round_counter-1)+". Press [O] to open up your reward chest.")
         choice = input("  >>  ")
         
         while choice.lower() != 'o':
@@ -298,5 +316,5 @@ while result != "DEAD":
         
 
 print("\n{---------------------------------------------------------------}")
-print("YOU SURVIVED TO", round_counter, "ROUNDS. CONGRATULATIONS,", player.name+".")
+print("YOU SURVIVED TO", round_counter-1, "ROUNDS. CONGRATULATIONS,", player.name+".")
 print("To try again, run the program once more.")

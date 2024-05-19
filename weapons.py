@@ -17,7 +17,7 @@ class Weapon:
 
 class Sword(Weapon):
     def __init__(self, name, rarity, character, buy_value, sell_value, srn, dex, con):
-        super().__init__(name=name, rarity=rarity, damage = random.randint(6, 100)) 
+        super().__init__(name=name, rarity=rarity, damage = random.randint(6, 10)) 
         self.character = character
         self.buy_value = buy_value
         self.sell_value = sell_value

@@ -17,6 +17,7 @@ class Battle:
         self.character = character
         self.weapon = weapon
         self.turn_count = 1
+        self.round_count = 1
         
     def create_item(self):
         RARITY_MULT = {
@@ -147,7 +148,7 @@ class Battle:
 
     def entire_game(self):
         os.system('cls')
-        print("ROUND", self.turn_count)
+        print("ROUND", self.round_count)
         print("{---------------------------------------------------------------}")
         if self.turn_count == 1:
             ene_inst = self.create_enemy_instances()
@@ -164,6 +165,7 @@ class Battle:
                 else:
                     if amount_enemies != 0:
                         print("  [X"+str(amount_enemies)+"]", "Boss", enemy_key)
+                counter += 1
         status = self.turn(ene_inst)
         while status != "DEAD" and status != "WON":
             input("[Press any key to continue.]")
@@ -177,6 +179,11 @@ class Battle:
             #level up
             if self.character.exp>self.character.needed_exp:
                 self.character.all_level_up()
+            #refresh cooldowns
+            for ability_cooldown in self.weapon.cooldownsDict:
+                self.weapon.cooldownsDict[ability_cooldown] = 0
+            #increment round count by 1
+            self.round_count += 1
             return "WON"
 
     def turn(self, en_inst): 
@@ -429,6 +436,8 @@ class Battle:
                     enemy_dmg = inst.choose_ability()
                     self.character.current_health -= enemy_dmg
         print("{---------------------------------------------------------------}")
+        
+        self.turn_count +=1 
 
 
         return en_inst
