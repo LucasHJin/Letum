@@ -6,12 +6,8 @@ This is a DnD based text-adventure role playing game. Based on the timeless genr
 History:
 April 13, 2023: Program Creation
 """
-
-#Test dying
-#OPTIONAL -> ORDER ITEMS IN SHOP
+#ADD COMMENTS
 #OPTIONAL -> MAKE NUMBERS INSTEAD OF NAMES FOR ENEMIES
-#REPLACE ALL THE ARMOR NAMINGS WITH ONE CONSISTENT NAMING
-
 
 from characters import Character
 from weapons import Sword
@@ -134,7 +130,7 @@ print("\nAs you open the rotting chest, its hinges slowly creaking like the gutt
 #player = Character(name=name, srn=int(stats_input[0]), dex=int(stats_input[1]), con=int(stats_input[2]), level=1, exp=0)
 #only do ^^ if there are optional paramaters that could be passed but aren't
 player = Character(name, int(stats_input[0]), int(stats_input[1]), int(stats_input[2]), 1, 0)
-weapon = Sword("Old Iron Sword", "Legendary", player, 0, 0, 0, 0, 0)
+weapon = Sword("Old Iron Sword", "Common", player, 0, 0, 0, 0, 0)
 player.equipment['Weapon'] = weapon
 #refresh stats to set proper stats (like initializing) for player
 player.refresh_stats()
@@ -204,6 +200,7 @@ round_counter = 0
 
 shop = Shop(player)
 shop.create_items([10, 10, 10, 10])
+shop.sort_items()
 
 POSSIBLE = {
     "I": "Open Inventory",
@@ -255,46 +252,49 @@ while result != "DEAD":
     print("ROUND", round_counter+1)
     print("{---------------------------------------------------------------}")
     result = rnd.entire_game()
-    round_counter += 1
+    if result != "DEAD":
+        round_counter += 1
 
-    generate_multipliers = {
-        'Rat': [5, 3, 1.5],    
-        'Goblin': [2.5, 1.8, 1.2], 
-        'Skeleton': [1.5, 1, 0.8], 
-        'Demon': [0.8, 0.3, 0.1]
-    }
+        generate_multipliers = {
+            'Rat': [5, 3, 1.5],    
+            'Goblin': [2.5, 1.8, 1.2], 
+            'Skeleton': [1.5, 1, 0.8], 
+            'Demon': [0.8, 0.3, 0.1]
+        }
 
-    for enemy in eyDict:
-        for enemy_type_num in range(len(eyDict[enemy])):
-            #amount of enemies
-            amount_enemies = round_counter//10 + random.randint(0, round_counter//5)
-            #multiplier for having more weaker enemies and less stronger enemies
-            amount_enemies *= int(generate_multipliers[enemy][enemy_type_num])
-            eyDict[enemy][enemy_type_num] = amount_enemies
+        for enemy in eyDict:
+            for enemy_type_num in range(len(eyDict[enemy])):
+                #amount of enemies
+                amount_enemies = round_counter//10 + random.randint(0, round_counter//5)
+                #multiplier for having more weaker enemies and less stronger enemies
+                amount_enemies *= int(generate_multipliers[enemy][enemy_type_num])
+                eyDict[enemy][enemy_type_num] = amount_enemies
 
-    rnd.enemiesDict = eyDict
-    
-    print("Congratulations for surviving Round", str(round_counter)+". Press [O] to open up your reward chest.")
-    choice = input("  >>  ")
-    
-    while choice.lower() != 'o':
-        print("That was not an option. Press [O] to open up your reward chest.")
+        rnd.enemiesDict = eyDict
+        
+        print("Congratulations for surviving Round", str(round_counter)+". Press [O] to open up your reward chest.")
         choice = input("  >>  ")
-    
-    contain = random_items(round_counter, rnd)
-    open_chest(contain)
-    input("[Press enter to continue.]")
-    
-    os.system('cls')
-    print("What will you do now?")
-    print_options(POSSIBLE)
-    choice = input("  >>  ")
-    
-    while choice.upper() not in POSSIBLE:
+        
+        while choice.lower() != 'o':
+            print("That was not an option. Press [O] to open up your reward chest.")
+            choice = input("  >>  ")
+        
+        contain = random_items(round_counter, rnd)
+        open_chest(contain)
+        input("[Press enter to continue.]")
+        
         os.system('cls')
-        print(" ~ That was not one of the options. The options are: ~ ")
+        print("What will you do now?")
         print_options(POSSIBLE)
         choice = input("  >>  ")
-    
+        
+        while choice.upper() not in POSSIBLE:
+            os.system('cls')
+            print(" ~ That was not one of the options. The options are: ~ ")
+            print_options(POSSIBLE)
+            choice = input("  >>  ")
+        
 
-print("YOU SURVIVED", round_counter, "ROUNDS. CONGRATULATIONS,", player.name+".")
+print("\n{---------------------------------------------------------------}")
+print("YOU SURVIVED TO", round_counter, "ROUNDS. CONGRATULATIONS,", player.name+".")
+print("To try again, run the program once more.")

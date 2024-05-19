@@ -358,8 +358,6 @@ class Character:
                 print("[Enter [L] to leave or enter the number of a specific item to learn more about it.]")
                 choice = input("  >>  ")
             
-                
-                    
 
     def refresh_current_health(self): #for after level up or clear room 
         self.current_health = self.health

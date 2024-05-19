@@ -149,7 +149,13 @@ class Shop:
                     inst.buy_value = item_cost
                     inst.sell_value = int(item_cost * 0.7)
                     self.items['Rings'].append(inst)
-            
+          
+    def sort_items(self):
+        #https://stackoverflow.com/questions/403421/how-do-i-sort-a-list-of-objects-based-on-an-attribute-of-the-objects
+        for items_type in self.items:
+            if items_type != "Utility":
+                self.items[items_type].sort(key=lambda x: x.buy_value, reverse=False)   
+      
     def display_shop(self):
         os.system('cls')
         print("SHOP")
