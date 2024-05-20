@@ -19,7 +19,7 @@ class Character:
         self.armor_class = 0
         self.attack_damage = 0
         self.inventory = {
-            'Gold': 100000000,
+            'Gold': 0,
             'Health Potion': 0
         }
         self.current_health = self.health

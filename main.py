@@ -7,7 +7,6 @@ History:
 April 13, 2023: Program Creation
 """
 #ADD COMMENTS
-#add ability to sell weapons/equipment
 
 from characters import Character
 from weapons import Sword
@@ -140,7 +139,7 @@ player.refresh_stats()
 #add obtained items to inventory
 
 contain = {
-    'Gold': 100,
+    'Gold': 50,
     'Health Potion': 5,
     weapon: 1
 }

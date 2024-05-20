@@ -346,6 +346,16 @@ class Shop:
                         
                 else:
                     choice = self.not_option()
+            elif choice[0].lower() == 's' and len(choice) == 1:
+                self.sell_item()
+                os.system('cls')
+                self.display_shop()
+                print("Thank you for selling an item. What would you like to do now?")
+                self.print_instructions()
+                choice = input("  >>  ")
+                if choice == "":
+                    choice = self.not_option()
+                choice = choice.split()
             else:
                 choice = self.not_option()
                 
@@ -400,9 +410,10 @@ class Shop:
             input("[Press any button to return.]")
 
     def print_instructions(self):
-        print("[Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
-        print("[Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
-        print("[Press L to return.]")
+        print("  >>  [Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
+        print("  >>  [Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
+        print("  >>  [Enter [S] to initiate the selling process.]")
+        print("  >>  [Press [L] to return.]")
 
     def not_option(self):
         print("That was not an option.")
@@ -414,3 +425,66 @@ class Shop:
             choice = input("  >>  ")
         choice = choice.split()
         return choice
+    
+    def sell_item(self):
+        self.display_inventory_sell_price()
+        print("What item do you want to sell? (Enter the number of the item or press [L] to leave.)")
+        choice_item = input("  >>  ").strip()
+        sell_price = 0
+        check = False
+        check_equipped = False
+        inv_list = list(self.character.inventory.keys())
+        
+        if choice_item.isdigit():
+            if int(choice_item) > 2 and int(choice_item) <= len(inv_list):
+                item_sell = inv_list[int(choice_item)-1]
+                for item_type in self.character.equipment:
+                    if self.character.equipment[item_type] == item_sell:
+                        check_equipped = True
+                        break
+                if not check_equipped:
+                    check = True
+                    sell_price = item_sell.sell_value
+        elif choice_item.lower() == 'l':
+            check = True
+                
+        while not check:
+            check_equipped = False
+            print("That was not a valid choice. (Please note that you are unable to sell gold or potions. Additionally, you are unable to sell any equipment that you currently have equipped. You may also press [L] to leave.)")
+            choice_item = input("  >>  ").strip()
+            if choice_item.isdigit():
+                if int(choice_item) > 2 and int(choice_item) < len(inv_list):
+                    item_sell = inv_list[int(choice_item)-1]
+                    for item_type in self.character.equipment:
+                        if self.character.equipment[item_type] == item_sell:
+                            check_equipped = True
+                            break
+                    if not check_equipped:
+                        check = True
+                        sell_price = item_sell.sell_value
+            elif choice_item.lower() == 'l':
+                check = True
+
+        if choice_item.lower() != 'l':
+            self.character.inventory['Gold'] += sell_price
+            #https://note.nkmk.me/en/python-dict-clear-pop-popitem-del
+            self.character.inventory.pop(item_sell)
+            print("You have sold", item_sell.name, "and gained", str(sell_price), "Gold.")
+            input("[Press enter to continue.]")
+        else:
+            print("Be sure to come back and sell items if you change your mind.")
+            input("[Press enter to continue.]")
+        
+        
+    def display_inventory_sell_price(self):
+        os.system('cls')
+        count = 0
+        print("INVENTORY")
+        print("{---------------------------------------------------------------}")
+        for i in self.character.inventory.keys():
+            if not isinstance(i, Sword) and not isinstance(i, Helmet) and not isinstance(i, Armor) and not isinstance(i, Ring):
+                print("["+str(count+1)+"] "+i+":", self.character.inventory[i], "- N/A")
+            else:
+                print("["+str(count+1)+"] "+i.name+":", self.character.inventory[i], "-", str(i.sell_value)+"G")
+            count+=1
+        print("{---------------------------------------------------------------}")
