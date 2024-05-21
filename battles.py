@@ -113,7 +113,7 @@ class Battle:
         elif item_type == "Helmet":
             item_name = item_a2 + " " + item_p + item_s + "'s " + item_hn
             inst = Helmet(name=item_name, rarity=item_rarity[0], buy_value=0, sell_value=0)
-            inst.decide_stats()
+            inst.decide_stats([2, 3, 4], [3, 3, 1])
             item_cost = 0
             for extra in inst.added_extra:
                 item_cost += inst.added_extra[extra]*50
@@ -124,7 +124,7 @@ class Battle:
         elif item_type == "Armor":
             item_name = item_a2 + " " + item_p + item_s + "'s " + item_bn
             inst = Armor(name=item_name, rarity=item_rarity[0], buy_value=0, sell_value=0)
-            inst.decide_stats()
+            inst.decide_stats([4, 2, 4], [3, 3, 1])
             item_cost = 0
             for extra in inst.added_extra:
                 item_cost += inst.added_extra[extra]*50
@@ -135,7 +135,7 @@ class Battle:
         else:
             item_name = item_a2 + " " + item_p + item_s + "'s " + item_rn
             inst = Ring(name=item_name, rarity=item_rarity[0], buy_value=0, sell_value=0)
-            inst.decide_stats()
+            inst.decide_stats([3, 2, 1], [2, 1, 4])
             item_cost = 0
             for extra in inst.added_extra:
                 item_cost += inst.added_extra[extra]*50

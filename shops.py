@@ -5,8 +5,7 @@ from armor import Ring
 import random
 import os
 
-
-#CREATE DICTIONARY OF POSSIBLE ADJECTIVES, SUFFIXES, PREFIXES, MATERIALS, etc. for describing weapons/armor
+#FIX ERROR WITH EXITING OUT OF LOOP -> INDEX RANGE
 
 class Shop:
     def __init__(self, character):
@@ -116,7 +115,7 @@ class Shop:
                 elif amount == 1:
                     item_name = item_a2 + " " + item_p + item_s + "'s " + item_hn
                     inst = Helmet(name=item_name, rarity=item_rarity[0], buy_value=0, sell_value=0)
-                    inst.decide_stats()
+                    inst.decide_stats([2, 3, 4], [3, 3, 1])
                     item_cost = 0
                     for extra in inst.added_extra:
                         item_cost += inst.added_extra[extra]*50
@@ -128,7 +127,7 @@ class Shop:
                 elif amount == 2:
                     item_name = item_a2 + " " + item_p + item_s + "'s " + item_bn
                     inst = Armor(name=item_name, rarity=item_rarity[0], buy_value=0, sell_value=0)
-                    inst.decide_stats()
+                    inst.decide_stats([4, 2, 4], [3, 3, 1])
                     item_cost = 0
                     for extra in inst.added_extra:
                         item_cost += inst.added_extra[extra]*50
@@ -140,7 +139,7 @@ class Shop:
                 else:
                     item_name = item_a2 + " " + item_p + item_s + "'s " + item_rn
                     inst = Ring(name=item_name, rarity=item_rarity[0], buy_value=0, sell_value=0)
-                    inst.decide_stats()
+                    inst.decide_stats([3, 2, 1], [2, 1, 4])
                     item_cost = 0
                     for extra in inst.added_extra:
                         item_cost += inst.added_extra[extra]*50
@@ -193,12 +192,18 @@ class Shop:
         print("{---------------------------------------------------------------}\n")
 
     def open_shop(self):
+        GOOD_INPUT = ['l', 'u', 'w', 'h', 'a', 'r']
+
         self.display_shop()
         self.print_instructions()
         choice = input("  >>  ")
-        if choice == "":
-            choice = self.not_option()
-        choice = choice.split()
+        if not choice:
+            self.not_option()
+        elif choice[0].lower() not in GOOD_INPUT:
+            self.not_option()
+
+        print("ASDL CJAFWFQ")
+        print(choice)
             
         while choice[0].lower() != "l":
             if choice[0].lower() == "u":
@@ -206,14 +211,15 @@ class Shop:
                     if choice[1].isdigit():
                         if int(choice[1])==1:
                             os.system('cls')
+                            print("Health Potion")
+                            print("{---------------------------------------------------------------}")
                             print("Heals 40HP. Takes up 1 turn.")
                             input("[Press any button to return.]")
                             self.display_shop()
                             self.print_instructions()
                             choice = input("  >>  ")
-                            if choice == "":
+                            if choice[0] not in GOOD_INPUT:
                                 choice = self.not_option()
-                            choice = choice.split()
                         else:
                             choice = self.not_option()
                     else:
@@ -228,9 +234,8 @@ class Shop:
                             self.display_shop()
                             self.print_instructions()
                             choice = input("  >>  ")
-                            if choice == "":
+                            if choice[0] not in GOOD_INPUT:
                                 choice = self.not_option()
-                            choice = choice.split()
                         else:
                             choice = self.not_option()
                     else:
@@ -245,9 +250,8 @@ class Shop:
                             self.display_shop()
                             self.print_instructions()
                             choice = input("  >>  ")
-                            if choice == "":
+                            if choice[0] not in GOOD_INPUT:
                                 choice = self.not_option()
-                            choice = choice.split()
                         else:
                             choice = self.not_option()
                     else:
@@ -262,9 +266,8 @@ class Shop:
                             self.display_shop()
                             self.print_instructions()
                             choice = input("  >>  ")
-                            if choice == "":
+                            if choice[0] not in GOOD_INPUT:
                                 choice = self.not_option()
-                            choice = choice.split()
                         else:
                             choice = self.not_option()
                     else:
@@ -279,9 +282,8 @@ class Shop:
                             self.display_shop()
                             self.print_instructions()
                             choice = input("  >>  ")
-                            if choice == "":
+                            if choice[0] not in GOOD_INPUT:
                                 choice = self.not_option()
-                            choice = choice.split()
                         else:
                             choice = self.not_option()
                     else:
@@ -329,16 +331,14 @@ class Shop:
                                     print("Thanks for buying an item. Would you like to buy anything else?")
                                     self.print_instructions()
                                     choice = input("  >>  ")
-                                    if choice == "":
+                                    if choice[0] not in GOOD_INPUT:
                                         choice = self.not_option()
-                                    choice = choice.split()
                                 else:
                                     print("Sorry, you do not have enough Gold. Would you like to buy anything else?")
                                     self.print_instructions()
                                     choice = input("  >>  ")
-                                    if choice == "":
+                                    if choice[0] not in GOOD_INPUT:
                                         choice = self.not_option()
-                                    choice = choice.split()
                             else:
                                 choice = self.not_option()
                         else:
@@ -353,9 +353,8 @@ class Shop:
                 print("Thank you for selling an item. What would you like to do now?")
                 self.print_instructions()
                 choice = input("  >>  ")
-                if choice == "":
+                if choice[0] not in GOOD_INPUT:
                     choice = self.not_option()
-                choice = choice.split()
             else:
                 choice = self.not_option()
                 
@@ -416,13 +415,37 @@ class Shop:
         print("  >>  [Press [L] to return.]")
 
     def not_option(self):
+        #DO IT BASED ON LEN 0, LEN1, LEN 2, LEN 3
+        GOOD_INPUT = ['l', 'u', 'w', 'h', 'a', 'r']
+        print("AYAYAYYAYAY")
         print("That was not an option.")
         self.print_instructions()
         choice = input("  >>  ")
-        while choice == "":
-            print("That was not an option.")
-            self.print_instructions()
-            choice = input("  >>  ")
+        passed = False
+
+        while not passed:
+            print(choice, "+A")
+            if not choice:
+                print("That was not an option.")
+                self.print_instructions()
+                choice = input("  >>  ")
+            elif len(choice.strip()) == 1:
+
+            elif len(choice.strip()) == 2:
+                
+            elif len(choice.strip()) == 3:
+                
+            elif len(choice.strip()) == 4:
+                
+            elif len(choice.strip()) == 5:
+            
+            
+            choice[0].lower() not in GOOD_INPUT:
+                print("That was not an option.")
+                self.print_instructions()
+                choice = input("  >>  ")
+            else:
+                passed = True
         choice = choice.split()
         return choice
     

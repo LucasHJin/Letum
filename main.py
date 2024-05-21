@@ -18,7 +18,6 @@ from armor import Ring
 import os
 from shops import Shop
 import random
-#https://stackoverflow.com/questions/60608275/how-can-i-print-text-so-it-looks-like-its-being-typed-out MAYBE
 
 #FUNCTIONS
 def open_chest(items):
