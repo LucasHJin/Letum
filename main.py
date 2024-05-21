@@ -7,6 +7,7 @@ History:
 April 13, 2023: Program Creation
 """
 #ADD COMMENTS
+#ADD CLEAR SCREEN WHERE APPROPRIATE
 
 from characters import Character
 from weapons import Sword
@@ -15,7 +16,6 @@ from armor import Helmet
 from armor import Armor
 from armor import Ring
 import os
-import time
 from shops import Shop
 import random
 #https://stackoverflow.com/questions/60608275/how-can-i-print-text-so-it-looks-like-its-being-typed-out MAYBE
@@ -103,7 +103,7 @@ print("\n ~ Thank you for revealing our stats. ~ ")
 print(" ~ Your goal is simple. It is to survive as long as possible against an endless horde of monsters. ~ ")
 print(" ~ Good luck, and may you leave behind a legacy worthy of your name. ~ ")
 
-time.sleep(1.5)
+input("[Press enter to continue.]")
 
 #START OF THE GAME
 
@@ -315,5 +315,5 @@ while result != "DEAD":
         
 
 print("\n{---------------------------------------------------------------}")
-print("YOU SURVIVED TO", round_counter-1, "ROUNDS. CONGRATULATIONS,", player.name+".")
+print("YOU SURVIVED FOR", round_counter-1, "ROUNDS. CONGRATULATIONS,", player.name+".")
 print("To try again, run the program once more.")
