@@ -197,10 +197,7 @@ class Shop:
         self.display_shop()
         self.print_instructions()
         choice = input("  >>  ")
-        if not choice:
-            self.not_option()
-        elif choice[0].lower() not in GOOD_INPUT:
-            self.not_option()
+        choice = self.not_option(choice)
 
         print("ASDL CJAFWFQ")
         print(choice)
@@ -219,13 +216,13 @@ class Shop:
                             self.print_instructions()
                             choice = input("  >>  ")
                             if choice[0] not in GOOD_INPUT:
-                                choice = self.not_option()
+                                choice = self.not_option(choice)
                         else:
-                            choice = self.not_option()
+                            choice = self.not_option(choice)
                     else:
-                        choice = self.not_option()
+                        choice = self.not_option(choice)
                 else:
-                    choice = self.not_option()
+                    choice = self.not_option(choice)
             elif choice[0].lower() == "w":
                 if len(choice) == 2:
                     if choice[1].isdigit():
@@ -235,13 +232,13 @@ class Shop:
                             self.print_instructions()
                             choice = input("  >>  ")
                             if choice[0] not in GOOD_INPUT:
-                                choice = self.not_option()
+                                choice = self.not_option(choice)
                         else:
-                            choice = self.not_option()
+                            choice = self.not_option(choice)
                     else:
-                        choice = self.not_option()
+                        choice = self.not_option(choice)
                 else:
-                    choice = self.not_option()
+                    choice = self.not_option(choice)
             elif choice[0].lower() == "h":
                 if len(choice) == 2:
                     if choice[1].isdigit():
@@ -251,13 +248,13 @@ class Shop:
                             self.print_instructions()
                             choice = input("  >>  ")
                             if choice[0] not in GOOD_INPUT:
-                                choice = self.not_option()
+                                choice = self.not_option(choice)
                         else:
-                            choice = self.not_option()
+                            choice = self.not_option(choice)
                     else:
-                        choice = self.not_option()
+                        choice = self.not_option(choice)
                 else:
-                    choice = self.not_option()
+                    choice = self.not_option(choice)
             elif choice[0].lower() == "a":
                 if len(choice) == 2:
                     if choice[1].isdigit():
@@ -267,13 +264,13 @@ class Shop:
                             self.print_instructions()
                             choice = input("  >>  ")
                             if choice[0] not in GOOD_INPUT:
-                                choice = self.not_option()
+                                choice = self.not_option(choice)
                         else:
-                            choice = self.not_option()
+                            choice = self.not_option(choice)
                     else:
-                        choice = self.not_option()
+                        choice = self.not_option(choice)
                 else:
-                    choice = self.not_option()
+                    choice = self.not_option(choice)
             elif choice[0].lower() == "r":
                 if len(choice) == 2:
                     if choice[1].isdigit():
@@ -283,13 +280,13 @@ class Shop:
                             self.print_instructions()
                             choice = input("  >>  ")
                             if choice[0] not in GOOD_INPUT:
-                                choice = self.not_option()
+                                choice = self.not_option(choice)
                         else:
-                            choice = self.not_option()
+                            choice = self.not_option(choice)
                     else:
-                        choice = self.not_option()
+                        choice = self.not_option(choice)
                 else:
-                    choice = self.not_option()
+                    choice = self.not_option(choice)
             elif choice[0].lower() == "b":
                 if len(choice) == 3:
                     POSSIBLE = ['u', 'w', 'h', 'a', 'r']
@@ -307,7 +304,7 @@ class Shop:
                             found = True
                             category = i
                     if not found:
-                        choice = self.not_option()
+                        choice = self.not_option(choice)
                     else:
                         if choice[2].isdigit():
                             if int(choice[2])>=1 and int(choice[2])<=10:
@@ -332,20 +329,20 @@ class Shop:
                                     self.print_instructions()
                                     choice = input("  >>  ")
                                     if choice[0] not in GOOD_INPUT:
-                                        choice = self.not_option()
+                                        choice = self.not_option(choice)
                                 else:
                                     print("Sorry, you do not have enough Gold. Would you like to buy anything else?")
                                     self.print_instructions()
                                     choice = input("  >>  ")
                                     if choice[0] not in GOOD_INPUT:
-                                        choice = self.not_option()
+                                        choice = self.not_option(choice)
                             else:
-                                choice = self.not_option()
+                                choice = self.not_option(choice)
                         else:
-                            choice = self.not_option()
+                            choice = self.not_option(choice)
                         
                 else:
-                    choice = self.not_option()
+                    choice = self.not_option(choice)
             elif choice[0].lower() == 's' and len(choice) == 1:
                 self.sell_item()
                 os.system('cls')
@@ -354,9 +351,9 @@ class Shop:
                 self.print_instructions()
                 choice = input("  >>  ")
                 if choice[0] not in GOOD_INPUT:
-                    choice = self.not_option()
+                    choice = self.not_option(choice)
             else:
-                choice = self.not_option()
+                choice = self.not_option(choice)
                 
                 
     def print_item(self, val, choice, letter):
@@ -414,40 +411,49 @@ class Shop:
         print("  >>  [Enter [S] to initiate the selling process.]")
         print("  >>  [Press [L] to return.]")
 
-    def not_option(self):
+    def not_option(self, choice):
         #DO IT BASED ON LEN 0, LEN1, LEN 2, LEN 3
-        GOOD_INPUT = ['l', 'u', 'w', 'h', 'a', 'r']
-        print("AYAYAYYAYAY")
-        print("That was not an option.")
-        self.print_instructions()
-        choice = input("  >>  ")
+        GOOD_CHECK = ['u', 'w', 'h', 'a', 'r']
         passed = False
 
         while not passed:
-            print(choice, "+A")
-            if not choice:
+            if choice:
+                #https://stackoverflow.com/questions/2184955/test-if-a-variable-is-a-list-or-tuple
+                if type(choice) is not list:
+                    choice = choice.split()
+                if len(choice) == 1:
+                    if choice[0].lower() == "s" or choice[0].lower() == "l":
+                            passed = True
+                elif len(choice) == 2:
+                    if choice[0].lower() in GOOD_CHECK:
+                        if choice[0].lower() == "u":
+                            if choice[1].isdigit():
+                                if int(choice[1]) == 1:
+                                    passed = True
+                        else:
+                            if choice[1].isdigit():
+                                if int(choice[1]) >= 1 and int(choice[1]) <=10:
+                                    passed = True
+                elif len(choice) == 3:
+                    if choice[0].lower() == "b":
+                        if choice[1].lower() in GOOD_CHECK:
+                            if choice[1].lower() == "u":
+                                if choice[2].isdigit():
+                                    if int(choice[2]) == 1:
+                                        passed = True
+                            else:
+                                if choice[2].isdigit():
+                                    if int(choice[2]) >= 1 and int(choice[2]) <=10:
+                                        passed = True
+            if not passed:
                 print("That was not an option.")
                 self.print_instructions()
                 choice = input("  >>  ")
-            elif len(choice.strip()) == 1:
-
-            elif len(choice.strip()) == 2:
-                
-            elif len(choice.strip()) == 3:
-                
-            elif len(choice.strip()) == 4:
-                
-            elif len(choice.strip()) == 5:
-            
-            
-            choice[0].lower() not in GOOD_INPUT:
-                print("That was not an option.")
-                self.print_instructions()
-                choice = input("  >>  ")
-            else:
-                passed = True
-        choice = choice.split()
+        #double check (make sure split)
+        if type(choice) is not list:
+            choice = choice.split()
         return choice
+    
     
     def sell_item(self):
         self.display_inventory_sell_price()
