@@ -1,3 +1,12 @@
+"""
+Final Project
+ICS3U
+Lucas Jin
+
+History:
+
+"""
+
 from enemies import Rat
 from enemies import Goblin
 from enemies import Skeleton

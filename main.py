@@ -4,8 +4,9 @@ ICS3U
 Lucas Jin
 This is a DnD based text-adventure role playing game. Based on the timeless genre, it is made with OOP and uses a variety of concepts such as functions, lists, dictionaries, variables, etc.
 History:
-April 13, 2023: Program Creation
+    April 13, 2023: Program Creation
 """
+
 #ADD COMMENTS
 #ADD CLEAR SCREEN WHERE APPROPRIATE
 

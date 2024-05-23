@@ -1,3 +1,12 @@
+"""
+Final Project
+ICS3U
+Lucas Jin
+
+History:
+
+"""
+
 import random
 
 class Sword:

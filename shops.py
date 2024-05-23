@@ -1,3 +1,12 @@
+"""
+Final Project
+ICS3U
+Lucas Jin
+
+History:
+
+"""
+
 from weapons import Sword
 from armor import Helmet
 from armor import Armor

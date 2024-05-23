@@ -1,3 +1,12 @@
+"""
+Final Project
+ICS3U
+Lucas Jin
+
+History:
+
+"""
+
 #to use to generate items
 import random
 
@@ -37,11 +46,16 @@ class Base:
     }
     
     def __init__(self, name, rarity, buy_value, sell_value):
+#ADD A DOC STRING
+
+        #initializing all the attributes for the Base class
         self.name = name
         self.rarity = rarity
+        #determining multiplier based on rarity
         self.multiplier = self.RARITY_MULT[rarity]
         self.buy_value = buy_value
         self.sell_value = sell_value
+        #all will start with 0 in stats and extra -> will be updated with function when created
         self.added_stats = {
             'str': 0,
             'dex': 0,
@@ -54,12 +68,26 @@ class Base:
         }
 
     def decide_stats(self, weight1, weight2):
-        split_points = random.choices(['str', 'dex', 'con'], weights=weight1, k=self.points)
+        """
+        A function to create/decide the stats of an instance of Base or its children once it is created (creating stats for equipment)
+
+        Parameters
+        ----------
+        weight1: [int]
+            Values for probability calculations for stats
+        weight2: [int]
+            Values for probability calculations for extra bonuses
+        """
+        #using random.choices to determine how many points to assign to each stat
+        split_points = random.choices(['str', 'dex', 'con'], weights=weight1, k=int(4 * self.multiplier))
+        #assigning stats
         self.added_stats['str']=split_points.count('str')
         self.added_stats['dex']=split_points.count('dex')
         self.added_stats['con']=split_points.count('con')
 
-        split_points_extra = random.choices(['ac', 'hp', 'dmg'], weights=weight2, k=self.points*8)
+        #using random.choices to determine how many extra points to assign to each extra value
+        split_points_extra = random.choices(['ac', 'hp', 'dmg'], weights=weight2, k=int(4 * self.multiplier)*8)
+        #assigning points
         self.added_extra['ac']=split_points_extra.count('ac')//3
         self.added_extra['hp']=int(split_points_extra.count('hp')*1.5)
         self.added_extra['dmg']=split_points_extra.count('dmg')//2
@@ -69,7 +97,9 @@ class Helmet(Base):
     A class to represent the helmet template (is a child class, inheriting from parent class: Base)
     ...
     """
+    #change maybe? => remove added_stats, move it back
     def __init__(self, name, rarity, buy_value, sell_value, added_stats=None, added_extra=None):
+        #super -> takes all the values inherited
         super().__init__(name, rarity, buy_value, sell_value)
         self.added_stats = added_stats if added_stats is not None else {'str': 0, 'dex': 0, 'con': 0}
         self.added_extra = added_extra if added_extra is not None else {'ac': 0, 'hp': 0, 'dmg': 0}
