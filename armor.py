@@ -47,8 +47,20 @@ class Base:
     }
     
     def __init__(self, name, rarity, buy_value, sell_value):
-#ADD A DOC STRING
+        """
+        A function that is called immediately when an instance of this class is created. It initalizes all the attributes of the class.
 
+        Parameters
+        ----------
+        name: str
+            Name of the item
+        rarity: str
+            Rarity of the item
+        buy_value: int
+            Amount the item would cost to buy
+        sell_value: int
+            How much the item would sell for
+        """
         #initializing all the attributes for the Base class
         self.name = name
         self.rarity = rarity
@@ -96,34 +108,66 @@ class Base:
 class Helmet(Base):
     """
     A class to represent the helmet template (is a child class, inheriting from parent class: Base)
-    ...
     """
-    #change maybe? => remove added_stats, move it back
-    def __init__(self, name, rarity, buy_value, sell_value, added_stats=None, added_extra=None):
-        #super -> takes all the values inherited
+    #explicitly listing seemingly redunant arguments in init -> provides clarity for documentation
+    def __init__(self, name, rarity, buy_value, sell_value):
+        """
+        A function that is called immediately when an instance of this class is created. It initalizes all the attributes of the class.
+
+        Parameters
+        ----------
+        name: str
+            Name of the item
+        rarity: str
+            Rarity of the item
+        buy_value: int
+            Amount the item would cost to buy
+        sell_value: int
+            How much the item would sell for
+        """
+        #init -> initializes all attributes of helmet
+        #super -> calls parent class's methods (init in this case)
+        #don't need to call added_stats or added_extra in super().__init__ because they were not passed as arguments in the parent class's init
         super().__init__(name, rarity, buy_value, sell_value)
-        self.added_stats = added_stats if added_stats is not None else {'str': 0, 'dex': 0, 'con': 0}
-        self.added_extra = added_extra if added_extra is not None else {'ac': 0, 'hp': 0, 'dmg': 0}
-        self.points = int(4 * self.multiplier)
 
 class Armor(Base):
     """
     A class to represent the armor template (is a child class, inheriting from parent class: Base)
-    ...
     """
-    def __init__(self, name, rarity, buy_value, sell_value, added_stats=None, added_extra=None):
+    def __init__(self, name, rarity, buy_value, sell_value):
+        """
+        A function that is called immediately when an instance of this class is created. It initalizes all the attributes of the class.
+
+        Parameters
+        ----------
+        name: str
+            Name of the item
+        rarity: str
+            Rarity of the item
+        buy_value: int
+            Amount the item would cost to buy
+        sell_value: int
+            How much the item would sell for
+        """
         super().__init__(name, rarity, buy_value, sell_value)
-        self.added_stats = added_stats if added_stats is not None else {'str': 0, 'dex': 0, 'con': 0}
-        self.added_extra = added_extra if added_extra is not None else {'ac': 0, 'hp': 0, 'dmg': 0}
-        self.points = int(5 * self.multiplier)
 
 class Ring(Base):
     """
     A class to represent the ring template (is a child class, inheriting from parent class: Base)
-    ...
     """
-    def __init__(self, name, rarity, buy_value, sell_value, added_stats=None, added_extra=None):
+    def __init__(self, name, rarity, buy_value, sell_value):
+        """
+        A function that is called immediately when an instance of this class is created. It initalizes all the attributes of the class.
+
+        Parameters
+        ----------
+        name: str
+            Name of the item
+        rarity: str
+            Rarity of the item
+        buy_value: int
+            Amount the item would cost to buy
+        sell_value: int
+            How much the item would sell for
+        """
         super().__init__(name, rarity, buy_value, sell_value)
-        self.added_stats = added_stats if added_stats is not None else {'str': 0, 'dex': 0, 'con': 0}
-        self.added_extra = added_extra if added_extra is not None else {'ac': 0, 'hp': 0, 'dmg': 0}
-        self.points = int(2 * self.multiplier)
