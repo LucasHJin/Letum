@@ -2,9 +2,10 @@
 Final Project
 ICS3U
 Lucas Jin
-
+This file declares the Sword class with all the necessary methods and attributes. It is used in the instance of Battle to decide the damage dealt by the player.
 History:
-
+    April 13, 2024: Program Creation
+    May 25, 2024: Adding Comments
 """
 
 import random

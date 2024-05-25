@@ -2,9 +2,10 @@
 Final Project
 ICS3U
 Lucas Jin
-
+This file declares the Battle class for battling with all the necessary methods and attributes. One instance of this class will be initialized in main to call all battles within the program.
 History:
-
+    April 13, 2024: Program Creation
+    May 25, 2024: Adding Comments
 """
 
 from enemies import Rat

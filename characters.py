@@ -2,9 +2,10 @@
 Final Project
 ICS3U
 Lucas Jin
-
+This file declares the Character class for the player's character with all the necessary methods and attributes. For example, it possesses attributes such as health and inventory and methods such as adding to stats.
 History:
-
+    April 13, 2024: Program Creation
+    May 25, 2024: Adding Comments
 """
 
 import random

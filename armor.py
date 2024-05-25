@@ -2,9 +2,10 @@
 Final Project
 ICS3U
 Lucas Jin
-
+This file declares the Parent and Child classes for equipment with all the necessary methods and attributes. The equipment will be used by the player in various manners.
 History:
-
+    April 13, 2024: Program Creation
+    May 25, 2024: Adding Comments
 """
 
 #to use to generate items

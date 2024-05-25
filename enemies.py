@@ -2,9 +2,10 @@
 Final Project
 ICS3U
 Lucas Jin
-
+This file declares the Parent and Child classes for the various enemies of the game with all the necessary methods and attributes. Instances of them will be called in the Battle class in battles.py to represent the enemies within the game.
 History:
-
+    April 13, 2024: Program Creation
+    May 25, 2024: Adding Comments
 """
 
 import random

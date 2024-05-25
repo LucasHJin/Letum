@@ -2,9 +2,10 @@
 Final Project
 ICS3U
 Lucas Jin
-
+This file declares the Shop class with all the necessary methods and attributes. It has one instance of itself created at the beginning of the program in main and both buys and sells various items (instances of the equipment).
 History:
-
+    April 13, 2024: Program Creation
+    May 25, 2024: Adding Comments
 """
 
 from weapons import Sword
@@ -14,7 +15,6 @@ from armor import Ring
 import random
 import os
 
-#FIX ERROR WITH EXITING OUT OF LOOP -> INDEX RANGE
 
 class Shop:
     def __init__(self, character):
