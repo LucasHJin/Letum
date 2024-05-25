@@ -256,11 +256,11 @@ class Battle:
         #case 3: normal turn
         if (self.character.tabbar["Stunned"]==0 and dodge_stun==0):
             print("What do you want to do?")
-            for i in range(len(self.weapon.abilityDict[self.weapon.rarity])-1):
-                if self.weapon.cooldownsDict[self.weapon.abilityDict[self.weapon.rarity][i]]==0:
-                    print("  ["+str(i+1)+"] "+self.weapon.abilityDict[self.weapon.rarity][i])
+            for i in range(len(self.weapon.ABILITY_DICT[self.weapon.rarity])-1):
+                if self.weapon.cooldownsDict[self.weapon.ABILITY_DICT[self.weapon.rarity][i]]==0:
+                    print("  ["+str(i+1)+"] "+self.weapon.ABILITY_DICT[self.weapon.rarity][i])
                 else:
-                    print("X ["+str(i+1)+"] "+self.weapon.abilityDict[self.weapon.rarity][i], "→", self.weapon.cooldownsDict[self.weapon.abilityDict[self.weapon.rarity][i]], "turn cooldown remaining")
+                    print("X ["+str(i+1)+"] "+self.weapon.ABILITY_DICT[self.weapon.rarity][i], "→", self.weapon.cooldownsDict[self.weapon.ABILITY_DICT[self.weapon.rarity][i]], "turn cooldown remaining")
             if self.character.inventory["Health Potion"]>0 and self.character.current_health != self.character.health:
                 print("  ["+str(i+2)+"] Use a Health Potion ("+str(self.character.inventory["Health Potion"])+"X)")
             print("  [V] View the enemy")
@@ -275,22 +275,22 @@ class Battle:
                     input("[Press enter to continue.]")
                     print("{---------------------------------------------------------------}")
             check_answer = False
-            for j in range(len(self.weapon.abilityDict[self.weapon.rarity])):
+            for j in range(len(self.weapon.ABILITY_DICT[self.weapon.rarity])):
                 if choice == str(j+1):
-                    if choice != str(len(self.weapon.abilityDict[self.weapon.rarity])):
+                    if choice != str(len(self.weapon.ABILITY_DICT[self.weapon.rarity])):
                         #reorganized into 2 if statements instead of and for legibility
-                        if self.weapon.cooldownsDict[self.weapon.abilityDict[self.weapon.rarity][int(choice)-1]]==0:
+                        if self.weapon.cooldownsDict[self.weapon.ABILITY_DICT[self.weapon.rarity][int(choice)-1]]==0:
                             check_answer = True
                     else:
                         if self.character.inventory["Health Potion"] > 0 and self.character.current_health != self.character.health:
                             check_answer = True
             while not check_answer:
                 print("Enter a new choice. The options are:")
-                for i in range(len(self.weapon.abilityDict[self.weapon.rarity])-1):
-                    if self.weapon.cooldownsDict[self.weapon.abilityDict[self.weapon.rarity][i]]==0:
-                        print("  ["+str(i+1)+"] "+self.weapon.abilityDict[self.weapon.rarity][i])
+                for i in range(len(self.weapon.ABILITY_DICT[self.weapon.rarity])-1):
+                    if self.weapon.cooldownsDict[self.weapon.ABILITY_DICT[self.weapon.rarity][i]]==0:
+                        print("  ["+str(i+1)+"] "+self.weapon.ABILITY_DICT[self.weapon.rarity][i])
                     else:
-                        print("X ["+str(i+1)+"] "+self.weapon.abilityDict[self.weapon.rarity][i], "→", self.weapon.cooldownsDict[self.weapon.abilityDict[self.weapon.rarity][i]], "turn cooldown remaining")
+                        print("X ["+str(i+1)+"] "+self.weapon.ABILITY_DICT[self.weapon.rarity][i], "→", self.weapon.cooldownsDict[self.weapon.ABILITY_DICT[self.weapon.rarity][i]], "turn cooldown remaining")
                 if self.character.inventory["Health Potion"]>0 and self.character.current_health != self.character.health:
                     print("  ["+str(i+2)+"] Use a Health Potion ("+str(self.character.inventory["Health Potion"])+"X)")
                 print("  [V] View the enemy")
@@ -304,15 +304,15 @@ class Battle:
                                 print("  ["+inst.name+"] - Current Health:", inst.health)
                         input("[Press enter to continue.]")
                         print("{---------------------------------------------------------------}")
-                for j in range(len(self.weapon.abilityDict[self.weapon.rarity])):
+                for j in range(len(self.weapon.ABILITY_DICT[self.weapon.rarity])):
                     if choice == str(j+1):
-                        if choice != str(len(self.weapon.abilityDict[self.weapon.rarity])):
-                            if self.weapon.cooldownsDict[self.weapon.abilityDict[self.weapon.rarity][int(choice)-1]]==0:
+                        if choice != str(len(self.weapon.ABILITY_DICT[self.weapon.rarity])):
+                            if self.weapon.cooldownsDict[self.weapon.ABILITY_DICT[self.weapon.rarity][int(choice)-1]]==0:
                                 check_answer = True
                         else:
                             if self.character.inventory["Health Potion"] > 0 and self.character.current_health != self.character.health:
                                 check_answer = True
-            choice_action = self.weapon.abilityDict[self.weapon.rarity][int(choice)-1]
+            choice_action = self.weapon.ABILITY_DICT[self.weapon.rarity][int(choice)-1]
             if choice_action == "Slash":
                 dmg = self.weapon.slash()
             elif choice_action == "Wide Slash":

@@ -22,7 +22,7 @@ class Base:
         Name of the equipment
     rarity: str
         Rarity of the equipment
-    multiplier: str
+    multiplier: int
         Calculated multiplier based off of rarity and RARITY_MULT
     buy_value: int
         Cost to buy the equipment from the shop
@@ -32,11 +32,13 @@ class Base:
         Amount of stats the equipment will add
     added_extra: {str, int}
         Amount of extra benefits (health, armor class, damage) the equipment will add
-
-    Constants
-    ---------
     RARITY_MULT: {str, int}
         Provides conversion from rarity to how much an equipment's stats/gold value should be multiplied by
+        
+    Methods
+    -------
+    decide_stats(weight1, weight2):
+        Creates the stats and extra bonuses for an equipment when called
     """
     RARITY_MULT = {
         'Common': 1.0,

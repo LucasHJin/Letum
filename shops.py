@@ -410,8 +410,8 @@ class Shop:
                 if inst.added_stats['con']>0:
                     print("    >>  Constitution: +"+str(inst.added_stats['con']))
             print("  >>  Available Abilities:")
-            for ability in range(len(inst.abilityDict[inst.rarity])-1):
-                print("    >>  "+inst.abilityDict[inst.rarity][ability])
+            for ability in range(len(inst.ABILITY_DICT[inst.rarity])-1):
+                print("    >>  "+inst.ABILITY_DICT[inst.rarity][ability])
             input("[Press any button to return.]")
 
     def print_instructions(self):
