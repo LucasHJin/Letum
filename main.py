@@ -194,7 +194,7 @@ input("[Press enter to continue.]")
 eyDict = {
     'Rat': [1, 0, 0],
     'Goblin': [0, 0, 0],
-    'Skeleton': [0, 0, 0],
+    'Skeleton': [1, 0, 0],
     'Demon': [0, 0, 0]
 }
 rnd = Battle(eyDict, player, weapon)

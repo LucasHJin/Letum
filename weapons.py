@@ -27,7 +27,7 @@ class Sword:
         Cost to buy the equipment from the shop
     sell_value: int
         Amount received from selling the equipment
-    damage_multiplier: int
+    damage_multiplier: float
         Calculated multiplier based off of rarity and RARITY_MULT
     added_stats: {str: int}
         Amount of stats the equipment will add
@@ -37,7 +37,7 @@ class Sword:
         Decides cooldowns within battle for each of the abilities
     ABILITY_DICT
         Provides the possible abilities to use based on the rarity of the weapon
-    RARITY_MULT: {str, int}
+    RARITY_MULT: {str, float}
         Provides conversion from rarity to how much an equipment's stats/gold value should be multiplied by
         
     Methods

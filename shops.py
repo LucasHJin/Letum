@@ -20,7 +20,7 @@ import os
 
 class Shop:
     """
-    A class to represent the base template for armor.
+    A class to represent the shop.
     ...
 
     Attributes
