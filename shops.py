@@ -32,6 +32,8 @@ class Shop:
 
     Methods
     -------
+    call_create()
+        Calls the following function (create_items(items_amount)) and adds all the items to the shop's collection
     create_items(items_amount)
         Uses the random function to create random pieces of equipment. The item's costs, names, stats, etc. are all randomized.
     sort_items()
@@ -72,6 +74,23 @@ class Shop:
             'Armor': [],
             'Rings': []
         }
+    
+    def call_create(self):
+        """
+        A function that adds all the created items to the shop's dictionary.
+        
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
+        """
+        temp_dict = self.create_items([20, 10, 10, 10])
+        for key_cat in temp_dict:
+            for temp_item in temp_dict[key_cat]:
+                self.items[key_cat].append(temp_item)
         
     def create_items(self, items_amount):
         """
@@ -86,6 +105,12 @@ class Shop:
         -------
         None
         """
+        temp_items_dict = {
+            'Weapons': [],
+            'Helmets': [],
+            'Armor': [],
+            'Rings': []
+        }
         RARITY_MULT = {
             'Common': 1.0,
             'Uncommon': 1.2,
@@ -175,7 +200,7 @@ class Shop:
                         item_sell = int(item_cost * 0.7)
                         inst.buy_value = item_cost
                         inst.sell_value = item_sell
-                    self.items['Weapons'].append(inst)
+                    temp_items_dict['Weapons'].append(inst)
                 elif amount == 1:
                     item_name = item_a2 + " " + item_p + item_s + "'s " + item_hn
                     inst = Helmet(name=item_name, rarity=item_rarity[0], buy_value=0, sell_value=0)
@@ -187,7 +212,7 @@ class Shop:
                         item_cost += inst.added_stats[stat]*100
                     inst.buy_value = item_cost
                     inst.sell_value = int(item_cost * 0.7)
-                    self.items['Helmets'].append(inst)
+                    temp_items_dict['Helmets'].append(inst)
                 elif amount == 2:
                     item_name = item_a2 + " " + item_p + item_s + "'s " + item_bn
                     inst = Armor(name=item_name, rarity=item_rarity[0], buy_value=0, sell_value=0)
@@ -199,7 +224,7 @@ class Shop:
                         item_cost += inst.added_stats[stat]*100
                     inst.buy_value = item_cost
                     inst.sell_value = int(item_cost * 0.7)
-                    self.items['Armor'].append(inst)
+                    temp_items_dict['Armor'].append(inst)
                 else:
                     item_name = item_a2 + " " + item_p + item_s + "'s " + item_rn
                     inst = Ring(name=item_name, rarity=item_rarity[0], buy_value=0, sell_value=0)
@@ -211,7 +236,8 @@ class Shop:
                         item_cost += inst.added_stats[stat]*100
                     inst.buy_value = item_cost
                     inst.sell_value = int(item_cost * 0.7)
-                    self.items['Rings'].append(inst)
+                    temp_items_dict['Rings'].append(inst)
+        return temp_items_dict
           
     def sort_items(self):
         """
@@ -289,8 +315,6 @@ class Shop:
         self.print_instructions()
         choice = input("  >>  ")
         choice = self.not_option(choice)
-
-        print(choice)
             
         while choice[0].lower() != "l":
             if choice[0].lower() == "u":

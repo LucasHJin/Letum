@@ -12,151 +12,84 @@ from enemies import Rat
 from enemies import Goblin
 from enemies import Skeleton
 from enemies import Demon
-from weapons import Sword
-from armor import Helmet
-from armor import Armor
-from armor import Ring
 import os
 import math
 import random
 
 
 class Battle:
-    def __init__(self, enemiesDict, character, weapon):
-        self.enemiesDict = enemiesDict #dict with list of common, elite, boss numbers for each enemy
+    """
+    A Battle class that will simulate each of the battles in the game with its methods.
+    ...
+
+    Attributes
+    ----------
+    enemiesDict: {str: [int]}
+        A dictionary with keys based on the enemies names and values corresponding to the amount of enemies of each rarity (the values are lists of length 3, divided into common, elite and boss numbers)
+    character: Character
+        The instance of Character used by the player. To access its attributes like current health.
+    weapon: Sword
+        The instance of Sword used by the player. To access its attributes and methods like its abilities.
+    shop: Shop
+        The instance of Shop that is initialized at the start of the program. To access its ability to create items.
+    turn_count: int 
+        Counting each turn within a single round.
+    round_count: int
+        Counting each round.
+        
+    Methods
+    -------
+    one_round()
+        Function to simulate one entire round of battle. It ends when the player dies or kills all enemies, returning either "WON or "DEAD".
+    turn(en_inst)
+        Function to simulate one turn of a battle. It will be called repeatedly in one_round().
+    create_enemy_instances()
+        Creates all the enemy instances for the round. Is called once at the beginning of one_round().
+    """
+    
+    def __init__(self, enemiesDict, character, weapon, shop):
+        """
+        A function that is called immediately when an instance of this class is created. It initalizes all the attributes of the class.
+
+        Parameters
+        ----------
+        enemiesDict: {str: [int]}
+            A dictionary that dictates how many of each type of enemy and rarity of enemy is created.
+        character: Character   
+            The instance of the character.
+        weapon: Sword
+            The instance of the weapon.
+        shop: Shop
+            The instnace of the shop.
+        
+        Returns
+        -------
+        None
+        """
+        self.enemiesDict = enemiesDict 
         self.character = character
         self.weapon = weapon
+        self.shop = shop
         self.turn_count = 1
         self.round_count = 1
         
-    def create_item(self):
-        RARITY_MULT = {
-            'Common': 1.0,
-            'Uncommon': 1.2,
-            'Rare': 1.5,
-            'Epic': 2.0,
-            'Legendary': 3.0
-        }
-            
-        #Generated these lists with AI
-        WORSE_ADJECTIVES = [
-            "Rusty", "Old", "Worn", "Tarnished", "Dull", "Faded", "Cracked", 
-            "Chipped", "Broken", "Weathered", "Battered", "Fractured", "Rugged", 
-            "Scratched", "Bent", "Corroded", "Decayed", "Moldy", "Musty", "Tattered"
-        ]
-        ADJECTIVES = [
-            "Mighty", "Eternal", "Ancient", "Legendary", "Unyielding", "Glorious", 
-            "Venerable", "Resplendent", "Mysterious", "Mythical", "Swift", "Stalwart", 
-            "Valiant", "Enchanted", "Radiant", "Arcane", "Ethereal", "Spectral", 
-            "Blazing", "Gleaming"
-        ]
-        PREFIXES = [
-            "Shadow", "Blood", "Dawn", "Death", "Fire", "Ice", "Storm", "Soul", 
-            "Void", "Frost", "Sun", "Moon", "Thunder", "Dragon", "Celestial", 
-            "Inferno", "Oath", "Demon", "Fey", "Rune"
-        ]
-        SUFFIXES = [
-            "blade", "edge", "fang", "brand", "caller", "reaver", "thirster", 
-            "keeper", "slayer", "whisper", "bane", "strike", "clap", "shadow", 
-            "thunder", "claw", "hammer", "crown", "crescent", "harbinger", "hunter"
-        ]
-        NOUNS = [
-            "Sword", "Blade", "Saber", "Scimitar", "Rapier", "Cutlass", "Katana", 
-            "Longsword", "Bastard Sword", "Greatsword", "Claymore", "Dagger", 
-            "Broadsword", "Warblade", "Falchion", "Gladius", "Dirk", "Kris", 
-            "Katana", "Tanto"
-        ]
-        HELMET_NOUNS = [
-            "Helm", "Visage", "Headgear", "Cap", "Crown", "Mask", "Veil", "Crest", 
-            "Hood", "Visor", "Coif", "Circlet", "Tiara", "Casque", "Cowl"
-        ]
-        ARMOR_NOUNS = [
-            "Armor", "Cuirass", "Plate", "Harness", "Mail", "Hauberk", "Vest", "Jacket", 
-            "Robe", "Garb", "Tabard", "Tunic", "Brigandine", "Vestments", "Surcoat"
-        ]
-        RING_NOUNS = [
-            "Ring", "Band", "Circle", "Loop", "Hoop", "Bandlet", "Bangle", "Orb", 
-            "Sphere", "Jewel", "Gem", "Stone", "Amulet", "Charm", "Token"
-        ]
-        item_a = random.choice(ADJECTIVES)
-        item_a2 = random.choice(WORSE_ADJECTIVES)
-        item_p = random.choice(PREFIXES)
-        item_s = random.choice(SUFFIXES)
-        item_n = random.choice(NOUNS)
-        item_hn = random.choice(HELMET_NOUNS)
-        item_bn = random.choice(ARMOR_NOUNS)
-        item_rn = random.choice(RING_NOUNS)
-        
-        RARITY_LIST = ["Common", "Uncommon", "Rare", "Epic", "Legendary"]
-        item_rarity = random.choices(RARITY_LIST, weights = [50, 25, 15, 7.5, 2.5], k=1)
-        item_type = random.choices(["Weapon", "Helmet", "Armor", "Ring"], weights = [30, 30, 15, 25], k=1)
-        
-        if item_type == "Weapon":
-            if item_rarity[0]=="Common" or item_rarity[0]=="Uncommon":
-                item_name = item_a2 + " " + item_p + item_s + "'s " + item_n
-                inst = Sword(item_name, item_rarity[0], self.character, 0, 0, 0, 0, 0)
-                item_cost = inst.damage*225 + int(inst.damage*inst.damage_multiplier*10)
-                item_sell = int(item_cost * 0.7)
-                inst.buy_value = item_cost
-                inst.sell_value = item_sell
-            else:
-                item_name = item_a + " " + item_p + item_s + "'s " + item_n
-                points = int(random.randint(1, 2) * RARITY_MULT[item_rarity[0]])
-                #print("POINTS", points)
-                split_points = random.choices(['str', 'dex', 'con'], weights=[2, 1, 1], k=points)
-                #print("SPLIT POINTS", split_points)
-                added_stats = {
-                    'str': 0,
-                    'dex': 0,
-                    'con': 0
-                }
-                added_stats['str']=split_points.count('str')
-                added_stats['dex']=split_points.count('dex')
-                added_stats['con']=split_points.count('con')
-                #print("ADDED", added_stats)
-                inst = Sword(item_name, item_rarity[0], self.character, 0, 0, int(added_stats["str"]), int(added_stats["dex"]), int(added_stats["con"]))
-                #print("AFTER", inst.added_stats)
-                item_cost = points*300 + inst.damage*250 + int(inst.damage*inst.damage_multiplier*10)
-                item_sell = int(item_cost * 0.7)
-                inst.buy_value = item_cost
-                inst.sell_value = item_sell
-        elif item_type == "Helmet":
-            item_name = item_a2 + " " + item_p + item_s + "'s " + item_hn
-            inst = Helmet(name=item_name, rarity=item_rarity[0], buy_value=0, sell_value=0)
-            inst.decide_stats([2, 3, 4], [3, 3, 1])
-            item_cost = 0
-            for extra in inst.added_extra:
-                item_cost += inst.added_extra[extra]*50
-            for stat in inst.added_stats:
-                item_cost += inst.added_stats[stat]*100
-            inst.buy_value = item_cost
-            inst.sell_value = int(item_cost * 0.7)
-        elif item_type == "Armor":
-            item_name = item_a2 + " " + item_p + item_s + "'s " + item_bn
-            inst = Armor(name=item_name, rarity=item_rarity[0], buy_value=0, sell_value=0)
-            inst.decide_stats([4, 2, 4], [3, 3, 1])
-            item_cost = 0
-            for extra in inst.added_extra:
-                item_cost += inst.added_extra[extra]*50
-            for stat in inst.added_stats:
-                item_cost += inst.added_stats[stat]*100
-            inst.buy_value = item_cost
-            inst.sell_value = int(item_cost * 0.7)
-        else:
-            item_name = item_a2 + " " + item_p + item_s + "'s " + item_rn
-            inst = Ring(name=item_name, rarity=item_rarity[0], buy_value=0, sell_value=0)
-            inst.decide_stats([3, 2, 1], [2, 1, 4])
-            item_cost = 0
-            for extra in inst.added_extra:
-                item_cost += inst.added_extra[extra]*50
-            for stat in inst.added_stats:
-                item_cost += inst.added_stats[stat]*100
-            inst.buy_value = item_cost
-            inst.sell_value = int(item_cost * 0.7)
-        
-        return inst
 
-    def entire_game(self):
+    def one_round(self):
+        """
+        A function that simulates an entire round until either the player dies or all the enemies have been killed.
+
+        Parameters
+        ----------
+        None
+        
+        Returns
+        -------
+        "WON": str
+            Returned if the round has ended (all enemies have died) while the character is still alive
+        OR
+        "DEAD": str
+            Returned if the character has died.
+        """
         os.system('cls')
         print("ROUND", self.round_count)
         print("{---------------------------------------------------------------}")
@@ -197,6 +130,20 @@ class Battle:
             return "WON"
 
     def turn(self, en_inst): 
+        """
+        A function that simulates 1 turn within a round. It accounts for both the player's and the enemy's turns.
+
+        Parameters
+        ----------
+        en_inst: {str: [Rat/Goblin/Skeleton/Demon]}
+            A dictionary containing all the enemy types as keys with their values being lists filled with all the enemy instances of that type.
+        
+        Returns
+        -------
+        en_inst: {str: [Rat/Goblin/Skeleton/Demon]}
+            A dictionary containing all the enemy types as keys with their values being lists filled with all the enemy instances of that type.
+            (Returning so that if an enemy dies for example, it stays dead the next time turn is called)
+        """
         CONVERSION_DICT = {
             'Rat': 'r',
             'Goblin': 'g',
@@ -397,7 +344,16 @@ class Battle:
                             self.character.inventory['Health Potion'] += amount_HP
                             print("  >>  +"+str(amount_HP)+" Health Potions")
                         if temp_prob<(0.05 * RARITY_DROP_CHANCE[inst.tpe] * TYPE_DROP_CHANCE[enemy_key]):
-                            item = self.create_item()
+                            item_type = random.choices(["Weapons", "Helmets", "Armor", "Rings"], weights = [30, 30, 15, 25], k=1)
+                            if item_type[0] == "Weapons":
+                                item_am = [1, 0, 0, 0]
+                            elif item_type[0] == "Helmets":
+                                item_am = [0, 1, 0, 0]
+                            elif item_type[0] == "Armor":
+                                item_am = [0, 0, 1, 0]
+                            else:
+                                item_am = [0, 0, 0, 1]
+                            item = self.shop.create_items(item_am)[item_type[0]][0]
                             if item in self.character.inventory:
                                 self.character.inventory+=1
                             else:
@@ -455,6 +411,18 @@ class Battle:
             
 
     def create_enemy_instances(self):
+        """
+        A function that simulates creates all the enemy instances for a round.
+
+        Parameters
+        ----------
+        None
+        
+        Returns
+        -------
+        enemy_instances: {str: [Rat/Goblin/Skeleton/Demon]}
+            A dictionary containing all the enemy types as keys with their values being lists filled with all the enemy instances of that type.
+        """
         enemy_instances = {
             'Rat': [],
             'Goblin': [],

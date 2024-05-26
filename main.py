@@ -132,7 +132,7 @@ print("\nAs you open the rotting chest, its hinges slowly creaking like the gutt
 
 #player = Character(name=name, srn=int(stats_input[0]), dex=int(stats_input[1]), con=int(stats_input[2]), level=1, exp=0)
 #only do ^^ if there are optional paramaters that could be passed but aren't
-player = Character(name, int(stats_input[0]), int(stats_input[1]), int(stats_input[2]), 1, 0)
+player = Character(name, int(stats_input[0]), int(stats_input[1]), int(stats_input[2]))
 weapon = Sword("Old Iron Sword", "Common", player, 0, 0, 0, 0, 0)
 player.equipment['Weapon'] = weapon
 #refresh stats to set proper stats (like initializing) for player
@@ -194,16 +194,17 @@ input("[Press enter to continue.]")
 eyDict = {
     'Rat': [1, 0, 0],
     'Goblin': [0, 0, 0],
-    'Skeleton': [1, 0, 0],
+    'Skeleton': [0, 0, 0],
     'Demon': [0, 0, 0]
 }
-rnd = Battle(eyDict, player, weapon)
+shop = Shop(player)
+shop.call_create()
+shop.sort_items()
+
+rnd = Battle(eyDict, player, weapon, shop)
 result = "TEMP"
 round_counter = 1
 
-shop = Shop(player)
-shop.create_items([20, 10, 10, 10])
-shop.sort_items()
 
 POSSIBLE = {
     "I": "Open Inventory",
@@ -252,7 +253,7 @@ while result != "DEAD":
             print_options(POSSIBLE)
             choice = input("  >>  ")
 
-    result = rnd.entire_game()
+    result = rnd.one_round()
     if result != "DEAD":
         round_counter += 1
 
