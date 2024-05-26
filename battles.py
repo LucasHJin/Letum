@@ -225,7 +225,7 @@ class Battle:
         print("\nYour Turn:")
         print("{---------------------------------------------------------------}")
         dodge_stun = 0
-        self.character.check_status_bar()
+        self.character.apply_status()
         print("  >>  Health:", self.character.current_health)
         for ability_cooldown in self.weapon.cooldownsDict:
             if self.weapon.cooldownsDict[ability_cooldown]>0:

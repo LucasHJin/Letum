@@ -42,6 +42,20 @@ class Enemy:
     }
     
     def __init__(self, name, tpe):
+        """
+        A function that is called immediately when an instance of this class is created. It initalizes all the attributes of the class.
+
+        Parameters
+        ----------
+        name: str
+            Name of the instance
+        tpe: str
+            The type of enemy (Rat, Goblin, Skeleton, Demon)
+        
+        Returns
+        -------
+        None
+        """
         self.name = name
         self.tpe = tpe
         self.multiplier = self.ENEMY_TPE_MULT[tpe]

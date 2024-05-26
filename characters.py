@@ -16,23 +16,125 @@ from armor import Armor
 from armor import Ring
 
 class Character:
-    def __init__(self, name, srn, dex, con, level, exp):
+    """
+    A Character class that will be instantiated to create the character the player uses.
+    ...
+
+    Attributes
+    ----------
+    name: str
+        Name of the character.
+    stats: {str: int}
+        The stats of the character. It affects other attributes such as health.
+    level: int
+        The level of the character. Starts at 1.
+    exp: int
+        The amount of exp the character currently has.
+    needed_exp: int
+        The amount of exp the character needs to level up.
+    health: int
+        The total amount of health the character has.
+    current_health: int
+        The amount of health the character currently has in a battle.
+    armor_class: int
+        A stat that affects damage reduction in battles.
+    attack_damage: int
+        A stat that affects how much damage the character does in battles.
+    inventory: {str/Sword/Helmet/Armor/Ring: int}
+        The inventory to store all of the character's equipment, gold, etc.
+    tabbar: {str: int}
+        Dictionary to check for any status affects.
+    equipment: {str: str/Sword/Helmet/Armor/Ring}
+        The equipment that the character currently has equipped.
+    stat_points: int
+        The amount of stat points the character currently has to use.
+    is_buffed: boolean  
+        If the character is buffed.
+    added_ac: int
+        Amount of armor class added from equipped equipment.
+    added_hp: int
+        Amount of health added from equipped equipment.
+    added_dmg: int
+        Amount of damage added from equipped equipment.
+
+    Methods
+    -------
+    check_profile()
+        Shows the profile/status window of the character.
+    display_equipments()
+        Prints the currently equipped equipment.
+    print_single_equipment(val, inst)
+        Prints a description of an equipment from the inventory.
+    equip_equipment()
+        Function to equip equipment from the inventory.
+    display_inventory()
+        Prints all the items in the inventory.
+    check_inventory()
+        Function to let the user check any of their items in their inventory.
+    add_inventory(items)
+        Function to add items to the inventory.
+    apply_status()
+        Applies status effects to the tabbar.
+    use_health_potion()
+        Function to use a health potion -> increase health by 40 and remove 1 health potion from inventory.
+    check_dead()
+        Check if the character is dead.
+    calc_health()
+        Calcuate health based on stats.
+    calc_ac()
+        Calcuate armor class based on stats.
+    calc_damage()
+        Calcuate damage based on stats.
+    calc_needed_exp()
+        Calculate amount of exp needed to reach next level.
+    refresh_current_health()
+        Refreshes current health to max (after finishing a round).
+    refresh_stats()
+        Calculates/updates all the necessary values (i.e. health, damage, etc.) To be used after leveling up.
+    calc_lvl_up()
+        Calculates how many times the player has leveled up based on their current exp.
+    assign_stat_points()
+        Function to assign all stat points.
+    all_level_up()
+        Function that combines the previous two functions to let the player level up.
+    """
+    
+    def __init__(self, name, srn, dex, con):
+        """
+        A function that is called immediately when an instance of this class is created. It initalizes all the attributes of the class.
+
+        Parameters
+        ----------
+        name: str
+            Name of the instance
+        srn: int
+            Amount of strength the character has based on user input.
+        dex: int
+            Amount of dexterity the character has based on user input.
+        con: int
+            Amount of constitution the character has based on user input.
+        
+        Returns
+        -------
+        None
+        """
         self.name = name
         self.stats = {
             'str': srn,
             'dex': dex,
             'con': con,
         }
-        self.level = level
-        self.exp = exp
-        self.health = 10
+        self.level = 1
+        self.exp = 0
+        self.needed_exp = 40
+        self.health = 1 #ensure that character isn't dead as soon as it is instantiated -> will be replaced with proper health later on
+        self.current_health = self.health
         self.armor_class = 0
         self.attack_damage = 0
         self.inventory = {
             'Gold': 1900000,
             'Health Potion': 0
         }
-        self.current_health = self.health
         self.tabbar = {
             "Poison": 0,
             "Stunned": 0,
@@ -45,7 +147,6 @@ class Character:
             'Ring': "None",
             'Weapon': "None"
         }
-        self.needed_exp = 40
         self.stat_points = 0
         self.is_buffed = False
         self.added_ac = 0
@@ -53,6 +154,17 @@ class Character:
         self.added_dmg = 0
 
     def check_profile(self):
+        """
+        A function that prints out the characters profile (i.e. name, level, experience, health, etc.)
+
+        Parameters
+        ----------
+        None
+        
+        Returns
+        -------
+        None
+        """
         os.system('cls')
         print("STATUS")
         print(self.name)
@@ -83,6 +195,17 @@ class Character:
     
     
     def display_equipments(self):
+        """
+        A function that prints out the character's currently equipped equipment.
+
+        Parameters
+        ----------
+        None
+        
+        Returns
+        -------
+        None
+        """
         print("Current Equipment")
         print("{---------------------------------------------------------------}")
         if self.equipment['Weapon'] == "None":
@@ -103,7 +226,79 @@ class Character:
             print("  >>  Ring:", self.equipment['Ring'].name)
         print("{---------------------------------------------------------------}\n")
 
+    def print_single_equipment(self, val, inst):
+        """
+        A function that prints out the description for a single piece of equipment.
+        
+        Parameters
+        ----------
+        val: int
+            Acts as a boolean, for if we want to print a piece of equipment or weapon (different aspects that need to be printed)
+        inst: Helmet/Armor/Ring/Sword
+            The instance of the item to be printed
+        
+        Returns
+        -------
+        None
+        """
+        if val==0:
+            POSSIBLEDICT = {
+                'h': "Helmet",
+                'a': "Armor",
+                'r': "Ring"
+            }
+            os.system('cls')
+            print(inst.name)
+            print("{---------------------------------------------------------------}")
+            print("  >>  Cost:", inst.buy_value)
+            print("  >>  Sell Value:", inst.sell_value)
+            print("  >>  Rarity:", inst.rarity)
+            if inst.added_stats['str']>0 or inst.added_stats['dex']>0 or inst.added_stats['con']>0:
+                print("  >>  Added Stats:")
+                if inst.added_stats['str']>0:
+                    print("    >>  Strength: +"+str(inst.added_stats['str']))
+                if inst.added_stats['dex']>0:
+                    print("    >>  Dexterity: +"+str(inst.added_stats['dex']))
+                if inst.added_stats['con']>0:
+                    print("    >>  Constitution: +"+str(inst.added_stats['con']))
+            print("  >>  Added Benefits:")
+            print("    >>  Health: +"+str(inst.added_extra['hp']))
+            print("    >>  Damage: +"+str(inst.added_extra['dmg']))
+            print("    >>  Armor Class: +"+str(inst.added_extra['ac']))
+            input("[Press any button to return.]")
+        elif val==1:
+            os.system('cls')
+            print(inst.name)
+            print("{---------------------------------------------------------------}")
+            print("  >>  Cost:", inst.buy_value)
+            print("  >>  Sell Value:", inst.sell_value)
+            print("  >>  Rarity:", inst.rarity)
+            print("  >>  Damage:", int(inst.damage * inst.damage_multiplier))
+            if inst.added_stats['str']>0 or inst.added_stats['dex']>0 or inst.added_stats['con']>0:
+                print("  >>  Added Stats:")
+                if inst.added_stats['str']>0:
+                    print("    >>  Strength: +"+str(inst.added_stats['str']))
+                if inst.added_stats['dex']>0:
+                    print("    >>  Dexterity: +"+str(inst.added_stats['dex']))
+                if inst.added_stats['con']>0:
+                    print("    >>  Constitution: +"+str(inst.added_stats['con']))
+            print("  >>  Available Abilities:")
+            for ability in range(len(inst.ABILITY_DICT[inst.rarity])-1):
+                print("    >>  "+inst.ABILITY_DICT[inst.rarity][ability])
+            input("[Press any button to return.]")    
+
     def equip_equipment(self):
+        """
+        A function that to equip equipment from the inventory.
+
+        Parameters
+        ----------
+        None
+        
+        Returns
+        -------
+        None
+        """
         #display message
         self.display_equipments()
         #input and finding want to equip equipment
@@ -254,72 +449,50 @@ class Character:
                 print("Sorry, that was not an option. What would you like to equip right now? [Enter the first letter of the equipment category or [L] to leave or [I] to check your inventory.]")
                 choice = input("  >>  ")
         input("Thank you for your business. I hope to see you soon. [Press enter to continue.]")
-        
-        
-    def print_single_equipment(self, val, inst):
-        if val==0:
-            POSSIBLEDICT = {
-                'h': "Helmet",
-                'a': "Armor",
-                'r': "Ring"
-            }
-            os.system('cls')
-            print(inst.name)
-            print("{---------------------------------------------------------------}")
-            print("  >>  Cost:", inst.buy_value)
-            print("  >>  Sell Value:", inst.sell_value)
-            print("  >>  Rarity:", inst.rarity)
-            if inst.added_stats['str']>0 or inst.added_stats['dex']>0 or inst.added_stats['con']>0:
-                print("  >>  Added Stats:")
-                if inst.added_stats['str']>0:
-                    print("    >>  Strength: +"+str(inst.added_stats['str']))
-                if inst.added_stats['dex']>0:
-                    print("    >>  Dexterity: +"+str(inst.added_stats['dex']))
-                if inst.added_stats['con']>0:
-                    print("    >>  Constitution: +"+str(inst.added_stats['con']))
-            print("  >>  Added Benefits:")
-            print("    >>  Health: +"+str(inst.added_extra['hp']))
-            print("    >>  Damage: +"+str(inst.added_extra['dmg']))
-            print("    >>  Armor Class: +"+str(inst.added_extra['ac']))
-            input("[Press any button to return.]")
-        elif val==1:
-            os.system('cls')
-            print(inst.name)
-            print("{---------------------------------------------------------------}")
-            print("  >>  Cost:", inst.buy_value)
-            print("  >>  Sell Value:", inst.sell_value)
-            print("  >>  Rarity:", inst.rarity)
-            print("  >>  Damage:", int(inst.damage * inst.damage_multiplier))
-            if inst.added_stats['str']>0 or inst.added_stats['dex']>0 or inst.added_stats['con']>0:
-                print("  >>  Added Stats:")
-                if inst.added_stats['str']>0:
-                    print("    >>  Strength: +"+str(inst.added_stats['str']))
-                if inst.added_stats['dex']>0:
-                    print("    >>  Dexterity: +"+str(inst.added_stats['dex']))
-                if inst.added_stats['con']>0:
-                    print("    >>  Constitution: +"+str(inst.added_stats['con']))
-            print("  >>  Available Abilities:")
-            for ability in range(len(inst.ABILITY_DICT[inst.rarity])-1):
-                print("    >>  "+inst.ABILITY_DICT[inst.rarity][ability])
-            input("[Press any button to return.]")    
     
     def display_inventory(self):
+        """
+        A function that displays the inventory and then returns a list with the inventory and the number of items in the inventory.
+
+        Parameters
+        ----------
+        None
+        
+        Returns
+        -------
+        inventoryList: [Sword/Helmet/Armor/Ring/str]
+            All the items in the inventory.
+        count: int
+            Amount of items within the inventory.
+        """
         os.system('cls')
         inventoryList = []
         count = 0
         print("INVENTORY")
         print("{---------------------------------------------------------------}")
-        for i in self.inventory.keys():
-            if not isinstance(i, Sword) and not isinstance(i, Helmet) and not isinstance(i, Armor) and not isinstance(i, Ring):
-                print("["+str(count+1)+"] "+i+":", self.inventory[i])
+        for item_inv in self.inventory.keys():
+            if not isinstance(item_inv, Sword) and not isinstance(item_inv, Helmet) and not isinstance(item_inv, Armor) and not isinstance(item_inv, Ring):
+                print("["+str(count+1)+"] "+item_inv+":", self.inventory[item_inv])
             else:
-                print("["+str(count+1)+"] "+i.name+":", self.inventory[i])
-            inventoryList.append(i)
+                print("["+str(count+1)+"] "+item_inv.name+":", self.inventory[item_inv])
+            inventoryList.append(item_inv)
             count+=1
         print("{---------------------------------------------------------------}")
+        #could also just return inventoryList and use len
         return [inventoryList, count]
     
     def check_inventory(self):
+        """
+        A function that lets the user check through their inventory.
+
+        Parameters
+        ----------
+        None
+        
+        Returns
+        -------
+        None
+        """
         temp = self.display_inventory()
         inventoryList = temp[0]
         count = temp[1]
@@ -373,11 +546,37 @@ class Character:
                 print("[Enter [L] to leave or enter the number of a specific item to learn more about it.]")
                 choice = input("  >>  ")
             
+    def add_inventory(self, items):
+        """
+        A function that adds items to the player's inventory.
 
-    def refresh_current_health(self): #for after level up or clear room 
-        self.current_health = self.health
+        Parameters
+        ----------
+        items: {str: int}
+            Dictionary of items and amount of each item to be added to inventory
+        
+        Returns
+        -------
+        None
+        """
+        for i in items.keys():
+            if i in self.inventory:
+                self.inventory[i]+=items[i]
+            else:
+                self.inventory[i]=items[i]
 
-    def check_status_bar(self): 
+    def apply_status(self): 
+        """
+        A function that applys status effects to the character's instance.
+
+        Parameters
+        ----------
+        None
+        
+        Returns
+        -------
+        None
+        """
         if self.tabbar["Poison"]>0: #works now
             pDamage = int(self.health*0.05)
             print(" ~ You have been poisoned for", pDamage, "damage. ~ ")
@@ -403,6 +602,17 @@ class Character:
 
 
     def use_health_potion(self):
+        """
+        A function that heals the user by 40 HP in battle.
+
+        Parameters
+        ----------
+        None
+        
+        Returns
+        -------
+        None
+        """
         self.inventory['Health Potion'] -= 1
         add_health = random.randint(25, 50)
         self.current_health += add_health
@@ -413,6 +623,18 @@ class Character:
 
             
     def check_dead(self):
+        """
+        A function that checks if the user is dead.
+
+        Parameters
+        ----------
+        None
+        
+        Returns
+        -------
+        dead: boolean
+            Returns if the user is dead or not (True/False)
+        """
         if self.current_health<=0:
             dead = True
         else:
@@ -420,18 +642,87 @@ class Character:
         return dead
 
     def calc_health(self):
+        """
+        A function that calculates the user's health based on constitution.
+
+        Parameters
+        ----------
+        None
+        
+        Returns
+        -------
+        None
+        """
         self.health = 100 + self.stats['con'] * 2
 
     def calc_ac(self):
+        """
+        A function that calculates the user's armor class based on dexterity.
+
+        Parameters
+        ----------
+        None
+        
+        Returns
+        -------
+        None
+        """
         self.armor_class = 20 + self.stats['dex'] * 2
 
     def calc_damage(self):
+        """
+        A function that calculates the user's damage based on strength.
+
+        Parameters
+        ----------
+        None
+        
+        Returns
+        -------
+        None
+        """
         self.attack_damage = 15 + self.stats['str'] * 3
 
     def calc_needed_exp(self):
+        """
+        A function that calculates the amount of exp needed by the user to level up based on their level.
+
+        Parameters
+        ----------
+        None
+        
+        Returns
+        -------
+        None
+        """
         self.needed_exp = 40*self.level
+        
+    def refresh_current_health(self): #for after level up or clear room 
+        """
+        A function that refreshes the users current health to their max health.
+
+        Parameters
+        ----------
+        None
+        
+        Returns
+        -------
+        None
+        """
+        self.current_health = self.health
 
     def refresh_stats(self):
+        """
+        A function that calls all the previous calculating and refreshing functions all at once. This can be used after a round to have all of their stats refreshed.
+
+        Parameters
+        ----------
+        None
+        
+        Returns
+        -------
+        None
+        """
         self.calc_health()
         self.calc_damage()
         self.calc_ac()
@@ -444,7 +735,19 @@ class Character:
         self.calc_needed_exp()
         self.refresh_current_health()
 
-    def calc_exp(self):
+    def calc_lvl_up(self):
+        """
+        A function that calculates the amount of level ups gained by the user.
+
+        Parameters
+        ----------
+        None
+        
+        Returns
+        -------
+        counter: int
+            The amount of times the user has leveled up.
+        """
         counter=0
         while self.exp>=self.needed_exp:
             self.exp-=self.needed_exp
@@ -454,6 +757,18 @@ class Character:
         return counter
 
     def assign_stat_points(self, repeated_num):
+        """
+        A function that allows the user to add stat points to their stats.
+
+        Parameters
+        ----------
+        repeated_num: int
+            The amount of times the user can add to their stat points.
+        
+        Returns
+        -------
+        None
+        """
         print("Current Stats:")
         print("{---------------------------------------------------------------}")
         print("  >>  Strength:", self.stats['str'])
@@ -501,18 +816,20 @@ class Character:
 
 
     def all_level_up(self):
+        """
+        A function that calls the previous two functions to allow the character to level up and add to their stats seamlessly.
+
+        Parameters
+        ----------
+        None
+        
+        Returns
+        -------
+        None
+        """
         os.system('cls')
-        times = self.calc_exp()
+        times = self.calc_lvl_up()
         for _ in range(times):
             self.stat_points += 2
         self.assign_stat_points(self.stat_points)
         self.refresh_stats()
-
-    def add_inventory(self, items):
-        for i in items.keys():
-            if i in self.inventory:
-                self.inventory[i]+=items[i]
-            else:
-                self.inventory[i]=items[i]
-
-
