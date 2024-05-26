@@ -28,11 +28,11 @@ class Base:
         Cost to buy the equipment from the shop
     sell_value: int
         Amount received from selling the equipment
-    added_stats: {str, int}
+    added_stats: {str: int}
         Amount of stats the equipment will add
-    added_extra: {str, int}
+    added_extra: {str: int}
         Amount of extra benefits (health, armor class, damage) the equipment will add
-    RARITY_MULT: {str, int}
+    RARITY_MULT: {str: int}
         Provides conversion from rarity to how much an equipment's stats/gold value should be multiplied by
         
     Methods
@@ -62,6 +62,10 @@ class Base:
             Amount the item would cost to buy
         sell_value: int
             How much the item would sell for
+            
+        Returns
+        -------
+        None
         """
         #initializing all the attributes for the Base class
         self.name = name
@@ -92,6 +96,10 @@ class Base:
             Values for probability calculations for stats
         weight2: [int]
             Values for probability calculations for extra bonuses
+        
+        Returns
+        -------
+        None
         """
         #using random.choices to determine how many points to assign to each stat
         split_points = random.choices(['str', 'dex', 'con'], weights=weight1, k=int(4 * self.multiplier))
@@ -126,6 +134,10 @@ class Helmet(Base):
             Amount the item would cost to buy
         sell_value: int
             How much the item would sell for
+
+        Returns
+        -------
+        None
         """
         #init -> initializes all attributes of helmet
         #super -> calls parent class's methods (init in this case)
@@ -150,6 +162,10 @@ class Armor(Base):
             Amount the item would cost to buy
         sell_value: int
             How much the item would sell for
+            
+        Returns
+        -------
+        None
         """
         super().__init__(name, rarity, buy_value, sell_value)
 
@@ -171,5 +187,9 @@ class Ring(Base):
             Amount the item would cost to buy
         sell_value: int
             How much the item would sell for
+        
+        Returns
+        -------
+        None
         """
         super().__init__(name, rarity, buy_value, sell_value)

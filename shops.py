@@ -8,16 +8,62 @@ History:
     May 25, 2024: Adding Comments
 """
 
+#importing all the necessary classes to be checked with isinstance later on
 from weapons import Sword
 from armor import Helmet
 from armor import Armor
 from armor import Ring
+#importing random for item creation, os for screen clearing
 import random
 import os
 
 
 class Shop:
+    """
+    A class to represent the base template for armor.
+    ...
+
+    Attributes
+    ----------
+    character: Character
+        Instance of the Character class -> attribute to be able to access various attributes of the character instance
+    items: {str: str/Sword/Helmet/Armor/Ring}
+        A dictionary containing all of the possible items to buy in the shop
+
+    Methods
+    -------
+    create_items(items_amount)
+        Uses the random function to create random pieces of equipment. The item's costs, names, stats, etc. are all randomized.
+    sort_items()
+        Sorts the items (instances) within the list based on alphabetical order
+    display_shop()
+        Prints the display for what the shop is selling
+    open_shop()
+        Is the main function that is called when the shop is opened. It governs all actions/inputs made by the player.
+    print_item(val, choice, letter)
+        Prints a description of the item including name, cost, rarity, etc.
+    print_instructions()
+        Prints the instructions for what the player can do within the shop
+    not_option(choice)
+        Function used to get a proper input whenever the user enters an invalid input
+    sell_item()
+        Function to sell items in the player's inventory
+    display_inventory_sell_price()
+        Prints out the possible items to sell (Inventory with sell price)
+    """
     def __init__(self, character):
+        """
+        A function that is called immediately when an instance of this class is created. It initalizes all the attributes of the class.
+
+        Parameters
+        ----------
+        character: Character
+            Instance of the Character class that was created at the start in main
+        
+        Returns
+        -------
+        None
+        """
         self.character = character
         self.items = {
             'Utility': ["Health Potion"],
@@ -28,7 +74,18 @@ class Shop:
         }
         
     def create_items(self, items_amount):
-        #items -> amount [weapon, helmet, armor, ring]
+        """
+        A function that will create the equipment to be displayed when the user opens the shop. It is all randomized.
+        
+        Parameters
+        ----------
+        items_amount: [int]
+            Is a list with the amounts of each type item to be made (separated into [Sword, Helmet, Armor, Ring])
+
+        Returns
+        -------
+        None
+        """
         RARITY_MULT = {
             'Common': 1.0,
             'Uncommon': 1.2,
@@ -113,9 +170,7 @@ class Shop:
                         added_stats['str']=split_points.count('str')
                         added_stats['dex']=split_points.count('dex')
                         added_stats['con']=split_points.count('con')
-                        #print("ADDED", added_stats)
                         inst = Sword(item_name, item_rarity[0], self.character, 0, 0, int(added_stats["str"]), int(added_stats["dex"]), int(added_stats["con"]))
-                        #print("AFTER", inst.added_stats)
                         item_cost = points*300 + inst.damage*250 + int(inst.damage*inst.damage_multiplier*10)
                         item_sell = int(item_cost * 0.7)
                         inst.buy_value = item_cost
@@ -159,12 +214,27 @@ class Shop:
                     self.items['Rings'].append(inst)
           
     def sort_items(self):
-        #https://stackoverflow.com/questions/403421/how-do-i-sort-a-list-of-objects-based-on-an-attribute-of-the-objects
+        """
+        A function that sorts all the items within each of the categories in self.items based on their cost attribute. It is called after item creation.
+        
+        Parameters
+        ----------
+        None
+            
+        Returns
+        -------
+        None
+        """
         for items_type in self.items:
             if items_type != "Utility":
+                #https://stackoverflow.com/questions/403421/how-do-i-sort-a-list-of-objects-based-on-an-attribute-of-the-objects
+                #used ^ to figure out how to sort the items by cost
                 self.items[items_type].sort(key=lambda x: x.buy_value, reverse=False)   
       
     def display_shop(self):
+        """
+        A function that will display the shop to the user and all the possible items they could buy as well as their cost.
+        """
         os.system('cls')
         print("SHOP")
         print("Utility")
@@ -201,6 +271,18 @@ class Shop:
         print("{---------------------------------------------------------------}\n")
 
     def open_shop(self):
+        """
+        A function that has calls other functions to complete any tasks the user wants to complete within the shop. (i.e. buying or selling items, looking at an item's description, etc.)
+        
+        Parameters
+        ----------
+        None
+            
+        Returns
+        -------
+        None
+        """
+        
         GOOD_INPUT = ['l', 'u', 'w', 'h', 'a', 'r']
 
         self.display_shop()
@@ -208,7 +290,6 @@ class Shop:
         choice = input("  >>  ")
         choice = self.not_option(choice)
 
-        print("ASDL CJAFWFQ")
         print(choice)
             
         while choice[0].lower() != "l":
@@ -366,6 +447,22 @@ class Shop:
                 
                 
     def print_item(self, val, choice, letter):
+        """
+        A function that prints the description of an item. It includes the name, cost, rarity, etc.
+        
+        Parameters
+        ----------
+        val: int
+            Used in a boolean fashion; to determine if the item to be displayed is a weapon or part of the armor
+        choice: int
+            A number corresponding to a certain placement in the list of equipment (corresponds to that equipment) based on the users input.
+        letter: str
+            A letter corresponding to the category of equipment based on the user's input.
+            
+        Returns
+        -------
+        None
+        """
         if val==0:
             POSSIBLEDICT = {
                 'h': "Helmets",
@@ -415,13 +512,37 @@ class Shop:
             input("[Press any button to return.]")
 
     def print_instructions(self):
+        """
+        A function that prints the instructions to the player.
+        
+        Parameters
+        ----------
+        None
+            
+        Returns
+        -------
+        None
+        """
         print("  >>  [Enter the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to see more about it.]")
         print("  >>  [Enter [B], followed by the FIRST LETTER of the CATEGORY and NUMBER of the item, WITH SPACES, to buy an item.]")
         print("  >>  [Enter [S] to initiate the selling process.]")
         print("  >>  [Press [L] to return.]")
 
     def not_option(self, choice):
-        #DO IT BASED ON LEN 0, LEN1, LEN 2, LEN 3
+        """
+        A function that repeats until it obtains a valid input from the player. Called when there is an invalid input.
+        
+        Parameters
+        ----------
+        choice: str
+            The input the user gives when prompted
+            
+        Returns
+        -------
+        choice: [str]
+            A processed valid input that was split to give access to each of the non-whitespace terms
+        """
+        
         GOOD_CHECK = ['u', 'w', 'h', 'a', 'r']
         passed = False
 
@@ -465,6 +586,17 @@ class Shop:
     
     
     def sell_item(self):
+        """
+        A function for the player to sell an item from their inventory.
+        
+        Parameters
+        ----------
+        None
+        
+        Returns
+        -------
+        None
+        """
         self.display_inventory_sell_price()
         print("What item do you want to sell? (Enter the number of the item or press [L] to leave.)")
         choice_item = input("  >>  ").strip()
@@ -515,6 +647,17 @@ class Shop:
         
         
     def display_inventory_sell_price(self):
+        """
+        A function that prints all the items in the player's inventory as well as their prices. This lets the user understand how much they will gain from selling a specific equipment.
+        
+        Parameters
+        ----------
+        None
+            
+        Returns
+        -------
+        None
+        """
         os.system('cls')
         count = 0
         print("INVENTORY")

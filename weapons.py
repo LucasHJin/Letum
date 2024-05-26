@@ -29,11 +29,11 @@ class Sword:
         Amount received from selling the equipment
     damage_multiplier: int
         Calculated multiplier based off of rarity and RARITY_MULT
-    added_stats: {str, int}
+    added_stats: {str: int}
         Amount of stats the equipment will add
     damage: int
         Amount of base damage before damage multiplier
-    cooldownsDict: {str, int}
+    cooldownsDict: {str: int}
         Decides cooldowns within battle for each of the abilities
     ABILITY_DICT
         Provides the possible abilities to use based on the rarity of the weapon
@@ -82,6 +82,10 @@ class Sword:
             Amount of points the weapon gives in dex
         con: int
             Amount of points the weapon gives in con
+            
+        Returns
+        -------
+        None
         """
         self.name = name
         self.rarity = rarity
@@ -114,9 +118,13 @@ class Sword:
     def slash(self):
         """
         Function to calculate the amount of damage dealt with slash.
+        
+        Parameters
+        ----------
+        None
 
-        Return
-        ------
+        Returns
+        -------
         dmg: int
             The amount of damage dealt by this ability
         """
@@ -127,9 +135,13 @@ class Sword:
     def wide_slash (self):
         """
         Function to calculate the amount of damage dealt with wide slash.
+        
+        Parameters
+        ----------
+        None
 
-        Return
-        ------
+        Returns
+        -------
         dmg: int
             The amount of damage dealt by this ability
         """
@@ -141,8 +153,12 @@ class Sword:
         """
         Function to calculate the amount of damage dealt with holy blow.
 
-        Return
-        ------
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
         dmg: int
             The amount of damage dealt by this ability
         """
@@ -153,9 +169,13 @@ class Sword:
     def holy_aura(self):
         """
         Function to apply a buff to the player's character.
-
-        Return
-        ------
+        
+        Parameters
+        ----------
+        None
+            
+        Returns
+        -------
         0: int (constant)
             Return 0 damage dealt because the buff has already been increased
         """
