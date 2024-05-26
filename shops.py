@@ -87,7 +87,9 @@ class Shop:
         -------
         None
         """
+        #create the items
         temp_dict = self.create_items([20, 10, 10, 10])
+        #add them to the shop's dictionary
         for key_cat in temp_dict:
             for temp_item in temp_dict[key_cat]:
                 self.items[key_cat].append(temp_item)
@@ -105,12 +107,14 @@ class Shop:
         -------
         None
         """
+        #temporary dict for all the items
         temp_items_dict = {
             'Weapons': [],
             'Helmets': [],
             'Armor': [],
             'Rings': []
         }
+        #multipliers for the amount of stat points, cost, etc.
         RARITY_MULT = {
             'Common': 1.0,
             'Uncommon': 1.2,
@@ -119,7 +123,7 @@ class Shop:
             'Legendary': 3.0
         }
             
-        #Generated these lists with AI
+        #Generated these lists with AI -> to be used interchangeably for random names
         WORSE_ADJECTIVES = [
             "Rusty", "Old", "Worn", "Tarnished", "Dull", "Faded", "Cracked", 
             "Chipped", "Broken", "Weathered", "Battered", "Fractured", "Rugged", 
@@ -159,7 +163,9 @@ class Shop:
             "Ring", "Band", "Circle", "Loop", "Hoop", "Bandlet", "Bangle", "Orb", 
             "Sphere", "Jewel", "Gem", "Stone", "Amulet", "Charm", "Token"
         ]
+        #for the amount for each type
         for amount in range(len(items_amount)):
+            #make that amount of items of that type
             for _ in range(items_amount[amount]):
                 item_a = random.choice(ADJECTIVES)
                 item_a2 = random.choice(WORSE_ADJECTIVES)
@@ -170,23 +176,29 @@ class Shop:
                 item_bn = random.choice(ARMOR_NOUNS)
                 item_rn = random.choice(RING_NOUNS)
                 
+                #decide rarity randomly
                 RARITY_LIST = ["Common", "Uncommon", "Rare", "Epic", "Legendary"]
                 item_rarity = random.choices(RARITY_LIST, weights = [50, 25, 15, 7.5, 2.5], k=1)
                 
+                #weapon
                 if amount == 0:
                     if item_rarity[0]=="Common" or item_rarity[0]=="Uncommon":
+                        #creating the name with string concatenation
                         item_name = item_a2 + " " + item_p + item_s + "'s " + item_n
+                        #creating instance of item
                         inst = Sword(item_name, item_rarity[0], self.character, 0, 0, 0, 0, 0)
                         item_cost = inst.damage*225 + int(inst.damage*inst.damage_multiplier*10)
                         item_sell = int(item_cost * 0.7)
+                        #setting the instance's buy and sell values
                         inst.buy_value = item_cost
                         inst.sell_value = item_sell
                     else:
                         item_name = item_a + " " + item_p + item_s + "'s " + item_n
+                        #calculate amount of points
                         points = int(random.randint(1, 2) * RARITY_MULT[item_rarity[0]])
-                        #print("POINTS", points)
+                        #create list with division of points
                         split_points = random.choices(['str', 'dex', 'con'], weights=[2, 1, 1], k=points)
-                        #print("SPLIT POINTS", split_points)
+                        #adding points if higher in rarity
                         added_stats = {
                             'str': 0,
                             'dex': 0,
@@ -201,7 +213,9 @@ class Shop:
                         inst.buy_value = item_cost
                         inst.sell_value = item_sell
                     temp_items_dict['Weapons'].append(inst)
+                #helmet
                 elif amount == 1:
+                    #same idea as above, but all items regardless have some stats and extra benefits
                     item_name = item_a2 + " " + item_p + item_s + "'s " + item_hn
                     inst = Helmet(name=item_name, rarity=item_rarity[0], buy_value=0, sell_value=0)
                     inst.decide_stats([2, 3, 4], [3, 3, 1])
@@ -213,7 +227,9 @@ class Shop:
                     inst.buy_value = item_cost
                     inst.sell_value = int(item_cost * 0.7)
                     temp_items_dict['Helmets'].append(inst)
+                #armor
                 elif amount == 2:
+                    #same idea as above, but all items regardless have some stats and extra benefits
                     item_name = item_a2 + " " + item_p + item_s + "'s " + item_bn
                     inst = Armor(name=item_name, rarity=item_rarity[0], buy_value=0, sell_value=0)
                     inst.decide_stats([4, 2, 4], [3, 3, 1])
@@ -225,7 +241,9 @@ class Shop:
                     inst.buy_value = item_cost
                     inst.sell_value = int(item_cost * 0.7)
                     temp_items_dict['Armor'].append(inst)
+                #ring
                 else:
+                    #same idea as above, but all items regardless have some stats and extra benefits
                     item_name = item_a2 + " " + item_p + item_s + "'s " + item_rn
                     inst = Ring(name=item_name, rarity=item_rarity[0], buy_value=0, sell_value=0)
                     inst.decide_stats([3, 2, 1], [2, 1, 4])
@@ -270,6 +288,7 @@ class Shop:
         print("Weapons")
         print("{---------------------------------------------------------------}")
         counter = 1
+        #counter to print number next to each of the weapons -> easier input later on
         for item in self.items['Weapons']:
             print("  ["+str(counter)+"]  "+item.name, "-", str(item.buy_value)+"G - "+item.rarity)
             counter+=1
@@ -309,18 +328,26 @@ class Shop:
         None
         """
         
+        #valid options for first letter of input
         GOOD_INPUT = ['l', 'u', 'w', 'h', 'a', 'r']
 
+        #get input
         self.display_shop()
         self.print_instructions()
         choice = input("  >>  ")
+        #input validation
         choice = self.not_option(choice)
             
+        #while don't want to leave
         while choice[0].lower() != "l":
+            #utility
             if choice[0].lower() == "u":
+                #must be length 2 because starting not with 'b' (buy something)
                 if len(choice) == 2:
+                    #second choice must be a digit -> the number of one of the items
                     if choice[1].isdigit():
                         if int(choice[1])==1:
+                            #only one option for utility purchases
                             os.system('cls')
                             print("Health Potion")
                             print("{---------------------------------------------------------------}")
@@ -337,6 +364,7 @@ class Shop:
                         choice = self.not_option(choice)
                 else:
                     choice = self.not_option(choice)
+            #weapon
             elif choice[0].lower() == "w":
                 if len(choice) == 2:
                     if choice[1].isdigit():
@@ -353,6 +381,7 @@ class Shop:
                         choice = self.not_option(choice)
                 else:
                     choice = self.not_option(choice)
+            #helmet
             elif choice[0].lower() == "h":
                 if len(choice) == 2:
                     if choice[1].isdigit():
@@ -369,6 +398,7 @@ class Shop:
                         choice = self.not_option(choice)
                 else:
                     choice = self.not_option(choice)
+            #armor
             elif choice[0].lower() == "a":
                 if len(choice) == 2:
                     if choice[1].isdigit():
@@ -385,6 +415,7 @@ class Shop:
                         choice = self.not_option(choice)
                 else:
                     choice = self.not_option(choice)
+            #ring
             elif choice[0].lower() == "r":
                 if len(choice) == 2:
                     if choice[1].isdigit():
@@ -401,6 +432,7 @@ class Shop:
                         choice = self.not_option(choice)
                 else:
                     choice = self.not_option(choice)
+            #buy an item
             elif choice[0].lower() == "b":
                 if len(choice) == 3:
                     POSSIBLE = ['u', 'w', 'h', 'a', 'r']
@@ -412,6 +444,7 @@ class Shop:
                         'r': "Rings"
                     }
                     found = False
+                    #input validation
                     category = "a"
                     for i in POSSIBLE:
                         if choice[1].lower() == i:
@@ -422,6 +455,7 @@ class Shop:
                     else:
                         if choice[2].isdigit():
                             if int(choice[2])>=1 and int(choice[2])<=10:
+                                #finding the item
                                 inst = self.items[CATEGORY_CONVERSION[category]][int(choice[2])-1]
                                 if inst=="Health Potion":
                                     name = inst
@@ -430,9 +464,12 @@ class Shop:
                                     name = inst.name
                                     price = inst.buy_value
                                 if price<=self.character.inventory['Gold']:
+                                    #enough money
                                     print("You have bought ["+name+"].")
+                                    #removing gold from inventory
                                     self.character.inventory['Gold']-=price
                                     print("You have", self.character.inventory['Gold'], "Gold remaining.")
+                                    #adding to inventory
                                     if inst in self.character.inventory:
                                         self.character.inventory[inst]+=1
                                     else:
@@ -444,8 +481,10 @@ class Shop:
                                     choice = input("  >>  ")
                                     if choice[0] not in GOOD_INPUT:
                                         choice = self.not_option(choice)
+                                    #new input + validation
                                 else:
-                                    print("Sorry, you do not have enough Gold. Would you like to buy anything else?")
+                                    #not enough money
+                                    print("Sorry, you do not have enough Gold. Would you like to buy something else?")
                                     self.print_instructions()
                                     choice = input("  >>  ")
                                     if choice[0] not in GOOD_INPUT:
@@ -457,6 +496,7 @@ class Shop:
                         
                 else:
                     choice = self.not_option(choice)
+            #sell an item
             elif choice[0].lower() == 's' and len(choice) == 1:
                 self.sell_item()
                 os.system('cls')
@@ -494,12 +534,14 @@ class Shop:
                 'r': "Rings"
             }
             os.system('cls')
+            #fetching the item
             inst = self.items[POSSIBLEDICT[letter.lower()]][int(choice[1])-1]
             print(inst.name)
             print("{---------------------------------------------------------------}")
             print("  >>  Cost:", inst.buy_value)
             print("  >>  Sell Value:", inst.sell_value)
             print("  >>  Rarity:", inst.rarity)
+            #only print stat if above 0
             if inst.added_stats['str']>0 or inst.added_stats['dex']>0 or inst.added_stats['con']>0:
                 print("  >>  Added Stats:")
                 if inst.added_stats['str']>0:
@@ -531,6 +573,7 @@ class Shop:
                 if inst.added_stats['con']>0:
                     print("    >>  Constitution: +"+str(inst.added_stats['con']))
             print("  >>  Available Abilities:")
+            #printing the abilities the item has
             for ability in range(len(inst.ABILITY_DICT[inst.rarity])-1):
                 print("    >>  "+inst.ABILITY_DICT[inst.rarity][ability])
             input("[Press any button to return.]")
@@ -570,25 +613,33 @@ class Shop:
         GOOD_CHECK = ['u', 'w', 'h', 'a', 'r']
         passed = False
 
+        #while input isn't valid
         while not passed:
             if choice:
                 #https://stackoverflow.com/questions/2184955/test-if-a-variable-is-a-list-or-tuple
                 if type(choice) is not list:
                     choice = choice.split()
+                    #split to be able to access it later on
                 if len(choice) == 1:
+                    #only two good 1 length options are 's' or 'l'
                     if choice[0].lower() == "s" or choice[0].lower() == "l":
                             passed = True
                 elif len(choice) == 2:
+                    #must be one of the other options excluding 'b' as first letter
                     if choice[0].lower() in GOOD_CHECK:
                         if choice[0].lower() == "u":
+                            #second must be digit
                             if choice[1].isdigit():
+                                #u can only be 1
                                 if int(choice[1]) == 1:
                                     passed = True
                         else:
                             if choice[1].isdigit():
+                                #all other can be 1 to 10
                                 if int(choice[1]) >= 1 and int(choice[1]) <=10:
                                     passed = True
                 elif len(choice) == 3:
+                    #len 3 must be buying something
                     if choice[0].lower() == "b":
                         if choice[1].lower() in GOOD_CHECK:
                             if choice[1].lower() == "u":
@@ -600,6 +651,7 @@ class Shop:
                                     if int(choice[2]) >= 1 and int(choice[2]) <=10:
                                         passed = True
             if not passed:
+                #get new input if original input not valid
                 print("That was not an option.")
                 self.print_instructions()
                 choice = input("  >>  ")
@@ -621,6 +673,7 @@ class Shop:
         -------
         None
         """
+        #display all the items and their sell prices
         self.display_inventory_sell_price()
         print("What item do you want to sell? (Enter the number of the item or press [L] to leave.)")
         choice_item = input("  >>  ").strip()
@@ -629,19 +682,25 @@ class Shop:
         check_equipped = False
         inv_list = list(self.character.inventory.keys())
         
+        #input validation
         if choice_item.isdigit():
             if int(choice_item) > 2 and int(choice_item) <= len(inv_list):
                 item_sell = inv_list[int(choice_item)-1]
                 for item_type in self.character.equipment:
                     if self.character.equipment[item_type] == item_sell:
+                        #checking if the item is equipped
                         check_equipped = True
                         break
                 if not check_equipped:
                     check = True
+                    #if item isn't equipped, you can sell it
                     sell_price = item_sell.sell_value
         elif choice_item.lower() == 'l':
+            #if you want to leave, you can
             check = True
-                
+               
+        #input validation continued
+        #don't let user continue if item is equipped (prompt for new input)
         while not check:
             check_equipped = False
             print("That was not a valid choice. (Please note that you are unable to sell gold or potions. Additionally, you are unable to sell any equipment that you currently have equipped. You may also press [L] to leave.)")
@@ -659,6 +718,7 @@ class Shop:
             elif choice_item.lower() == 'l':
                 check = True
 
+        #sell the item
         if choice_item.lower() != 'l':
             self.character.inventory['Gold'] += sell_price
             #https://note.nkmk.me/en/python-dict-clear-pop-popitem-del

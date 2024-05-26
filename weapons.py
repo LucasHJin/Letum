@@ -35,7 +35,7 @@ class Sword:
         Amount of base damage before damage multiplier
     cooldownsDict: {str: int}
         Decides cooldowns within battle for each of the abilities
-    ABILITY_DICT
+    ABILITY_DICT: {str: [str]}
         Provides the possible abilities to use based on the rarity of the weapon
     RARITY_MULT: {str, float}
         Provides conversion from rarity to how much an equipment's stats/gold value should be multiplied by
@@ -100,6 +100,7 @@ class Sword:
             'dex': dex,
             'con': con
         }
+        #to see if ability can be used
         self.cooldownsDict = {
             'Slash': 0,
             'Wide Slash': 0,

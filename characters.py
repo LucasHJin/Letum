@@ -76,7 +76,7 @@ class Character:
     apply_status()
         Applies status effects to the tabbar.
     use_health_potion()
-        Function to use a health potion -> increase health by 40 and remove 1 health potion from inventory.
+        Function to use a health potion -> increase health and remove 1 health potion from inventory.
     check_dead()
         Check if the character is dead.
     calc_health()
@@ -132,7 +132,7 @@ class Character:
         self.armor_class = 0
         self.attack_damage = 0
         self.inventory = {
-            'Gold': 1900000,
+            'Gold': 0,
             'Health Potion': 0
         }
         self.tabbar = {
@@ -178,9 +178,10 @@ class Character:
         print("  >>  Dexterity:", self.stats['dex'])
         print("  >>  Constitution:", self.stats['con'])
         print("{---------------------------------------------------------------}")
+        #print can't call .name on a string -> need to check if it is a string or custom class
         if self.equipment['Helmet'] == "None":
             print("  >>  Helmet: N/A")
-        else:
+        else: 
             print("  >>  Helmet:", self.equipment['Helmet'].name)
         if self.equipment['Armor'] == "None":
             print("  >>  Armor: N/A")
@@ -208,6 +209,7 @@ class Character:
         """
         print("Current Equipment")
         print("{---------------------------------------------------------------}")
+        #print can't call .name on a string -> need to check if it is a string or custom class
         if self.equipment['Weapon'] == "None":
             print("  >>  Weapon: N/A")
         else:
@@ -242,11 +244,6 @@ class Character:
         None
         """
         if val==0:
-            POSSIBLEDICT = {
-                'h': "Helmet",
-                'a': "Armor",
-                'r': "Ring"
-            }
             os.system('cls')
             print(inst.name)
             print("{---------------------------------------------------------------}")
@@ -256,6 +253,7 @@ class Character:
             if inst.added_stats['str']>0 or inst.added_stats['dex']>0 or inst.added_stats['con']>0:
                 print("  >>  Added Stats:")
                 if inst.added_stats['str']>0:
+                    #if it adds to the stat, display it
                     print("    >>  Strength: +"+str(inst.added_stats['str']))
                 if inst.added_stats['dex']>0:
                     print("    >>  Dexterity: +"+str(inst.added_stats['dex']))
@@ -285,6 +283,7 @@ class Character:
             print("  >>  Available Abilities:")
             for ability in range(len(inst.ABILITY_DICT[inst.rarity])-1):
                 print("    >>  "+inst.ABILITY_DICT[inst.rarity][ability])
+                #print all the possible abilities based on the rarity
             input("[Press any button to return.]")    
 
     def equip_equipment(self):
@@ -316,17 +315,21 @@ class Character:
             'w': Sword
         }
         
+        #getting first input
         print("What would you like to equip right now? [Enter the first letter of the equipment category or [L] to leave or [I] to check your inventory.]")
         choice = input("  >>  ")
         
+        #input validation
         while choice.lower() not in POSSIBLE:
             print("Sorry, that was not an option. What would you like to equip right now? [Enter the first letter of the equipment category or [L] to leave or [I] to check your inventory.]")
             choice = input("  >>  ")
         
-        
+        #choice2 = the specific item you want to equip
         choice2 = ""
         
+        #infinite loop while the user doesn't leave
         while choice.lower() != "l" and choice2.lower() != "l":
+            #user checking inventory and being prompted for next input
             while choice.lower() == "i":
                 self.check_inventory()
                 print("What would you like to equip right now? [Enter the first letter of the equipment category or [L] to leave or [I] to check your inventory.]")
@@ -336,9 +339,11 @@ class Character:
                     print("Sorry, that was not an option. What would you like to equip right now? [Enter the first letter of the equipment category or [L] to leave or [I] to check your inventory.]")
                     choice = input("  >>  ")
                 
+            #which equipment to equip
             print("And what equipment would you like to equip? Please make sure that you are equipping a new piece of equipment. [Enter the name of the equipment (exactly as written) or enter [I] to check your inventory.]")
             choice2 = ""
             choice2 = input("  >>  ")
+            #input validation
             check = False
             if choice2.lower() == 'i':
                 self.check_inventory()
@@ -348,6 +353,7 @@ class Character:
                         if choice2 == item.name:
                             check = True
                             chosenItem = item
+                            #if it is an item in inventory, then it is good
                             break
             if (choice != "l" and choice2 != "l" and check):
                 #finding currently equipped equipment and the stats they would add
@@ -371,6 +377,7 @@ class Character:
                                     remove_stats['con'] = item.added_stats['con']
 
                 else:
+                    #finding stats again -> this time more because piece of equipment, not weapon
                     remove_stats = {
                         'str': 0,
                         'dex': 0,
@@ -407,6 +414,7 @@ class Character:
                 printhp = 0
                 printdmg = 0
                 
+                #nonweapons have a few more stats to add 
                 if POSSIBLEDICT[choice.lower()] != "Weapon":
                     self.added_ac = self.added_ac - remove_extra['ac'] + chosenItem.added_extra['ac']
                     self.added_hp = self.added_hp - remove_extra['hp'] + chosenItem.added_extra['hp']
@@ -419,9 +427,11 @@ class Character:
                     printhp = self.added_hp
                     printdmg = self.added_dmg
 
+                #changing equipped item to chosen item
                 self.equipment[POSSIBLEDICT[choice.lower()]] = item
 
                 os.system('cls')
+                #final message stating item has been equipped
                 print("You have equipped " + chosenItem.name + ".")
                 PRINTDICT = {
                     'str': printstr,
@@ -432,18 +442,21 @@ class Character:
                     'dmg': printdmg
                 }
                 
+                #printing out all the stat values changed by the change in equipment
                 for i in PRINTDICT:
                     if PRINTDICT[i]>=0:
                         print("  >>  "+i+": +"+str(PRINTDICT[i]))
                     else:
                         print("  >>  "+i+": "+str(PRINTDICT[i]))
             else:
+                #not a valid input
                 print("We shall restart.")
             print("")
             self.display_equipments()
             
             print("What would you like to equip right now? [Enter the first letter of the equipment category or [L] to leave or [I] to check your inventory.]")
             choice = input("  >>  ")
+            #getting input + validation again
             
             while choice.lower() not in POSSIBLE:
                 print("Sorry, that was not an option. What would you like to equip right now? [Enter the first letter of the equipment category or [L] to leave or [I] to check your inventory.]")
@@ -467,7 +480,9 @@ class Character:
         """
         os.system('cls')
         inventoryList = []
+        #inventory list to know whats in inventory
         count = 0
+        #count to put a number next to each item
         print("INVENTORY")
         print("{---------------------------------------------------------------}")
         for item_inv in self.inventory.keys():
@@ -493,6 +508,7 @@ class Character:
         -------
         None
         """
+        #check through each item in the inventory specifically
         temp = self.display_inventory()
         inventoryList = temp[0]
         count = temp[1]
@@ -501,19 +517,22 @@ class Character:
         while choice != "l":
             if choice.isdigit():
                 if choice == "1":
+                    #manually written description
                     print("Gold is the currency of the realm you currently reside in. It drops from monsters and chests and can be used to purchase equipment and consumables.")
                     input("[Press any button to return.]")
                     print("What will you do now?")
                     print("[Enter [L] to leave or enter the number of a specific item to learn more about it.]")
                     choice = input("  >>  ")
                 elif choice == "2":
-                    print("Health potions are an essential part of your kit. They will help you stay alive during battles, healing 40HP every use.")
+                    #manually written description
+                    print("Health potions are an essential part of your kit. They will help you stay alive during battles, healing a random amount every use.")
                     input("[Press any button to return.]")    
                     print("What will you do now?")
                     print("[Enter [L] to leave or enter the number of a specific item to learn more about it.]")
                     choice = input("  >>  ")
                 elif int(choice)-1<len(inventoryList) and int(choice)-1>=0:
                     if isinstance(inventoryList[int(choice)-1], Sword):
+                        #print the description of the chosen item
                         self.print_single_equipment(1, inventoryList[int(choice)-1])
                         print("What will you do now?")
                         print("[Enter [L] to leave or enter the number of a specific item to learn more about it.]")
@@ -534,6 +553,7 @@ class Character:
                         print("[Enter [L] to leave or enter the number of a specific item to learn more about it.]")
                         choice = input("  >>  ")
                     else:
+                        #invalid inputs (i.e. put a number out of the range)
                         print("That was not an option.")
                         print("[Enter [L] to leave or enter the number of a specific item to learn more about it.]")
                         choice = input("  >>  ")
@@ -559,11 +579,11 @@ class Character:
         -------
         None
         """
-        for i in items.keys():
-            if i in self.inventory:
-                self.inventory[i]+=items[i]
+        for item in items.keys():
+            if item in self.inventory:
+                self.inventory[item]+=items[item]
             else:
-                self.inventory[i]=items[i]
+                self.inventory[item]=items[item]
 
     def apply_status(self): 
         """
@@ -577,23 +597,30 @@ class Character:
         -------
         None
         """
-        if self.tabbar["Poison"]>0: #works now
+        if self.tabbar["Poison"]>0: #if poisoned
             pDamage = int(self.health*0.05)
+            #lose some health + print message
             print(" ~ You have been poisoned for", pDamage, "damage. ~ ")
             self.current_health -= pDamage
-            self.tabbar["Poison"]-=1 #WORKS
+            #reduce cooldown by one
+            self.tabbar["Poison"]-=1 
         if self.tabbar["Weakened"]>0:
+            #reduce cooldown -> effect is calculated during ability by enemy
             self.tabbar["Weakened"]-=1 
         if self.tabbar["Buffed"]==0 and self.is_buffed:
+            #if was buffed and it just ran out -> need to remove buff
             for st in self.stats:
                 self.stats[st]-=5
+            #no longer buffed
             self.is_buffed = False
             health_diff = self.health - self.current_health
             self.refresh_stats()
             self.current_health -= health_diff
         if self.tabbar["Buffed"]>0 and not self.is_buffed:
+            #if has buff effect but has not been buffed yet
             for st in self.stats:
                 self.stats[st]+=5
+            #is buffed
             self.is_buffed = True
             self.tabbar["Buffed"]-=1
             health_diff = self.health - self.current_health
@@ -603,7 +630,7 @@ class Character:
 
     def use_health_potion(self):
         """
-        A function that heals the user by 40 HP in battle.
+        A function that heals the user by 25 to 50 HP in battle.
 
         Parameters
         ----------
@@ -616,6 +643,7 @@ class Character:
         self.inventory['Health Potion'] -= 1
         add_health = random.randint(25, 50)
         self.current_health += add_health
+        #can't go past full health
         if self.current_health > self.health:
             self.current_health = self.health
         print("Quickly uncorking your health potion, you guzzle it down and feel your body rejuvenate. [+"+str(add_health)+"HP]")
@@ -750,9 +778,13 @@ class Character:
         """
         counter=0
         while self.exp>=self.needed_exp:
+            #while have more exp than needed exp
+            #subtract exp to get to next level
             self.exp-=self.needed_exp
             counter += 1
+            #increase level
             self.level += 1
+            #calculate new needed exp
             self.calc_needed_exp()
         return counter
 
@@ -769,6 +801,7 @@ class Character:
         -------
         None
         """
+        #print stats and stat points
         print("Current Stats:")
         print("{---------------------------------------------------------------}")
         print("  >>  Strength:", self.stats['str'])
@@ -778,12 +811,15 @@ class Character:
         print("  >>  Available Stat Points:", self.stat_points)
         print("{---------------------------------------------------------------}")
         for _ in range(repeated_num):
+            #while still have stat points
             print(" ~ Which stat would you like to increase? (str/dex/con) ~ ")
             stat_choice = input("  >>  ")
+            #input validation + getting input
             good = False
             if stat_choice.lower() in self.stats:
                 self.stats[stat_choice] += 1
                 good = True
+                #adding stats to the chosen one
                 print("{---------------------------------------------------------------}")
                 if stat_choice.lower() == 'str':
                     print("  >>  Strength:", self.stats['str'], "↑")
@@ -806,6 +842,7 @@ class Character:
                     else:
                         print("  >>  Constitution:", self.stats['con'], "↑")
                     print("{---------------------------------------------------------------}")
+        #when finished
         print(" ~ Level up complete! Your stats are now: ~ ")
         print("{---------------------------------------------------------------}")
         print("  >>  Strength:", self.stats['str'])
@@ -828,8 +865,11 @@ class Character:
         None
         """
         os.system('cls')
+        #calculates how many level ups and stat points
         times = self.calc_lvl_up()
         for _ in range(times):
             self.stat_points += 2
+        #lets you assign all of them
         self.assign_stat_points(self.stat_points)
+        #updates all stats
         self.refresh_stats()

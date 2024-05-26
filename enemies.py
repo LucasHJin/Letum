@@ -154,6 +154,7 @@ class Rat(Enemy):
         if not self.check_dead():
             # https://pynative.com/python-weighted-random-choices-with-probability/ for weighted values
             chosenAbility = random.choices(['Bite', 'Scratch'], weights = [60, 40], k=1) 
+            #choosing ability randomly and returning damage
             if chosenAbility[0] == 'Bite':
                 return self.bite()
             else:
@@ -176,6 +177,7 @@ class Rat(Enemy):
         """
         # https://pynative.com/python-get-random-float-numbers/ for random float
         # https://note.nkmk.me/en/python-math-floor-ceil-int/#:~:text=While%20math.,()%20instead%20rounds%20toward%20zero. -> rounding damage to integers
+        #armor class applies damage reduction
         damage = int(self.multiplier * self.damage * random.uniform(0.8, 1.2) * (100/(100+self.character.armor_class)))
         print(self.name, "unhinges its mutated mandibles, snapping at your body. Its bite deals", damage, "damage.") 
         return damage
@@ -308,6 +310,7 @@ class Goblin(Enemy):
             The amount of damage dealt by this ability
         """
         damage = int(self.multiplier * self.damage * random.uniform(0.3, 0.5) * (100/(100+self.character.armor_class)))
+        #adds a poison debuff to the character
         if self.character.tabbar["Poison"]:
             self.character.tabbar["Poison"] += 1
         else:
@@ -433,6 +436,7 @@ class Skeleton(Enemy):
             This ability does no damage.
         """
         print(self.name, "lunges at you, disassembling and assembling itself, attempting to trap you.")
+        #adds a stun debuff
         if self.character.tabbar["Stunned"]:
             self.character.tabbar["Stunned"] += 1
         else:
@@ -452,6 +456,7 @@ class Skeleton(Enemy):
         None
         """
         print(self.name, "realizes its innate trait, avoiding the death which it has taunted for so long.")
+        #sets health to 1 -> not dead
         self.health = 1
         
 
@@ -549,6 +554,7 @@ class Demon(Enemy):
             The amount of damage dealt by this ability
         """
         damage = int(self.multiplier * (self.damage + self.character.health*0.03) * random.uniform(0.5, 0.6) * (100/(100+self.character.armor_class)))
+        #adds weaken debuff to character
         if self.character.tabbar["Weakened"]:
             self.character.tabbar["Weakened"] += 1
         else:
@@ -570,11 +576,13 @@ class Demon(Enemy):
         damage: int
             The amount of damage dealt by this ability
         """
+        #if the character has been weakened -> more damage
         if self.character.tabbar["Weakened"]>0:
             damage = int(self.multiplier * random.uniform(1, 1.2) * 2.5 * (self.damage + self.character.health*0.05) * (100/(100+self.character.armor_class)))
             print(self.name, "burns you with hellfire which is strengthed by your weakness. The flames burn you for", damage, "damage.")
             self.character.tabbar["Weakened"]-=1
             return damage
+        #if the character hasn't been weakened -> less damage
         else:
             damage = int(self.multiplier * random.uniform(1, 1.1) * (self.damage + self.character.health*0.025) * (100/(100+self.character.armor_class)))
             print(self.name, "curses, bemoaning the fact that you aren't weakened. His flames deal", damage, "damage.")
