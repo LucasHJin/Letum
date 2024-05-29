@@ -1,35 +1,40 @@
 from chatterbot import ChatBot
 from chatterbot.trainers import ListTrainer
 import time 
-time.clock = time.time
+from convokit import Corpus, download
+time.clock = time.time #because time.clock was depreceated
 
 chatbot = ChatBot("Merchant")
 
-conversations = [
-    "This field seems endless, and the monsters keep coming!",
-    "Indeed, it feels like we're trapped in a never-ending nightmare.",
-    "We must keep fighting, lest we be overwhelmed by the horde!",
-    "Agreed! With each monster we defeat, we gain a moment of respite.",
-    "Look out! A group of goblins is approaching from the east!",
-    "I'll take care of the goblins. You focus on defending our flank.",
-    "Skeletons are emerging from the ground! We're surrounded!",
-    "Stay calm! We'll fight our way out of this together.",
-    "Rats! They're crawling out of every crevice!",
-    "I'll create a barrier with my spells. You focus on taking out the rats.",
-    "A demon! Its presence fills the air with dread!",
-    "We cannot let fear paralyze us. We must stand firm and face the demon!",
-    "We've been fighting for hours. Will this ever end?",
-    "It may seem endless, but we must not lose hope. Our perseverance will prevail.",
-    "I see a portal opening in the distance! We must make a break for it!",
-    "To the portal! Let us escape this endless onslaught and live to fight another day!",
-    "We made it through the portal! We're safe... for now.",
-    "Indeed, but our journey is far from over. We must continue to hone our skills and prepare for the next challenge."
-]
-
+#manually trained it -> didn't use a free database because there were none that conformed to my wishes (i.e. DnD setting)
 trainer = ListTrainer(chatbot)
-trainer.train(conversations)
+trainer.train([
+    "Tell me about this world.",
+    "Ah, this world of Letum is a tapestry woven with threads of magic and mystery. It is a realm where gods rise and fall, where heroes are forged in the fires of adversity, and where every step taken may lead to glory or doom.",
+])
 
-exit_conditions = (":q", "quit", "exit")
+trainer.train([
+    "What can you tell me about this world?",
+    "This world of Letum is a place of wonders and dangers, where the boundaries between reality and myth blur. It is a realm where ancient secrets lie buried beneath the earth, waiting to be unearthed by those brave enough to seek them.",
+])
+
+trainer.train([
+    "I want to know more about this world.",
+    "Ah, this world of Letum is a realm of endless possibilities and infinite mysteries. It is a land where the very fabric of reality is shaped by the whims of gods and the will of mortals, where every corner holds a new adventure and every shadow hides a secret.",
+])
+
+trainer.train([
+    "What's the story behind this world?",
+    "The story of this world of Letum is a tale as old as time itself, filled with heroes and villains, triumphs and tragedies. It is a saga of gods and mortals, of battles fought and lost, of destinies intertwined and fates foretold.",
+])
+
+trainer.train([
+    "Can you describe this world?",
+    "This world of Letum is a realm of wonder and peril, where magic flows like a river and danger lurks around every corner. It is a land of ancient ruins and forgotten cities, of dark forests and towering mountains, where adventure awaits those brave enough to seek it.",
+])
+
+
+exit_conditions = ("Q", "q", "Quit", "quit", "L", "l", "Leave", "leave", "exit")
 while True:
     query = input(" >> ")
     if query in exit_conditions:
