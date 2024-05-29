@@ -1,8 +1,15 @@
 # Letum
-Letum is an RPG turn-based text game, made with OOP, machine learning and Python. The majority of the game is made possible with classes and the machine learning generates dialogue for the player to interact with NPCs as well as descriptions for various items.
+Letum is an RPG turn-based text game, made with OOP, machine learning and Python. The majority of the game is made possible with classes and the machine learning generates dialogue for the player to interact with NPCs. Within the game, you are playing as a person who was summoned to the world by a Goddess. Your goal is to survive as long as possible by leveling up, upgrading your stats, buying and discovering new weapons and armors and fighting against all types of enemies including Rats, Goblins, Skeletons and Demons, each with their own tiers of strength.
 
 ## Features
-
+- You are able to fight in turn based battles
+   - Within these battles, there are status effects, buffs, damaging abilties, etc.
+   - You can unlock weapons, armor, consumables and gold from these battles (opening chests and killing enemies)
+- You are able to visit the shop
+   - Within the shop, you can chat with the shopkeeper (work in progress)
+   - You are able to buy various items that improve your stats and abilities
+   - You can also sell items
+- You are able to upgrade your stats by leveling up (this improves your survivability and damage)
 
 ## Installation and Running
 ### Prerequisites
@@ -13,9 +20,8 @@ Letum is an RPG turn-based text game, made with OOP, machine learning and Python
    python -m ensurepip --upgrade
 ```
 
-3. **Convokit and chatterbot**: Install the convokit and chatterbot libraries to be able to access the ai portions of this code:
+3. **Chatterbot**: Install the chatterbot library to be able to access the AI portions of this code:
 ```sh
-   pip install convokit
    pip install chatterbot==1.0.4
 ```
 
@@ -33,10 +39,15 @@ Letum is an RPG turn-based text game, made with OOP, machine learning and Python
 - The chatbot isn't advanced enough to have a proper conversation most of the time. Only some of the time can it have a proper conversation (it can respond to basic greetings and goodbye)
 
 ## Cheat codes
-
+- There are no cheat codes within the game as the goal is simply to survive as long as possible
+   - However, here are some tips:
+      - CONTINUE
 
 ## Support
 In case of any problems, contact:
 - Lucas J. - kblazer20@gmail.com
 
 ## Sources
+- https://docs.google.com/document/d/1F1rFOp_7X4bLbj4QpG3uGhUACjmGZ3tqvgm5Gg0bpM8/edit?usp=sharing
+- ChatGPT:
+   - Generating data to train the chatbot with chatgpt
