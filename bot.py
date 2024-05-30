@@ -1,7 +1,6 @@
 from chatterbot import ChatBot
 from chatterbot.trainers import ListTrainer
 import time 
-from convokit import Corpus, download
 time.clock = time.time #because time.clock was depreceated
 
 chatbot = ChatBot("Merchant")

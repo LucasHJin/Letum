@@ -40,8 +40,15 @@ Letum is an RPG turn-based text game, made with OOP, machine learning and Python
 
 ## Cheat codes
 - There are no cheat codes within the game as the goal is simply to survive as long as possible
-   - However, here are some tips:
-      - CONTINUE
+   - However, here are some tips to survive longer:
+      - When looking through the weapons in the shop, the rarity of rare is probably the most cost efficient as it allows you an AOE attack that hits all enemies
+         Note that the amount of enemies augments exponentially as rounds go by so buying a weapon with an AOE as soon as possible will be important
+      - Investing in dexterity has diminishing returns but is more worthwhile earlier
+         - On the other hand, investing in strength and constitution will help you deal more damage and stay alive consistently throughout the entire game
+      - Target bosses and elites as well as harder mobs such as Demons instead of Rats
+         - Use the AOE to take care of small mobs and focus on the larger enemies as they deal a lot more damage
+      - Don't buy health potions from the shop
+         - It is a waste of gold as many will drop from the enemies naturally
 
 ## Support
 In case of any problems, contact:
