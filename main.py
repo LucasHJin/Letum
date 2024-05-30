@@ -17,8 +17,9 @@ from battles import Battle
 from armor import Helmet
 from armor import Armor
 from armor import Ring
-import os
 from shops import Shop
+from bot import chatKun
+import os
 import random
 
 #FUNCTIONS
@@ -284,8 +285,10 @@ POSSIBLE = {
     "S": "Open Status",
     "B": "Buy Items from the Shop",
     "E": "Equip Equipment",
+    "T": "Talk with Kun",
     "F": "Fight"
 }
+first_talking = True
 
 os.system('cls')
 print("What will you do now?")
@@ -323,6 +326,22 @@ while result != "DEAD":
         #equip items
         elif choice.lower() == "e":
             player.equip_equipment()
+            os.system('cls')
+            print_options(POSSIBLE)
+            choice = input("  >>  ")
+        #talking with the merchant
+        elif choice.lower() == "t":
+            if first_talking:
+                #adding this message because chatbot doesn't always work because of lack of training -> incorporating it into the game
+                print(" ~ You will now begin talking to my loyal follower, Kun. ~ ")
+                print(" ~ But be warned, he has followed me for millenia upon millenia and it has started to corrupt his mind and soul. ~ ")
+                print(" ~ So, when talking with him, please phrase your questions properly and try to humour him if he temporarily becomes incoherent. ~ ")
+                input("[Press input to continue.]")
+            os.system('cls')
+            print("Conversation")
+            print(" ~ Enter 'Q', 'Quit', 'Leave', 'L' or 'Exit' precisely to stop the conversation.")
+            print("{---------------------------------------------------------------}")
+            chatKun()
             os.system('cls')
             print_options(POSSIBLE)
             choice = input("  >>  ")
