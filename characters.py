@@ -132,7 +132,7 @@ class Character:
         self.armor_class = 0
         self.attack_damage = 0
         self.inventory = {
-            'Gold': 0,
+            'Gold': 100000,
             'Health Potion': 0
         }
         self.tabbar = {
@@ -287,6 +287,8 @@ class Character:
             input("[Press any button to return.]")    
 
     def equip_equipment(self):
+
+        ###STILL NEED TO FIX -> PART WITH EQUIPPING
         """
         A function that to equip equipment from the inventory.
 
@@ -300,168 +302,217 @@ class Character:
         """
         #display message
         self.display_equipments()
+        self.display_inventory()
         #input and finding want to equip equipment
-        POSSIBLE = ['h', 'a', 'r', 'w', 'l', 'i']
         POSSIBLEDICT = {
-            'h': "Helmet",
-            'a': "Armor",
-            'r': "Ring",
-            'w': "Weapon"
+            Helmet: "Helmet",
+            Armor: "Armor",
+            Ring: "Ring",
+            Sword: "Weapon"
         }
-        POSSIBLEDICT2 = {
-            'h': Helmet,
-            'a': Armor,
-            'r': Ring,
-            'w': Sword
-        }
-        
+
         #getting first input
-        print("What would you like to equip right now? [Enter the first letter of the equipment category or [L] to leave or [I] to check your inventory.]")
+        print("What would you like to equip right now? [Enter the 'e' and the number of the equipment (no spaces) or [L] to leave or the number of the equipment to check it out.]")
         choice = input("  >>  ")
         
         #input validation
-        while choice.lower() not in POSSIBLE:
-            print("Sorry, that was not an option. What would you like to equip right now? [Enter the first letter of the equipment category or [L] to leave or [I] to check your inventory.]")
-            choice = input("  >>  ")
-        
-        #choice2 = the specific item you want to equip
-        choice2 = ""
-        
-        #infinite loop while the user doesn't leave
-        while choice.lower() != "l" and choice2.lower() != "l":
-            #user checking inventory and being prompted for next input
-            while choice.lower() == "i":
-                self.check_inventory()
-                print("What would you like to equip right now? [Enter the first letter of the equipment category or [L] to leave or [I] to check your inventory.]")
+        checking = True
+
+        while checking:
+            if not choice:
+                print("Sorry, that was not an option. What would you like to equip right now? [Enter the 'e' and the number of the equipment (no spaces) or [L] to leave or the number of the equipment to check it out.]")
                 choice = input("  >>  ")
-                
-                while choice.lower() not in POSSIBLE:
-                    print("Sorry, that was not an option. What would you like to equip right now? [Enter the first letter of the equipment category or [L] to leave or [I] to check your inventory.]")
-                    choice = input("  >>  ")
-                
-            #which equipment to equip
-            print("And what equipment would you like to equip? Please make sure that you are equipping a new piece of equipment. [Enter the name of the equipment (exactly as written) or enter [I] to check your inventory.]")
-            choice2 = ""
-            choice2 = input("  >>  ")
-            #input validation
-            check = False
-            if choice2.lower() == 'i':
-                self.check_inventory()
-            elif choice2.lower() != 'l':
-                for item in self.inventory:
-                    if isinstance(item, POSSIBLEDICT2[choice]):
-                        if choice2 == item.name:
-                            check = True
-                            chosenItem = item
-                            #if it is an item in inventory, then it is good
-                            break
-            if (choice != "l" and choice2 != "l" and check):
-                #finding currently equipped equipment and the stats they would add
-                if POSSIBLEDICT[choice.lower()] == "Weapon":
-                    remove_stats = {
-                        'str': 0,
-                        'dex': 0,
-                        'con': 0
-                    }
-                    remove_extra = {
-                        'ac': 0,
-                        'hp': 0,
-                        'dmg': 0
-                    }
-                    if self.equipment[POSSIBLEDICT[choice.lower()]] != "None":
-                        for item in self.inventory:
-                            if isinstance(item, Sword):
-                                if self.equipment[POSSIBLEDICT[choice.lower()]].name == item.name:
-                                    remove_stats['str'] = item.added_stats['str']
-                                    remove_stats['dex'] = item.added_stats['dex']
-                                    remove_stats['con'] = item.added_stats['con']
-
-                else:
-                    #finding stats again -> this time more because piece of equipment, not weapon
-                    remove_stats = {
-                        'str': 0,
-                        'dex': 0,
-                        'con': 0
-                    }
-                    remove_extra = {
-                        'ac': 0,
-                        'hp': 0,
-                        'dmg': 0
-                    }
-                    if self.equipment[POSSIBLEDICT[choice.lower()]] != "None":
-                        for item in self.inventory:
-                            if isinstance(item, (Ring, Helmet, Armor)):
-                                if self.equipment[POSSIBLEDICT[choice.lower()]].name == item.name:
-                                    remove_stats['str'] = item.added_stats['str']
-                                    remove_stats['dex'] = item.added_stats['dex']
-                                    remove_stats['con'] = item.added_stats['con']
-                                    remove_extra['ac'] = item.added_extra['ac']
-                                    remove_extra['hp'] = item.added_extra['hp']
-                                    remove_extra['dmg'] = item.added_extra['dmg']
-                
-
-                #changing stats to remove old and add new equipment
-                printstr = chosenItem.added_stats['str'] - remove_stats['str']
-                printdex = chosenItem.added_stats['dex'] - remove_stats['dex']
-                printcon = chosenItem.added_stats['con'] - remove_stats['con']
-                self.stats['str'] = self.stats['str'] - remove_stats['str'] + chosenItem.added_stats['str']
-                self.stats['dex'] = self.stats['dex'] - remove_stats['dex'] + chosenItem.added_stats['dex']
-                self.stats['con'] = self.stats['con'] - remove_stats['con'] + chosenItem.added_stats['con']
-                #Refresh all the values on status
-                self.refresh_stats()
-                #Need to add on calced values again
-                printac = 0
-                printhp = 0
-                printdmg = 0
-                
-                #nonweapons have a few more stats to add 
-                if POSSIBLEDICT[choice.lower()] != "Weapon":
-                    self.added_ac = self.added_ac - remove_extra['ac'] + chosenItem.added_extra['ac']
-                    self.added_hp = self.added_hp - remove_extra['hp'] + chosenItem.added_extra['hp']
-                    self.added_dmg = self.added_dmg - remove_extra['dmg'] + chosenItem.added_extra['dmg']
-                    self.armor_class = self.armor_class + self.added_ac
-                    self.health = self.health + self.added_hp
-                    self.attack_damage = self.attack_damage + self.added_dmg
-                    
-                    printac = self.added_ac
-                    printhp = self.added_hp
-                    printdmg = self.added_dmg
-
-                #changing equipped item to chosen item
-                self.equipment[POSSIBLEDICT[choice.lower()]] = item
-
-                os.system('cls')
-                #final message stating item has been equipped
-                print("You have equipped " + chosenItem.name + ".")
-                PRINTDICT = {
-                    'str': printstr,
-                    'dex': printdex,
-                    'con': printcon,
-                    'ac': printac,
-                    'hp': printhp,
-                    'dmg': printdmg
-                }
-                
-                #printing out all the stat values changed by the change in equipment
-                for i in PRINTDICT:
-                    if PRINTDICT[i]>=0:
-                        print("  >>  "+i+": +"+str(PRINTDICT[i]))
+            elif len(choice) == 1:
+                if choice.isdigit():
+                    if int(choice) > len(self.inventory) or int(choice) <=2:
+                        print("Sorry, that was not an option. What would you like to equip right now? [Enter the 'e' and the number of the equipment (no spaces) or [L] to leave or the number of the equipment to check it out.]")
+                        choice = input("  >>  ")
                     else:
-                        print("  >>  "+i+": "+str(PRINTDICT[i]))
+                        checking = False
+                elif choice.lower() != "l":
+                    print("Sorry, that was not an option. What would you like to equip right now? [Enter the 'e' and the number of the equipment (no spaces) or [L] to leave or the number of the equipment to check it out.]")
+                    choice = input("  >>  ")
+                else:
+                    checking = False
+            elif len(choice) == 2:
+                if choice[0].lower() != "e":
+                    print("Sorry, that was not an option. What would you like to equip right now? [Enter the 'e' and the number of the equipment (no spaces) or [L] to leave or the number of the equipment to check it out.]")
+                    choice = input("  >>  ")
+                elif not choice[1].isdigit():
+                    print("Sorry, that was not an option. What would you like to equip right now? [Enter the 'e' and the number of the equipment (no spaces) or [L] to leave or the number of the equipment to check it out.]")
+                    choice = input("  >>  ")
+                elif int(choice[1]) > len(self.inventory) or int(choice[1]) <= 2:
+                    print("Sorry, that was not an option. What would you like to equip right now? [Enter the 'e' and the number of the equipment (no spaces) or [L] to leave or the number of the equipment to check it out.]")
+                    choice = input("  >>  ")
+                else:
+                    checking = False
             else:
-                #not a valid input
-                print("We shall restart.")
-            print("")
-            self.display_equipments()
+                print("Sorry, that was not an option. What would you like to equip right now? [Enter the 'e' and the number of the equipment (no spaces) or [L] to leave or the number of the equipment to check it out.]")
+                choice = input("  >>  ")    
             
-            print("What would you like to equip right now? [Enter the first letter of the equipment category or [L] to leave or [I] to check your inventory.]")
-            choice = input("  >>  ")
-            #getting input + validation again
+        if len(choice) == 1 and choice == "l":
+            input("[Press enter to continue.]")
+            return
+        elif len(choice) == 1 and choice.isdigit():
+            count_keys = 1
+            for item in (self.inventory.keys()):
+                if count_keys == int(choice):
+                    check_item = item
+                    break
+                count_keys+=1
+            if isinstance(check_item, Sword):
+                self.print_single_equipment(1, check_item)
+            else:
+                self.print_single_equipment(0, check_item)
+        else:
+            temp_count = 0
+            for item in self.inventory:
+                if int(choice[1]) == temp_count+1:
+                    chosenItem = item
+                    #if it is an item in inventory, then it is good
+                    break
+                temp_count+=1
+            #finding currently equipped equipment and the stats they would add
+            if isinstance(chosenItem, Sword):
+                remove_stats = {
+                    'str': 0,
+                    'dex': 0,
+                    'con': 0
+                }
+                remove_extra = {
+                    'ac': 0,
+                    'hp': 0,
+                    'dmg': 0
+                }
+                #getting type of class -> https://stackoverflow.com/questions/510972/getting-the-class-name-of-an-instance
+                if self.equipment["Weapon"] != "None":
+                    for item in self.inventory:
+                        if isinstance(item, Sword):
+                            if self.equipment["Weapon"].name == item.name:
+                                remove_stats['str'] = item.added_stats['str']
+                                remove_stats['dex'] = item.added_stats['dex']
+                                remove_stats['con'] = item.added_stats['con']
+
+            else:
+                #finding stats again -> this time more because piece of equipment, not weapon
+                remove_stats = {
+                    'str': 0,
+                    'dex': 0,
+                    'con': 0
+                }
+                remove_extra = {
+                    'ac': 0,
+                    'hp': 0,
+                    'dmg': 0
+                }
+                #getting type of class -> https://stackoverflow.com/questions/510972/getting-the-class-name-of-an-instance
+                if self.equipment[POSSIBLEDICT[chosenItem.__class__]] != "None":
+                    for item in self.inventory:
+                        if isinstance(item, (Ring, Helmet, Armor)):
+                            if self.equipment[POSSIBLEDICT[chosenItem.__class__]].name == item.name:
+                                remove_stats['str'] = item.added_stats['str']
+                                remove_stats['dex'] = item.added_stats['dex']
+                                remove_stats['con'] = item.added_stats['con']
+                                remove_extra['ac'] = item.added_extra['ac']
+                                remove_extra['hp'] = item.added_extra['hp']
+                                remove_extra['dmg'] = item.added_extra['dmg']
             
-            while choice.lower() not in POSSIBLE:
-                print("Sorry, that was not an option. What would you like to equip right now? [Enter the first letter of the equipment category or [L] to leave or [I] to check your inventory.]")
+
+            #changing stats to remove old and add new equipment
+            printstr = chosenItem.added_stats['str'] - remove_stats['str']
+            printdex = chosenItem.added_stats['dex'] - remove_stats['dex']
+            printcon = chosenItem.added_stats['con'] - remove_stats['con']
+            self.stats['str'] = self.stats['str'] - remove_stats['str'] + chosenItem.added_stats['str']
+            self.stats['dex'] = self.stats['dex'] - remove_stats['dex'] + chosenItem.added_stats['dex']
+            self.stats['con'] = self.stats['con'] - remove_stats['con'] + chosenItem.added_stats['con']
+            #Refresh all the values on status
+            self.refresh_stats()
+            #Need to add on calced values again
+            printac = 0
+            printhp = 0
+            printdmg = 0
+            
+            #nonweapons have a few more stats to add 
+            if not isinstance(chosenItem, Sword):
+                self.added_ac = self.added_ac - remove_extra['ac'] + chosenItem.added_extra['ac']
+                self.added_hp = self.added_hp - remove_extra['hp'] + chosenItem.added_extra['hp']
+                self.added_dmg = self.added_dmg - remove_extra['dmg'] + chosenItem.added_extra['dmg']
+                self.armor_class = self.armor_class + self.added_ac
+                self.health = self.health + self.added_hp
+                self.attack_damage = self.attack_damage + self.added_dmg
+                
+                printac = self.added_ac
+                printhp = self.added_hp
+                printdmg = self.added_dmg
+
+            #changing equipped item to chosen item
+            self.equipment[POSSIBLEDICT[chosenItem.__class__]] = chosenItem
+
+            os.system('cls')
+            #final message stating item has been equipped
+            print("You have equipped " + chosenItem.name + ".")
+            PRINTDICT = {
+                'str': printstr,
+                'dex': printdex,
+                'con': printcon,
+                'ac': printac,
+                'hp': printhp,
+                'dmg': printdmg
+            }
+            
+            #printing out all the stat values changed by the change in equipment
+            for i in PRINTDICT:
+                if PRINTDICT[i]>=0:
+                    print("  >>  "+i+": +"+str(PRINTDICT[i]))
+                else:
+                    print("  >>  "+i+": "+str(PRINTDICT[i]))
+            input("[Press enter to continue.]")
+        os.system('cls')
+        
+        self.display_equipments()
+        self.display_inventory()
+        
+        #getting first input
+        print("What would you like to equip right now? [Enter the 'e' and the number of the equipment (no spaces) or [L] to leave or the number of the equipment to check it out.]")
+        choice = input("  >>  ")
+        
+        #input validation
+        checking = True
+
+        while checking:
+            if not choice:
+                print("Sorry, that was not an option. What would you like to equip right now? [Enter the 'e' and the number of the equipment (no spaces) or [L] to leave or the number of the equipment to check it out.]")
                 choice = input("  >>  ")
-        input("Thank you for your business. I hope to see you soon. [Press enter to continue.]")
+            elif len(choice) == 1:
+                if choice.isdigit():
+                    if int(choice) > len(self.inventory) or int(choice) <=2:
+                        print("Sorry, that was not an option. What would you like to equip right now? [Enter the 'e' and the number of the equipment (no spaces) or [L] to leave or the number of the equipment to check it out.]")
+                        choice = input("  >>  ")
+                    else:
+                        checking = False
+                elif choice.lower() != "l":
+                    print("Sorry, that was not an option. What would you like to equip right now? [Enter the 'e' and the number of the equipment (no spaces) or [L] to leave or the number of the equipment to check it out.]")
+                    choice = input("  >>  ")
+                else:
+                    checking = False
+            elif len(choice) == 2:
+                if choice[0].lower() != "e":
+                    print("Sorry, that was not an option. What would you like to equip right now? [Enter the 'e' and the number of the equipment (no spaces) or [L] to leave or the number of the equipment to check it out.]")
+                    choice = input("  >>  ")
+                elif not choice[1].isdigit():
+                    print("Sorry, that was not an option. What would you like to equip right now? [Enter the 'e' and the number of the equipment (no spaces) or [L] to leave or the number of the equipment to check it out.]")
+                    choice = input("  >>  ")
+                elif int(choice[1]) > len(self.inventory) or int(choice[1]) <= 2:
+                    print("Sorry, that was not an option. What would you like to equip right now? [Enter the 'e' and the number of the equipment (no spaces) or [L] to leave or the number of the equipment to check it out.]")
+                    choice = input("  >>  ")
+                else:
+                    checking = False
+            else:
+                print("Sorry, that was not an option. What would you like to equip right now? [Enter the 'e' and the number of the equipment (no spaces) or [L] to leave or the number of the equipment to check it out.]")
+                choice = input("  >>  ")    
+            
+            
+        input("[Press enter to continue.]")
     
     def display_inventory(self):
         """
@@ -512,7 +563,7 @@ class Character:
         temp = self.display_inventory()
         inventoryList = temp[0]
         count = temp[1]
-        print("[Enter [L] to leave or enter the number of a specific item to learn more about it.]")
+        print("[Enter [L] to leave the inventory or enter the number of a specific item to learn more about it.]")
         choice = input("  >>  ")
         while choice != "l":
             if choice.isdigit():
@@ -521,49 +572,49 @@ class Character:
                     print("Gold is the currency of the realm you currently reside in. It drops from monsters and chests and can be used to purchase equipment and consumables.")
                     input("[Press any button to return.]")
                     print("What will you do now?")
-                    print("[Enter [L] to leave or enter the number of a specific item to learn more about it.]")
+                    print("[Enter [L] to leave the inventory or enter the number of a specific item to learn more about it.]")
                     choice = input("  >>  ")
                 elif choice == "2":
                     #manually written description
                     print("Health potions are an essential part of your kit. They will help you stay alive during battles, healing a random amount every use.")
                     input("[Press any button to return.]")    
                     print("What will you do now?")
-                    print("[Enter [L] to leave or enter the number of a specific item to learn more about it.]")
+                    print("[Enter [L] to leave the inventory or enter the number of a specific item to learn more about it.]")
                     choice = input("  >>  ")
                 elif int(choice)-1<len(inventoryList) and int(choice)-1>=0:
                     if isinstance(inventoryList[int(choice)-1], Sword):
                         #print the description of the chosen item
                         self.print_single_equipment(1, inventoryList[int(choice)-1])
                         print("What will you do now?")
-                        print("[Enter [L] to leave or enter the number of a specific item to learn more about it.]")
+                        print("[Enter [L] to leave the inventory or enter the number of a specific item to learn more about it.]")
                         choice = input("  >>  ")
                     elif isinstance(inventoryList[int(choice)-1], Helmet):
                         self.print_single_equipment(0, inventoryList[int(choice)]-1)
                         print("What will you do now?")
-                        print("[Enter [L] to leave or enter the number of a specific item to learn more about it.]")
+                        print("[Enter [L] to leave the inventory or enter the number of a specific item to learn more about it.]")
                         choice = input("  >>  ")
                     elif isinstance(inventoryList[int(choice)-1], Armor):
                         self.print_single_equipment(0, inventoryList[int(choice)-1])
                         print("What will you do now?")
-                        print("[Enter [L] to leave or enter the number of a specific item to learn more about it.]")
+                        print("[Enter [L] to leave the inventory or enter the number of a specific item to learn more about it.]")
                         choice = input("  >>  ")
                     elif isinstance(inventoryList[int(choice)-1], Ring):
                         self.print_single_equipment(0, inventoryList[int(choice)-1])
                         print("What will you do now?")
-                        print("[Enter [L] to leave or enter the number of a specific item to learn more about it.]")
+                        print("[Enter [L] to leave the inventory or enter the number of a specific item to learn more about it.]")
                         choice = input("  >>  ")
                     else:
                         #invalid inputs (i.e. put a number out of the range)
                         print("That was not an option.")
-                        print("[Enter [L] to leave or enter the number of a specific item to learn more about it.]")
+                        print("[Enter [L] to leave the inventory or enter the number of a specific item to learn more about it.]")
                         choice = input("  >>  ")
                 else:
                     print("That was not an option.")
-                    print("[Enter [L] to leave or enter the number of a specific item to learn more about it.]")
+                    print("[Enter [L] to leave the inventory or enter the number of a specific item to learn more about it.]")
                     choice = input("  >>  ")
             else:
                 print("That was not an option.")
-                print("[Enter [L] to leave or enter the number of a specific item to learn more about it.]")
+                print("[Enter [L] to leave the inventory or enter the number of a specific item to learn more about it.]")
                 choice = input("  >>  ")
             
     def add_inventory(self, items):

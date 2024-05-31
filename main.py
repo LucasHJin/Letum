@@ -337,6 +337,7 @@ while result != "DEAD":
                 print(" ~ But be warned, he has followed me for millenia upon millenia and it has started to corrupt his mind and soul. ~ ")
                 print(" ~ So, when talking with him, please phrase your questions properly and try to humour him if he temporarily becomes incoherent. ~ ")
                 input("[Press input to continue.]")
+                first_talking = False
             os.system('cls')
             print("Conversation")
             print(" ~ Enter 'Q', 'Quit', 'Leave', 'L' or 'Exit' precisely to stop the conversation.")

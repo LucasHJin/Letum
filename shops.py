@@ -356,8 +356,8 @@ class Shop:
                             self.display_shop()
                             self.print_instructions()
                             choice = input("  >>  ")
-                            if choice[0] not in GOOD_INPUT:
-                                choice = self.not_option(choice)
+                            #input validation
+                            choice = self.not_option(choice)
                         else:
                             choice = self.not_option(choice)
                     else:
@@ -373,8 +373,8 @@ class Shop:
                             self.display_shop()
                             self.print_instructions()
                             choice = input("  >>  ")
-                            if choice[0] not in GOOD_INPUT:
-                                choice = self.not_option(choice)
+                            #input validation
+                            choice = self.not_option(choice)
                         else:
                             choice = self.not_option(choice)
                     else:
@@ -390,8 +390,8 @@ class Shop:
                             self.display_shop()
                             self.print_instructions()
                             choice = input("  >>  ")
-                            if choice[0] not in GOOD_INPUT:
-                                choice = self.not_option(choice)
+                            #input validation
+                            choice = self.not_option(choice)
                         else:
                             choice = self.not_option(choice)
                     else:
@@ -407,8 +407,8 @@ class Shop:
                             self.display_shop()
                             self.print_instructions()
                             choice = input("  >>  ")
-                            if choice[0] not in GOOD_INPUT:
-                                choice = self.not_option(choice)
+                            #input validation
+                            choice = self.not_option(choice)
                         else:
                             choice = self.not_option(choice)
                     else:
@@ -424,8 +424,8 @@ class Shop:
                             self.display_shop()
                             self.print_instructions()
                             choice = input("  >>  ")
-                            if choice[0] not in GOOD_INPUT:
-                                choice = self.not_option(choice)
+                            #input validation
+                            choice = self.not_option(choice)
                         else:
                             choice = self.not_option(choice)
                     else:
@@ -479,16 +479,15 @@ class Shop:
                                     print("Thanks for buying an item. Would you like to buy anything else?")
                                     self.print_instructions()
                                     choice = input("  >>  ")
-                                    if choice[0] not in GOOD_INPUT:
-                                        choice = self.not_option(choice)
-                                    #new input + validation
+                                    #input validation
+                                    choice = self.not_option(choice)
                                 else:
                                     #not enough money
                                     print("Sorry, you do not have enough Gold. Would you like to buy something else?")
                                     self.print_instructions()
                                     choice = input("  >>  ")
-                                    if choice[0] not in GOOD_INPUT:
-                                        choice = self.not_option(choice)
+                                    #input validation
+                                    choice = self.not_option(choice)
                             else:
                                 choice = self.not_option(choice)
                         else:
@@ -504,8 +503,8 @@ class Shop:
                 print("Thank you for selling an item. What would you like to do now?")
                 self.print_instructions()
                 choice = input("  >>  ")
-                if choice[0] not in GOOD_INPUT:
-                    choice = self.not_option(choice)
+                #input validation
+                choice = self.not_option(choice)
             else:
                 choice = self.not_option(choice)
                 

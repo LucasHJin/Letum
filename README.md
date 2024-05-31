@@ -31,7 +31,7 @@ Letum is an RPG turn-based text game, made with OOP, machine learning and Python
    git clone git@github.com:LucasHJin/Letum.git
 ```
 
-2. **Open the Repository**: Open the repository in any code editor of your preference (i.e. VsCode).
+2. **Open the Repository**: Open the repository in any code editor of your preference (i.e. VSCode).
 
 3. **Run the Program**: You should now be able to run the program.
 
