@@ -8,9 +8,6 @@ History:
     May 23, 2024: Adding Comments
 """
 
-#ADD COMMENTS
-#ADD CLEAR SCREEN WHERE APPROPRIATE
-
 from characters import Character
 from weapons import Sword
 from battles import Battle
@@ -117,6 +114,10 @@ os.system('cls')
 print(" ~ Hello, I am the Creator. I have brought you to the mystical realm of Letum, where Gods are born and killed. You will recognize my communications with you through '~' symbols. ~ ")
 print(" ~ What is your name, oh fine warrior? ~ ")
 name = input("  >>  ")
+while not name:
+    print(" ~ Could you repeat your name? ~ ")
+    name = input("  >>  ")
+
 print(" ~ And of what origin are you "+name+"? [Enter your stats below (str, dex, con). Enter [help] for an explanation. **Make sure to separate with a comma and a space.] ~ ")
 stats_input = input("  >>  ").split(", ")
 
@@ -195,8 +196,9 @@ while choice.lower() != "o":
     print_options(possible)
     choice = input("  >>  ")
 
+os.system('cls')
 
-print("\nAs you open the rotting chest, its hinges slowly creaking like the gutteral roar of a ghastly beast, you notice a reflective piece of metal within it. Looking closer, you make out the shape of a sword. Suddenly, it disappears, followed by vocal notifications, seemingly from the same 'Creator' you spoke to previously.")
+print("As you open the rotting chest, its hinges slowly creaking like the gutteral roar of a ghastly beast, you notice a reflective piece of metal within it. Looking closer, you make out the shape of a sword. Suddenly, it disappears, followed by vocal notifications, seemingly from the same 'Creator' you spoke to previously.")
 
 #initializing the character and weapon and making sure they all have the proper stats
 player = Character(name, int(stats_input[0]), int(stats_input[1]), int(stats_input[2]))
@@ -220,6 +222,9 @@ print(" ~ You might have seen notifications earlier stating that you obtained 10
 print(" ~ To check what is in your inventory, press [I] when prompted for an input. ~ ")
 print(" ~ If you want to check your status and your equipped items, press [S] when prompted for an input. ~ ")
 print(" ~ Once finished learning the basics, press [C] to continue. ~ ")
+input("[Press enter to continue.]")
+os.system('cls')
+
 
 possible = {
     "I": "Open Inventory",
@@ -249,6 +254,9 @@ while choice.lower() != "c":
         os.system('cls')
         print_options(possible)
         choice = input("  >>  ")
+
+
+os.system('cls')
 
 print("As you wonder what to do now, you here once again the voice in your head.")
 print(" ~ I'm unable to say much else due to restrictions but I will try to reveal as much as possible. ~ ")
