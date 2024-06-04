@@ -136,6 +136,8 @@ class Battle:
                 self.weapon.cooldownsDict[ability_cooldown] = 0
             #increment round count by 1
             self.round_count += 1
+            #reset turn count to 1
+            self.turn_count = 1
             #return that you won the round (game continues)
             return "WON"
 

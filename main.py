@@ -409,6 +409,7 @@ while result != "DEAD":
                 #let the enemy dict of this type and rarity be the amount generated
                 eyDict[enemy][enemy_type_num] = amount_enemies
 
+
         #set the attribute enemiesDict of the Battles class to the new set of enemies
         rnd.enemiesDict = eyDict
         
