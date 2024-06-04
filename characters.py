@@ -287,8 +287,6 @@ class Character:
             input("[Press any button to return.]")    
 
     def equip_equipment(self):
-
-        ###STILL NEED TO FIX -> PART WITH EQUIPPING
         """
         A function that to equip equipment from the inventory.
 
@@ -451,6 +449,7 @@ class Character:
                     self.armor_class = self.armor_class + self.added_ac
                     self.health = self.health + self.added_hp
                     self.attack_damage = self.attack_damage + self.added_dmg
+                    self.current_health = self.health
                     
                     #only need difference of what was added and removed, not total
                     printac = chosenItem.added_extra['ac'] - remove_extra['ac']
@@ -934,3 +933,8 @@ class Character:
         self.assign_stat_points(self.stat_points)
         #updates all stats
         self.refresh_stats()
+        #keep the stats from the equipment
+        self.armor_class = self.armor_class + self.added_ac
+        self.health = self.health + self.added_hp
+        self.attack_damage = self.attack_damage + self.added_dmg
+        self.current_health = self.health
