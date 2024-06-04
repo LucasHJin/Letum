@@ -37,6 +37,8 @@ Letum is an RPG turn-based text game, made with OOP, machine learning and Python
 
 ## Known Bugs
 - The chatbot isn't advanced enough to have a proper conversation most of the time. Only some of the time can it have a proper conversation (it can respond to basic greetings and goodbye)
+- You are able to increase your health, armor class and damage by repeatedly equipping equipment
+   - This will not repeatedly increase your stats (str/dex/con) only the aforementioned values
 
 ## Cheat codes
 - There are no cheat codes within the game as the goal is simply to survive as long as possible
